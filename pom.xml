@@ -2,17 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.nonobank</groupId>
-	<artifactId>invt</artifactId>
+	<groupId>com.tingo</groupId>
+	<artifactId>weaver</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
-
-	<!-- deploy 时候需要在setting.xml文件中配置相应的server节点，用于校验用户权限，id必须和这里的id相同 -->
-	<!-- <distributionManagement> <repository> <id>nono_releases</id> <name>nono 
-		releases nexus</name> <url>http://192.168.1.45:8081/nexus/content/repositories/Nonobank-Releases/</url> 
-		</repository> <snapshotRepository> <id>nono_snapshots</id> <name>nono snapshosts 
-		nexus</name> <url>http://192.168.1.45:8081/nexus/content/repositories/Nonobank-Snapshots/</url> 
-		</snapshotRepository> </distributionManagement> -->
 
 	<properties>
 		<junit.version>4.12</junit.version>
@@ -49,6 +42,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.8.10</version>
+		</dependency>
+
+		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>${dom4j.version}</version>
@@ -62,9 +61,9 @@
 		</dependency>
 
 		<dependency>
-    		<groupId>commons-codec</groupId>
-    		<artifactId>commons-codec</artifactId>
-    		<version>1.9</version>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
 		</dependency>
 
 
@@ -242,21 +241,21 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
-			<artifactId>jersey-test-framework-provider-grizzly2</artifactId>
-			<version>${jersey-test-framework-provider-grizzly2.version}</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.15</version>
+			<scope>test</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>org.glassfish.jersey.test-framework</groupId>
-			<artifactId>jersey-test-framework-core</artifactId>
-			<version>${jersey-test-framework-core.version}</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.15-beta2</version>
+			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
-		<finalName>invt-app</finalName>
+		<finalName>tingo-weaver</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

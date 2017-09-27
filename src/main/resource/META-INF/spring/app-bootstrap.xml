@@ -5,5 +5,5 @@
 
 	<import resource="classpath:/META-INF/spring/spring-application.xml" />
 	<import resource="classpath:/META-INF/spring/spring-database.xml"/>
+	<import resource="classpath:/META-INF/spring/spring-parameters.xml"/>
 </beans>
-
