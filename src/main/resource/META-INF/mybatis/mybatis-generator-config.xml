@@ -18,7 +18,7 @@
 		</commentGenerator>
 		<!--数据库链接地址账号密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-						connectionURL="jdbc:mysql://192.168.1.90:3306/db_nono\?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull\&yearIsDateType=false&autoReconnect=true" userId="yanfa" password="yanfa#123" />
+						connectionURL="jdbc:mysql://192.168.1.90:3306/db_nono?useUnicode=true&amp;characterEncoding=UTF-8&amp;yearIsDateType=false&amp;autoReconnect=true" userId="yanfa" password="yanfa#123" />
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
@@ -28,7 +28,7 @@
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 		<!--生成映射文件存放位置 -->
-		<sqlMapGenerator targetPackage="/mapper" targetProject="src/main/resources">
+		<sqlMapGenerator targetPackage="/mapper" targetProject="src/main/resource">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 		<!--生成Dao类存放位置 targetPackage 需要自定义 目录自动生成 basePackage-->
@@ -37,7 +37,7 @@
 		</javaClientGenerator>
 
 		<!-- 正式生成之前需要删除 此事例 -->
-		<table tableName="ETL_BF_TASK_LOG" domainObjectName="EtlBfTaskLog"
+		<table tableName="debt_sale" domainObjectName="DebtSale"
 			   enableCountByExample="false" enableUpdateByExample="false"
 			   enableDeleteByExample="false" enableSelectByExample="false"
 			   selectByExampleQueryId="false">

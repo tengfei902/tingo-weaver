@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tingo.weaver.dao.DebtSaleDao" >
+  <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.DebtSale" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="bo_id" property="boId" jdbcType="BIGINT" />
+    <result column="va_id" property="vaId" jdbcType="BIGINT" />
+    <result column="transfer_num" property="transferNum" jdbcType="DECIMAL" />
+    <result column="original_price" property="originalPrice" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="one_price" property="onePrice" jdbcType="DECIMAL" />
+    <result column="op_type" property="opType" jdbcType="BIT" />
+    <result column="to_type" property="toType" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="transfer_rate" property="transferRate" jdbcType="DECIMAL" />
+    <result column="percent" property="percent" jdbcType="DECIMAL" />
+    <result column="expect" property="expect" jdbcType="TINYINT" />
+    <result column="residue_num" property="residueNum" jdbcType="DECIMAL" />
+    <result column="deadline" property="deadline" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="interest" property="interest" jdbcType="DECIMAL" />
+    <result column="trans_amount" property="transAmount" jdbcType="DECIMAL" />
+    <result column="pay_amount" property="payAmount" jdbcType="DECIMAL" />
+    <result column="lock_num" property="lockNum" jdbcType="DECIMAL" />
+    <result column="seri_no" property="seriNo" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="db_id" property="dbId" jdbcType="BIGINT" />
+    <result column="transfer_type" property="transferType" jdbcType="BIT" />
+    <result column="handing_fee_rate" property="handingFeeRate" jdbcType="DECIMAL" />
+    <result column="yield_rate" property="yieldRate" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, bo_id, va_id, transfer_num, original_price, price, one_price, op_type, 
+    to_type, title, transfer_rate, `percent`, expect, residue_num, deadline, `status`, 
+    interest, trans_amount, pay_amount, lock_num, seri_no, version, create_time, update_time, 
+    db_id, transfer_type, handing_fee_rate, yield_rate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from debt_sale
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from debt_sale
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tingo.weaver.model.po.DebtSale" >
+    insert into debt_sale (id, user_id, bo_id, 
+      va_id, transfer_num, original_price, 
+      price, one_price, op_type, 
+      to_type, title, transfer_rate, 
+      `percent`, expect, residue_num, 
+      deadline, `status`, interest, 
+      trans_amount, pay_amount, lock_num, 
+      seri_no, version, create_time, 
+      update_time, db_id, transfer_type, 
+      handing_fee_rate, yield_rate)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{boId,jdbcType=BIGINT}, 
+      #{vaId,jdbcType=BIGINT}, #{transferNum,jdbcType=DECIMAL}, #{originalPrice,jdbcType=DECIMAL}, 
+      #{price,jdbcType=DECIMAL}, #{onePrice,jdbcType=DECIMAL}, #{opType,jdbcType=BIT}, 
+      #{toType,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{transferRate,jdbcType=DECIMAL}, 
+      #{percent,jdbcType=DECIMAL}, #{expect,jdbcType=TINYINT}, #{residueNum,jdbcType=DECIMAL}, 
+      #{deadline,jdbcType=TIMESTAMP}, #{status,jdbcType=BIT}, #{interest,jdbcType=DECIMAL}, 
+      #{transAmount,jdbcType=DECIMAL}, #{payAmount,jdbcType=DECIMAL}, #{lockNum,jdbcType=DECIMAL}, 
+      #{seriNo,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{dbId,jdbcType=BIGINT}, #{transferType,jdbcType=BIT}, 
+      #{handingFeeRate,jdbcType=DECIMAL}, #{yieldRate,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.DebtSale" >
+    insert into debt_sale
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="boId != null" >
+        bo_id,
+      </if>
+      <if test="vaId != null" >
+        va_id,
+      </if>
+      <if test="transferNum != null" >
+        transfer_num,
+      </if>
+      <if test="originalPrice != null" >
+        original_price,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="onePrice != null" >
+        one_price,
+      </if>
+      <if test="opType != null" >
+        op_type,
+      </if>
+      <if test="toType != null" >
+        to_type,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="transferRate != null" >
+        transfer_rate,
+      </if>
+      <if test="percent != null" >
+        `percent`,
+      </if>
+      <if test="expect != null" >
+        expect,
+      </if>
+      <if test="residueNum != null" >
+        residue_num,
+      </if>
+      <if test="deadline != null" >
+        deadline,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="interest != null" >
+        interest,
+      </if>
+      <if test="transAmount != null" >
+        trans_amount,
+      </if>
+      <if test="payAmount != null" >
+        pay_amount,
+      </if>
+      <if test="lockNum != null" >
+        lock_num,
+      </if>
+      <if test="seriNo != null" >
+        seri_no,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="dbId != null" >
+        db_id,
+      </if>
+      <if test="transferType != null" >
+        transfer_type,
+      </if>
+      <if test="handingFeeRate != null" >
+        handing_fee_rate,
+      </if>
+      <if test="yieldRate != null" >
+        yield_rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="boId != null" >
+        #{boId,jdbcType=BIGINT},
+      </if>
+      <if test="vaId != null" >
+        #{vaId,jdbcType=BIGINT},
+      </if>
+      <if test="transferNum != null" >
+        #{transferNum,jdbcType=DECIMAL},
+      </if>
+      <if test="originalPrice != null" >
+        #{originalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="onePrice != null" >
+        #{onePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="opType != null" >
+        #{opType,jdbcType=BIT},
+      </if>
+      <if test="toType != null" >
+        #{toType,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="transferRate != null" >
+        #{transferRate,jdbcType=DECIMAL},
+      </if>
+      <if test="percent != null" >
+        #{percent,jdbcType=DECIMAL},
+      </if>
+      <if test="expect != null" >
+        #{expect,jdbcType=TINYINT},
+      </if>
+      <if test="residueNum != null" >
+        #{residueNum,jdbcType=DECIMAL},
+      </if>
+      <if test="deadline != null" >
+        #{deadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="interest != null" >
+        #{interest,jdbcType=DECIMAL},
+      </if>
+      <if test="transAmount != null" >
+        #{transAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payAmount != null" >
+        #{payAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="lockNum != null" >
+        #{lockNum,jdbcType=DECIMAL},
+      </if>
+      <if test="seriNo != null" >
+        #{seriNo,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dbId != null" >
+        #{dbId,jdbcType=BIGINT},
+      </if>
+      <if test="transferType != null" >
+        #{transferType,jdbcType=BIT},
+      </if>
+      <if test="handingFeeRate != null" >
+        #{handingFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="yieldRate != null" >
+        #{yieldRate,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tingo.weaver.model.po.DebtSale" >
+    update debt_sale
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="boId != null" >
+        bo_id = #{boId,jdbcType=BIGINT},
+      </if>
+      <if test="vaId != null" >
+        va_id = #{vaId,jdbcType=BIGINT},
+      </if>
+      <if test="transferNum != null" >
+        transfer_num = #{transferNum,jdbcType=DECIMAL},
+      </if>
+      <if test="originalPrice != null" >
+        original_price = #{originalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="onePrice != null" >
+        one_price = #{onePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="opType != null" >
+        op_type = #{opType,jdbcType=BIT},
+      </if>
+      <if test="toType != null" >
+        to_type = #{toType,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="transferRate != null" >
+        transfer_rate = #{transferRate,jdbcType=DECIMAL},
+      </if>
+      <if test="percent != null" >
+        `percent` = #{percent,jdbcType=DECIMAL},
+      </if>
+      <if test="expect != null" >
+        expect = #{expect,jdbcType=TINYINT},
+      </if>
+      <if test="residueNum != null" >
+        residue_num = #{residueNum,jdbcType=DECIMAL},
+      </if>
+      <if test="deadline != null" >
+        deadline = #{deadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=BIT},
+      </if>
+      <if test="interest != null" >
+        interest = #{interest,jdbcType=DECIMAL},
+      </if>
+      <if test="transAmount != null" >
+        trans_amount = #{transAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payAmount != null" >
+        pay_amount = #{payAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="lockNum != null" >
+        lock_num = #{lockNum,jdbcType=DECIMAL},
+      </if>
+      <if test="seriNo != null" >
+        seri_no = #{seriNo,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dbId != null" >
+        db_id = #{dbId,jdbcType=BIGINT},
+      </if>
+      <if test="transferType != null" >
+        transfer_type = #{transferType,jdbcType=BIT},
+      </if>
+      <if test="handingFeeRate != null" >
+        handing_fee_rate = #{handingFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="yieldRate != null" >
+        yield_rate = #{yieldRate,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.DebtSale" >
+    update debt_sale
+    set user_id = #{userId,jdbcType=BIGINT},
+      bo_id = #{boId,jdbcType=BIGINT},
+      va_id = #{vaId,jdbcType=BIGINT},
+      transfer_num = #{transferNum,jdbcType=DECIMAL},
+      original_price = #{originalPrice,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DECIMAL},
+      one_price = #{onePrice,jdbcType=DECIMAL},
+      op_type = #{opType,jdbcType=BIT},
+      to_type = #{toType,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      transfer_rate = #{transferRate,jdbcType=DECIMAL},
+      `percent` = #{percent,jdbcType=DECIMAL},
+      expect = #{expect,jdbcType=TINYINT},
+      residue_num = #{residueNum,jdbcType=DECIMAL},
+      deadline = #{deadline,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=BIT},
+      interest = #{interest,jdbcType=DECIMAL},
+      trans_amount = #{transAmount,jdbcType=DECIMAL},
+      pay_amount = #{payAmount,jdbcType=DECIMAL},
+      lock_num = #{lockNum,jdbcType=DECIMAL},
+      seri_no = #{seriNo,jdbcType=VARCHAR},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      db_id = #{dbId,jdbcType=BIGINT},
+      transfer_type = #{transferType,jdbcType=BIT},
+      handing_fee_rate = #{handingFeeRate,jdbcType=DECIMAL},
+      yield_rate = #{yieldRate,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

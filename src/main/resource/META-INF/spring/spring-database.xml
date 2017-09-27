@@ -62,7 +62,7 @@
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="invt.dao.local" />
+		<property name="basePackage" value="com.tingo.weaver.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
 	</bean>
 </beans>
