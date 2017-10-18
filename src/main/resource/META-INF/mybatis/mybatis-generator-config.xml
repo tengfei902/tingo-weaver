@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
 
-	<classPathEntry location="/Users/user/.m2/repositoryy/ojdbc/ojdbc/14/ojdbc-14.jar" />
+	<classPathEntry location="C:\Users\Administrator\.m2\repository\ojdbc\ojdbc\14\ojdbc-14.jar" />
 
 	<context id="mysqltables" targetRuntime="MyBatis3">
 
@@ -37,7 +37,7 @@
 		</javaClientGenerator>
 
 		<!-- 正式生成之前需要删除 此事例 -->
-		<table tableName="qingdan" domainObjectName="Qingdan"
+		<table tableName="kp_check_item_detail_pub_pf" domainObjectName="KpCheckItemDetailPubPf"
 			   enableCountByExample="false" enableUpdateByExample="false"
 			   enableDeleteByExample="false" enableSelectByExample="false"
 			   selectByExampleQueryId="false">

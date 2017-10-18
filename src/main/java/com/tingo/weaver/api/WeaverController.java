@@ -1,12 +1,17 @@
 package com.tingo.weaver.api;
 
+import com.tingo.weaver.biz.KpService;
+import com.tingo.weaver.model.gson.QingdanGson;
 import com.tingo.weaver.model.gson.TableGson;
 import com.tingo.weaver.model.gson.ZcListRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 /**
  * Created by user on 17/9/27.
@@ -14,16 +19,13 @@ import com.google.gson.Gson;
 @Controller
 @RequestMapping("/weaver")
 public class WeaverController {
+    @Autowired
+    private KpService kpService;
 
-    @RequestMapping(value = "/test",method = RequestMethod.GET)
-    public @ResponseBody String test() {
-        System.out.println("----------------");
-        return "213456";
-    }
-
-    @RequestMapping(value = "/test2",method = RequestMethod.GET)
-    public void test2() {
-        System.out.println("----------------");
+    @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET)
+    public @ResponseBody String getQingdanList() {
+        List<QingdanGson> list = kpService.selectQdList();
+        return new Gson().toJson(list);
     }
 
     @RequestMapping(value = "/getPageInfo",method = RequestMethod.GET)
@@ -39,6 +41,6 @@ public class WeaverController {
 
     @RequestMapping(value = "/zc/getZcList",method = RequestMethod.GET)
     public @ResponseBody String getZcList(ZcListRequest zcRequest) {
-
+        return null;
     }
 }

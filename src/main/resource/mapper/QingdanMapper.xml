@@ -11,7 +11,7 @@
     ID, QINGDANMC, QZ, `STATUS`
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from QINGDAN
     where ID = #{id,jdbcType=DECIMAL}
@@ -79,4 +79,11 @@
       `STATUS` = #{status,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
+  <select id="selectAvailableList" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select
+    <include refid="Base_Column_List" />
+    from QINGDAN
+    where status = 0 order by id
+  </select>
 </mapper>
