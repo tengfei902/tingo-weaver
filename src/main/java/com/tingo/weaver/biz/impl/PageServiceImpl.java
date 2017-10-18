@@ -1,5 +1,7 @@
 package com.tingo.weaver.biz.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tingo.weaver.biz.PageService;
 import com.tingo.weaver.biz.RefService;
 import com.tingo.weaver.biz.common.BeanCache;
@@ -141,7 +143,7 @@ public class PageServiceImpl implements PageService {
     }
 
     @Override
-    public String generateBody(Table table) {
+    public String generateBody(Table table) throws Exception {
         StringBuilder result = new StringBuilder("<table");
         result = result.append(" id = \"").append(table.getId()).append("\"");
         result = result.append(" class=\"").append(table.getClazz()).append("\"");
@@ -178,7 +180,111 @@ public class PageServiceImpl implements PageService {
 
         result = result.append(title);
 
+        StringBuilder dataStr = new StringBuilder("");
+
+        //data table
+        if(!StringUtils.isEmpty(table.getInitFunction())) {
+            Method method = BeanCache.getInstance().getCachedMethod("RefService",table.getInitFunction());
+            Object[] params = Utils.convertStr2ObjArray(table.getInitParams());
+            Object json = method.invoke(refService,params);
+
+            if(!Objects.isNull(json)) {
+                List<Map<String,String>> datas = new Gson().fromJson(json.toString(),new TypeToken<Map<String,List<String>>>(){}.getType());
+
+                if(!CollectionUtils.isEmpty(datas)) {
+                    dataStr = new StringBuilder("tr");
+
+                    int row = 0;
+
+                    for(Map<String,String> data:datas) {
+
+                        for(Column column:columns) {
+
+                            switch (column.getType()) {
+                                case CHECKBOX:
+                                    dataStr = dataStr.append(String.format("<td><input type=\"checkbox\" value=\"%s\"></td>",row));
+                                    break;
+                                case HIDDEN:
+                                    dataStr = dataStr.append(String.format("<input type=\"hidden\" id=\"%s\" value=\"%s\">",column.getId()+"_"+row,data.get(column.getAlias())));
+                                    break;
+                                case LABEL:
+                                    dataStr = dataStr.append(String.format("<td><div id='%s' name='%s' style='%s'>%s</div></td>",column.getId()+"_"+row,column.getName()+"_"+row,column.getStyle(),data.get(column.getAlias())));
+                                    break;
+                                case HREF:
+                                    dataStr = dataStr.append(String.format("<td><div><a href=\"%s\">%s</a></div></td>",data.get(column.getAlias().split("_"))));
+                                    break;
+                                case SELECT:
+
+                                    dataStr = dataStr.append(String.format("<select id=\"%s\">",column.getId()+"_"+row));
+
+                                    Method optionMethod = BeanCache.getInstance().getCachedMethod("RefService",column.getSelect().getOptionCheckFunction());
+                                    for(Option option:column.getSelect().getOptions()) {
+                                        boolean selected = Boolean.valueOf(optionMethod.invoke(refService,option.getValue()).toString());
+                                        if(selected) {
+                                            dataStr = dataStr.append(String.format("<option value=\"%s\" selected=\"selected\">%s</option>",option.getValue(),option.getName()));
+                                        } else {
+                                            dataStr = dataStr.append(String.format("<option value=\"%s\">%s</option>",option.getValue(),option.getName()));
+                                        }
+                                    }
+
+                                    dataStr = dataStr.append("</select>");
+                            }
+
+                        }
+
+                        row++;
+                    }
+
+                    dataStr = dataStr.append("</tr>");
+                }
+            }
+        }
+
+        result = result.append(dataStr);
+
         result = result.append("</table>");
         return result.toString();
+    }
+
+    @Override
+    public String generateDataBlock(Table table) {
+        List<Column> columns = table.getColumns().stream().sorted((o1, o2) -> o1.getOrder().compareTo(o2.getOrder())).collect(Collectors.toList());
+
+        StringBuilder dataStr = new StringBuilder("<tr>");
+
+        String row = "index";
+
+        for(Column column:columns) {
+
+            switch (column.getType()) {
+                case CHECKBOX:
+                    dataStr = dataStr.append(String.format("<td><input type=\"checkbox\" value=\"%s\"></td>", row));
+                    break;
+                case HIDDEN:
+                    dataStr = dataStr.append(String.format("<input type=\"hidden\" id=\"%s\" value=\"%s\">", column.getId() + "_" + row, ""));
+                    break;
+                case LABEL:
+                    dataStr = dataStr.append(String.format("<td><div id='%s' name='%s' style='%s'>%s</div></td>", column.getId() + "_" + row,column.getName()+"_"+row,column.getStyle(), ""));
+                    break;
+                case HREF:
+                    dataStr = dataStr.append(String.format("<td><div><a href=\"%s\">%s</a></div></td>", "",""));
+                    break;
+                case SELECT:
+
+                    dataStr = dataStr.append(String.format("<select id=\"%s\">", column.getId() + "_" + row));
+
+                    for (Option option : column.getSelect().getOptions()) {
+                        dataStr = dataStr.append(String.format("<option value=\"%s\" selected=\"selected\">%s</option>", option.getValue(), option.getName()));
+                    }
+
+                    dataStr = dataStr.append("</select>");
+                    break;
+                case TEXT:
+                    dataStr = dataStr.append(String.format("<td><input type='text' id='%s' name='%s' value=''></td>",column.getId()+"_"+row,column.getName()+"_"+row));
+                    break;
+            }
+        }
+        dataStr = dataStr.append("</tr>");
+        return dataStr.toString();
     }
 }

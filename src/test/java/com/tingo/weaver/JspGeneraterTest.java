@@ -60,8 +60,32 @@ public class JspGeneraterTest extends BaseTestCase {
                 .addColumn(new Column("fs","fs","分数",11).style("width:30px;").width("10%"))
                 .addColumn(new Column("qrkp","qrkp","确认考评",12).style("width:60px;").width("10%"));
 
-        String jsp = pageService.generateBody(table);
+        try {
+            String jsp = pageService.generateBody(table);
 
+            System.out.println(jsp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testBuildDataBlock() {
+        Table table = new Table("oTable1","oTable1")
+                .clazz("ListStyle detailtable detailtableTopTable")
+                .style("width: 100%")
+                .border(1)
+                .addColumn(new Column("xmnr","xmnr","项目内容",1).style("width:80px;").width("10%").type(TdType.LABEL))
+                .addColumn(new Column("tkxz","tkxz","条款细则",2).style("width:80px;").width("20%").type(TdType.LABEL))
+                .addColumn(new Column("fz","fz","分值",3).style("width:80px;").width("5%").type(TdType.LABEL))
+                .addColumn(new Column("pfbz","pfbz","评分标准",4).style("width:80px;").width("10%").type(TdType.LABEL))
+                .addColumn(new Column("kpjd","kpjd","考评季度",5).style("width:80px;").width("5%").type(TdType.LABEL))
+                .addColumn(new Column("zt","zt","状态",6).style("width:80px;").width("5%").type(TdType.LABEL))
+                .addColumn(new Column("zpf","zpf","自评分",7).style("width:80px;").width("5%").type(TdType.TEXT))
+                .addColumn(new Column("zpsm","zpsm","自评说明",8).style("width:80px;").width("20%").type(TdType.TEXT));
+
+        String jsp = pageService.generateDataBlock(table);
         System.out.println(jsp);
     }
 

@@ -1,6 +1,7 @@
 package com.tingo.weaver.api;
 
 import com.tingo.weaver.model.gson.TableGson;
+import com.tingo.weaver.model.gson.ZcListRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,5 +35,10 @@ public class WeaverController {
         tableGson.setHeader("header test");
 
         return new Gson().toJson(tableGson);
+    }
+
+    @RequestMapping(value = "/zc/getZcList",method = RequestMethod.GET)
+    public @ResponseBody String getZcList(ZcListRequest zcRequest) {
+
     }
 }

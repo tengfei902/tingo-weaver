@@ -9,5 +9,9 @@ public enum TdType {
     SELECT,
     OPTIONS,
     RADIO,
-    BUTTON;
+    BUTTON,
+    CHECKBOX,
+    HIDDEN,
+    LABEL,
+    HREF;
 }

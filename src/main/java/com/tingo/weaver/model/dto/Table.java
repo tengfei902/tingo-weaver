@@ -16,6 +16,7 @@ public class Table {
     private String style;
     private List<Column> columns;
     private String initFunction;
+    private String initParams;
 
     public Table(String id,String name) {
         this.id = id;
@@ -71,5 +72,9 @@ public class Table {
 
     public String getInitFunction() {
         return initFunction;
+    }
+
+    public String getInitParams() {
+        return initParams;
     }
 }

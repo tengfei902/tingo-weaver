@@ -1,6 +1,7 @@
 package com.tingo.weaver.model.dto;
 
 import com.tingo.weaver.utils.enums.Align;
+import com.tingo.weaver.utils.enums.TdType;
 
 /**
  * Created by user on 17/10/17.
@@ -15,6 +16,10 @@ public class Column {
     private Align align;
     private boolean disabled;
     private String style;
+    private TdType type;
+    private String href;
+    private String alias;
+    private Select select;
 
     public Column(String id,String name,String value,int order) {
         this.id = id;
@@ -30,6 +35,11 @@ public class Column {
 
     public Column style(String style) {
         this.style = style;
+        return this;
+    }
+
+    public Column type(TdType type) {
+        this.type = type;
         return this;
     }
 
@@ -67,5 +77,21 @@ public class Column {
 
     public String getStyle() {
         return style;
+    }
+
+    public TdType getType() {
+        return type;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public Select getSelect() {
+        return select;
     }
 }
