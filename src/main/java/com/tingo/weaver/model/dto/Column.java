@@ -16,6 +16,23 @@ public class Column {
     private boolean disabled;
     private String style;
 
+    public Column(String id,String name,String value,int order) {
+        this.id = id;
+        this.name = name;
+        this.value = value;
+        this.order = order;
+    }
+
+    public Column width(String width) {
+        this.width = width;
+        return this;
+    }
+
+    public Column style(String style) {
+        this.style = style;
+        return this;
+    }
+
     public String getId() {
         return id;
     }

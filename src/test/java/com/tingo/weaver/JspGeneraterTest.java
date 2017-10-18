@@ -5,6 +5,7 @@ import com.tingo.weaver.biz.PageBuilder;
 import com.tingo.weaver.biz.PageService;
 import com.tingo.weaver.model.dto.*;
 import com.tingo.weaver.utils.enums.TdType;
+import javafx.scene.control.Tab;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,7 +43,26 @@ public class JspGeneraterTest extends BaseTestCase {
 
     @Test
     public void testBuildBody() {
+        Table table = new Table("oTable1","oTable1")
+                .clazz("ListStyle detailtable detailtableTopTable")
+                .style("width: 100%")
+                .border(1)
+                .addColumn(new Column("xuanze","xuanze","选择",1).style("width:80px;").width("1%"))
+                .addColumn(new Column("bkp","bkp","被考评公司",2).style("width:80px;").width("10%"))
+                .addColumn(new Column("nr","nr","内容",3).style("width:120px;").width("10%"))
+                .addColumn(new Column("tkxz","tkxz","条款细则",4).style("width:120px;").width("3%"))
+                .addColumn(new Column("fssx","fssx","分数上限",5).style("width:60px;").width("20%"))
+                .addColumn(new Column("ysfs","ysfs","验收方式",6).style("width:120px;").width("15%"))
+                .addColumn(new Column("pfbz","pfbz","评分标准",7).style("width:120px;").width("10%"))
+                .addColumn(new Column("zpfs","zpfs","自评分数",8).style("width:60px;").width("10%"))
+                .addColumn(new Column("zl","zl","资料",9).style("width:60px;").width("15%"))
+                .addColumn(new Column("kpfs","kpfs","考评方式",10).style("width:60px;").width("20%"))
+                .addColumn(new Column("fs","fs","分数",11).style("width:30px;").width("10%"))
+                .addColumn(new Column("qrkp","qrkp","确认考评",12).style("width:60px;").width("10%"));
 
+        String jsp = pageService.generateBody(table);
+
+        System.out.println(jsp);
     }
 
     @Test
