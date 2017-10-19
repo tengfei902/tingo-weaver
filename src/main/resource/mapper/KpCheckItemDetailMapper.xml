@@ -136,4 +136,12 @@
       VERSION = #{version,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
+  <select id="selectByItemId" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_DETAIL
+    where item_id = #{itemId,jdbcType=DECIMAL}
+  </select>
+
 </mapper>

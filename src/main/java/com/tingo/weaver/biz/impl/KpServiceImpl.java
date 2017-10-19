@@ -1,21 +1,21 @@
 package com.tingo.weaver.biz.impl;
 
+import com.tingo.weaver.biz.HrmService;
 import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.dao.HrmResourceDao;
+import com.tingo.weaver.dao.KpCheckItemDao;
+import com.tingo.weaver.dao.KpCheckItemDetailDao;
 import com.tingo.weaver.dao.QingdanDao;
-import com.tingo.weaver.model.gson.KpZcGson;
-import com.tingo.weaver.model.gson.QingdanDetailGson;
-import com.tingo.weaver.model.gson.QingdanGson;
-import com.tingo.weaver.model.gson.ZcListRequest;
-import com.tingo.weaver.model.po.HrmResource;
-import com.tingo.weaver.model.po.KpCheckItemPub;
-import com.tingo.weaver.model.po.Qingdan;
+import com.tingo.weaver.model.gson.*;
+import com.tingo.weaver.model.po.*;
+import com.tingo.weaver.utils.enums.Jd;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,9 +25,20 @@ import java.util.List;
 public class KpServiceImpl implements KpService {
     @Autowired
     private QingdanDao qingdanDao;
-
     @Autowired
     private HrmResourceDao hrmResourceDao;
+    @Autowired
+    private KpCheckItemDao kpCheckItemDao;
+    @Autowired
+    private KpCheckItemDetailDao kpCheckItemDetailDao;
+    @Autowired
+    private HrmService hrmService;
+
+    @Override
+    public QingdanGson selectQdById(Integer id) {
+        Qingdan qingdan = qingdanDao.selectByPrimaryKey(new BigDecimal(id));
+        return new QingdanGson(qingdan.getId(),qingdan.getQingdanmc());
+    }
 
     @Override
     public List<QingdanGson> selectQdList(Integer jd) {
@@ -55,5 +66,59 @@ public class KpServiceImpl implements KpService {
 //        kpCheckItemPub.setQdId();
 //        List<KpCheckItemPub> items = kpCheckItemPupDao.selectByPrimaryKey()
         return null;
+    }
+
+    @Override
+    public List<CheckItemGson> getCheckItem(Long qdId) {
+
+        List<KpCheckItem> items = kpCheckItemDao.selectByQdId(new BigDecimal(qdId));
+        List<CheckItemGson> list = new ArrayList<>();
+        items.stream().forEach(kpCheckItem -> list.add(convertItem2Gson(kpCheckItem)));
+
+        return list;
+    }
+
+    private CheckItemGson convertItem2Gson(KpCheckItem item) {
+        CheckItemGson checkItemGson = new CheckItemGson();
+        checkItemGson.setItemId(item.getId().longValue());
+        checkItemGson.setJd(Jd.parse(item.getJd().intValue()).getDesc());
+        checkItemGson.setKpfs(item.getKpfs());
+        checkItemGson.setKpnr(item.getKpnr());
+        List<String> debts = Arrays.asList(item.getPfbm().split(","));
+
+        List<BigDecimal> debtList = new ArrayList<>();
+        for(String debt:debts) {
+            if(StringUtils.isEmpty(debt)) {
+                continue;
+            }
+            debtList.add(new BigDecimal(debt));
+        }
+
+        List<String> debtNames = hrmService.getDebtName(debtList);
+        StringBuilder debtName = new StringBuilder();
+        debtNames.stream().forEach(s -> debtName.append(s));
+
+        checkItemGson.setPfbm(debtName.toString());
+
+        checkItemGson.setQdId(item.getQdId().longValue());
+        checkItemGson.setQd(item.getQd());
+
+        List<KpCheckItemDetail> details = kpCheckItemDetailDao.selectByItemId(item.getId());
+
+        List<CheckItemDetailGson> detailGsons = new ArrayList<>();
+
+        checkItemGson.setDetails(detailGsons);
+
+        for(KpCheckItemDetail detail:details) {
+
+            CheckItemDetailGson detailGson = new CheckItemDetailGson();
+            detailGson.setDetailId(detail.getId().longValue());
+            detailGson.setFs(detail.getFs());
+            detailGson.setPfbz(detail.getPfbz());
+            detailGson.setTkxz(detail.getTkxz());
+
+            detailGsons.add(detailGson);
+        }
+        return checkItemGson;
     }
 }

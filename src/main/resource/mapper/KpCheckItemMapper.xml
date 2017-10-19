@@ -6,8 +6,9 @@
     <result column="QD_ID" property="qdId" jdbcType="DECIMAL" />
     <result column="QD" property="qd" jdbcType="VARCHAR" />
     <result column="KPNR" property="kpnr" jdbcType="VARCHAR" />
-    <result column="KPFS" property="kpfs" jdbcType="DECIMAL" />
+    <result column="KPFS" property="kpfs" jdbcType="VARCHAR" />
     <result column="PFBM" property="pfbm" jdbcType="VARCHAR" />
+    <result column="TKXZ" property="tkxz" jdbcType="VARCHAR" />
     <result column="JD" property="jd" jdbcType="DECIMAL" />
     <result column="STATUS" property="status" jdbcType="DECIMAL" />
     <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
@@ -15,7 +16,7 @@
     <result column="VERSION" property="version" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, QD_ID, QD, KPNR, KPFS, PFBM, JD, `STATUS`, CREATE_TIME, UPDATE_TIME, VERSION
+    ID, QD_ID, QD, KPNR, KPFS, PFBM,TKXZ, JD, `STATUS`, CREATE_TIME, UPDATE_TIME, VERSION
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
     select 
@@ -33,7 +34,7 @@
       `STATUS`, CREATE_TIME, UPDATE_TIME, 
       VERSION)
     values (#{id,jdbcType=DECIMAL}, #{qdId,jdbcType=DECIMAL}, #{qd,jdbcType=VARCHAR}, 
-      #{kpnr,jdbcType=VARCHAR}, #{kpfs,jdbcType=DECIMAL}, #{pfbm,jdbcType=VARCHAR}, #{jd,jdbcType=DECIMAL}, 
+      #{kpnr,jdbcType=VARCHAR}, #{kpfs,jdbcType=VARCHAR}, #{pfbm,jdbcType=VARCHAR}, #{jd,jdbcType=DECIMAL},
       #{status,jdbcType=DECIMAL}, #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE}, 
       #{version,jdbcType=DECIMAL})
   </insert>
@@ -88,7 +89,7 @@
         #{kpnr,jdbcType=VARCHAR},
       </if>
       <if test="kpfs != null" >
-        #{kpfs,jdbcType=DECIMAL},
+        #{kpfs,jdbcType=VARCHAR},
       </if>
       <if test="pfbm != null" >
         #{pfbm,jdbcType=VARCHAR},
@@ -123,7 +124,7 @@
         KPNR = #{kpnr,jdbcType=VARCHAR},
       </if>
       <if test="kpfs != null" >
-        KPFS = #{kpfs,jdbcType=DECIMAL},
+        KPFS = #{kpfs,jdbcType=VARCHAR},
       </if>
       <if test="pfbm != null" >
         PFBM = #{pfbm,jdbcType=VARCHAR},
@@ -151,7 +152,7 @@
     set QD_ID = #{qdId,jdbcType=DECIMAL},
       QD = #{qd,jdbcType=VARCHAR},
       KPNR = #{kpnr,jdbcType=VARCHAR},
-      KPFS = #{kpfs,jdbcType=DECIMAL},
+      KPFS = #{kpfs,jdbcType=VARCHAR},
       PFBM = #{pfbm,jdbcType=VARCHAR},
       JD = #{jd,jdbcType=DECIMAL},
       `STATUS` = #{status,jdbcType=DECIMAL},
@@ -160,4 +161,12 @@
       VERSION = #{version,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
+  <select id="selectByQdId" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM
+    where qd_id = #{qdId,jdbcType=DECIMAL}
+    and status = 0
+  </select>
 </mapper>

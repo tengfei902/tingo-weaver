@@ -12,6 +12,8 @@ public class KpCheckItemDetail {
 
     private BigDecimal fs;
 
+    private String tkxz;
+
     private BigDecimal jd;
 
     private BigDecimal status;
@@ -92,5 +94,13 @@ public class KpCheckItemDetail {
 
     public void setVersion(BigDecimal version) {
         this.version = version;
+    }
+
+    public String getTkxz() {
+        return tkxz;
+    }
+
+    public void setTkxz(String tkxz) {
+        this.tkxz = tkxz;
     }
 }

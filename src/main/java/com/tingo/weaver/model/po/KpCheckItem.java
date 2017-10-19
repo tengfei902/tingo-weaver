@@ -12,7 +12,7 @@ public class KpCheckItem {
 
     private String kpnr;
 
-    private BigDecimal kpfs;
+    private String kpfs;
 
     private String pfbm;
 
@@ -58,11 +58,11 @@ public class KpCheckItem {
         this.kpnr = kpnr == null ? null : kpnr.trim();
     }
 
-    public BigDecimal getKpfs() {
+    public String getKpfs() {
         return kpfs;
     }
 
-    public void setKpfs(BigDecimal kpfs) {
+    public void setKpfs(String kpfs) {
         this.kpfs = kpfs;
     }
 

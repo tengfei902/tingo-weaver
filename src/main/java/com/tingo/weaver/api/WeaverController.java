@@ -1,6 +1,7 @@
 package com.tingo.weaver.api;
 
 import com.tingo.weaver.biz.KpService;
+import com.tingo.weaver.model.gson.CheckItemGson;
 import com.tingo.weaver.model.gson.QingdanGson;
 import com.tingo.weaver.model.gson.TableGson;
 import com.tingo.weaver.model.gson.ZcListRequest;
@@ -34,6 +35,23 @@ public class WeaverController {
         return new Gson().toJson(list);
     }
 
+    @RequestMapping(value = "/getQingdanById",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
+    public @ResponseBody String getQingdanById(Integer id) {
+        QingdanGson qingdan = kpService.selectQdById(id);
+        return new Gson().toJson(qingdan);
+    }
+
+    /**
+     * 考评项列表 itemList.jsp
+     * @param qdId
+     * @return
+     */
+    @RequestMapping(value = "/getCheckItem",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
+    public @ResponseBody String getCheckItem(Long qdId) {
+        List<CheckItemGson> list = kpService.getCheckItem(qdId);
+        return new Gson().toJson(list);
+    }
+
     @RequestMapping(value = "/getPageInfo",method = RequestMethod.GET)
     public @ResponseBody String getPageInfo(String pageName) {
         TableGson tableGson = new TableGson();
@@ -49,4 +67,5 @@ public class WeaverController {
     public @ResponseBody String getZcList(ZcListRequest zcRequest) {
         return null;
     }
+
 }
