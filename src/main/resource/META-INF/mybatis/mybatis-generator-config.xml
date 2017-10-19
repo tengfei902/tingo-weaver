@@ -43,9 +43,5 @@
 			   selectByExampleQueryId="false">
 		</table>
 		<!-- 正式生成之前需要删除 此事例 -->
-		<javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
-			<property name="forceBigDecimals" value="false"/>
-		</javaTypeResolver>
-
 	</context>
 </generatorConfiguration>
