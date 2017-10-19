@@ -11,6 +11,8 @@ public class Qingdan {
 
     private BigDecimal status;
 
+    private int jd;
+
     public Long getId() {
         return id;
     }
@@ -41,5 +43,13 @@ public class Qingdan {
 
     public void setStatus(BigDecimal status) {
         this.status = status;
+    }
+
+    public int getJd() {
+        return jd;
+    }
+
+    public void setJd(int jd) {
+        this.jd = jd;
     }
 }

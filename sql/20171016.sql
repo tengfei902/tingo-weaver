@@ -1,6 +1,8 @@
 alter table qingdan add status integer default 0 not null;
 comment on column qingdan.status is '0:使用中,1已停用';
 
+alter table qingdan add jd integer;
+
 create table kp_check_item
 (
   id INTEGER primary key not null,

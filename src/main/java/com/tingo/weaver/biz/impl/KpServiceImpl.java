@@ -4,6 +4,7 @@ import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.dao.HrmResourceDao;
 import com.tingo.weaver.dao.QingdanDao;
 import com.tingo.weaver.model.gson.KpZcGson;
+import com.tingo.weaver.model.gson.QingdanDetailGson;
 import com.tingo.weaver.model.gson.QingdanGson;
 import com.tingo.weaver.model.gson.ZcListRequest;
 import com.tingo.weaver.model.po.HrmResource;
@@ -29,11 +30,19 @@ public class KpServiceImpl implements KpService {
     private HrmResourceDao hrmResourceDao;
 
     @Override
-    public List<QingdanGson> selectQdList() {
+    public List<QingdanGson> selectQdList(Integer jd) {
         List<QingdanGson> list = new ArrayList<>();
-        List<Qingdan> qingdans = qingdanDao.selectAvailableList();
+        List<Qingdan> qingdans = qingdanDao.selectAvailableList(new BigDecimal(jd));
         qingdans.stream().forEach(qingdan -> list.add(new QingdanGson(qingdan.getId(),qingdan.getQingdanmc())));
         return list;
+    }
+
+    @Override
+    public List<QingdanDetailGson> selectQdDetail(Integer jd) {
+        List<QingdanGson> list = new ArrayList<>();
+        List<Qingdan> qingdans = qingdanDao.selectAvailableList(new BigDecimal(jd));
+
+        return null;
     }
 
     @Override

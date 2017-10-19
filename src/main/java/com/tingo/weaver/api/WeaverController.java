@@ -22,9 +22,15 @@ public class WeaverController {
     @Autowired
     private KpService kpService;
 
-    @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET)
-    public @ResponseBody String getQingdanList() {
-        List<QingdanGson> list = kpService.selectQdList();
+//    @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET)
+//    public @ResponseBody String getQdDetail(Integer jd) {
+//        List<QingdanGson> list = kpService.selectQdList(jd);
+//        return new Gson().toJson(list);
+//    }
+
+    @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
+    public @ResponseBody String getQingdanList(Integer jd) {
+        List<QingdanGson> list = kpService.selectQdList(jd);
         return new Gson().toJson(list);
     }
 

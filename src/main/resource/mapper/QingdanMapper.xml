@@ -6,9 +6,10 @@
     <result column="QINGDANMC" property="qingdanmc" jdbcType="VARCHAR" />
     <result column="QZ" property="qz" jdbcType="DECIMAL" />
     <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="JD" property="jd" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, QINGDANMC, QZ, `STATUS`
+    ID, QINGDANMC, QZ, STATUS,JD
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
     select
@@ -84,6 +85,8 @@
     select
     <include refid="Base_Column_List" />
     from QINGDAN
-    where status = 0 order by id
+    where status = 0
+    and jd = #{jd,jdbcType=DECIMAL}
+    order by id desc
   </select>
 </mapper>
