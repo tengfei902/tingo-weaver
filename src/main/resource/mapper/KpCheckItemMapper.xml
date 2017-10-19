@@ -8,7 +8,6 @@
     <result column="KPNR" property="kpnr" jdbcType="VARCHAR" />
     <result column="KPFS" property="kpfs" jdbcType="VARCHAR" />
     <result column="PFBM" property="pfbm" jdbcType="VARCHAR" />
-    <result column="TKXZ" property="tkxz" jdbcType="VARCHAR" />
     <result column="JD" property="jd" jdbcType="DECIMAL" />
     <result column="STATUS" property="status" jdbcType="DECIMAL" />
     <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
@@ -16,7 +15,7 @@
     <result column="VERSION" property="version" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, QD_ID, QD, KPNR, KPFS, PFBM,TKXZ, JD, `STATUS`, CREATE_TIME, UPDATE_TIME, VERSION
+    ID, QD_ID, QD, KPNR, KPFS, PFBM, JD, STATUS, CREATE_TIME, UPDATE_TIME, VERSION
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
     select 
