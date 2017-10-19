@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tingo.weaver.dao.HrmDepartmentDao">
+  <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.HrmDepartment">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="DEPARTMENTMARK" jdbcType="VARCHAR" property="departmentmark" />
+    <result column="DEPARTMENTNAME" jdbcType="VARCHAR" property="departmentname" />
+    <result column="SUBCOMPANYID1" jdbcType="DECIMAL" property="subcompanyid1" />
+    <result column="SUPDEPID" jdbcType="DECIMAL" property="supdepid" />
+    <result column="ALLSUPDEPID" jdbcType="VARCHAR" property="allsupdepid" />
+    <result column="SHOWORDER" jdbcType="DECIMAL" property="showorder" />
+    <result column="CANCELED" jdbcType="CHAR" property="canceled" />
+    <result column="DEPARTMENTCODE" jdbcType="VARCHAR" property="departmentcode" />
+    <result column="COADJUTANT" jdbcType="DECIMAL" property="coadjutant" />
+    <result column="ZZJGBMFZR" jdbcType="VARCHAR" property="zzjgbmfzr" />
+    <result column="ZZJGBMFGLD" jdbcType="VARCHAR" property="zzjgbmfgld" />
+    <result column="JZGLBMFZR" jdbcType="VARCHAR" property="jzglbmfzr" />
+    <result column="JZGLBMFGLD" jdbcType="VARCHAR" property="jzglbmfgld" />
+    <result column="BMFZR" jdbcType="VARCHAR" property="bmfzr" />
+    <result column="BMFGLD" jdbcType="VARCHAR" property="bmfgld" />
+    <result column="BUDGETATUOMOVEORDER" jdbcType="DECIMAL" property="budgetatuomoveorder" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, DEPARTMENTMARK, DEPARTMENTNAME, SUBCOMPANYID1, SUPDEPID, ALLSUPDEPID, SHOWORDER, 
+    CANCELED, DEPARTMENTCODE, COADJUTANT, ZZJGBMFZR, ZZJGBMFGLD, JZGLBMFZR, JZGLBMFGLD, 
+    BMFZR, BMFGLD, BUDGETATUOMOVEORDER
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from HRMDEPARTMENT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from HRMDEPARTMENT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.tingo.weaver.model.po.HrmDepartment">
+    insert into HRMDEPARTMENT (ID, DEPARTMENTMARK, DEPARTMENTNAME, 
+      SUBCOMPANYID1, SUPDEPID, ALLSUPDEPID, 
+      SHOWORDER, CANCELED, DEPARTMENTCODE, 
+      COADJUTANT, ZZJGBMFZR, ZZJGBMFGLD, 
+      JZGLBMFZR, JZGLBMFGLD, BMFZR, 
+      BMFGLD, BUDGETATUOMOVEORDER)
+    values (#{id,jdbcType=DECIMAL}, #{departmentmark,jdbcType=VARCHAR}, #{departmentname,jdbcType=VARCHAR}, 
+      #{subcompanyid1,jdbcType=DECIMAL}, #{supdepid,jdbcType=DECIMAL}, #{allsupdepid,jdbcType=VARCHAR}, 
+      #{showorder,jdbcType=DECIMAL}, #{canceled,jdbcType=CHAR}, #{departmentcode,jdbcType=VARCHAR}, 
+      #{coadjutant,jdbcType=DECIMAL}, #{zzjgbmfzr,jdbcType=VARCHAR}, #{zzjgbmfgld,jdbcType=VARCHAR}, 
+      #{jzglbmfzr,jdbcType=VARCHAR}, #{jzglbmfgld,jdbcType=VARCHAR}, #{bmfzr,jdbcType=VARCHAR}, 
+      #{bmfgld,jdbcType=VARCHAR}, #{budgetatuomoveorder,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.HrmDepartment">
+    insert into HRMDEPARTMENT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="departmentmark != null">
+        DEPARTMENTMARK,
+      </if>
+      <if test="departmentname != null">
+        DEPARTMENTNAME,
+      </if>
+      <if test="subcompanyid1 != null">
+        SUBCOMPANYID1,
+      </if>
+      <if test="supdepid != null">
+        SUPDEPID,
+      </if>
+      <if test="allsupdepid != null">
+        ALLSUPDEPID,
+      </if>
+      <if test="showorder != null">
+        SHOWORDER,
+      </if>
+      <if test="canceled != null">
+        CANCELED,
+      </if>
+      <if test="departmentcode != null">
+        DEPARTMENTCODE,
+      </if>
+      <if test="coadjutant != null">
+        COADJUTANT,
+      </if>
+      <if test="zzjgbmfzr != null">
+        ZZJGBMFZR,
+      </if>
+      <if test="zzjgbmfgld != null">
+        ZZJGBMFGLD,
+      </if>
+      <if test="jzglbmfzr != null">
+        JZGLBMFZR,
+      </if>
+      <if test="jzglbmfgld != null">
+        JZGLBMFGLD,
+      </if>
+      <if test="bmfzr != null">
+        BMFZR,
+      </if>
+      <if test="bmfgld != null">
+        BMFGLD,
+      </if>
+      <if test="budgetatuomoveorder != null">
+        BUDGETATUOMOVEORDER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="departmentmark != null">
+        #{departmentmark,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentname != null">
+        #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanyid1 != null">
+        #{subcompanyid1,jdbcType=DECIMAL},
+      </if>
+      <if test="supdepid != null">
+        #{supdepid,jdbcType=DECIMAL},
+      </if>
+      <if test="allsupdepid != null">
+        #{allsupdepid,jdbcType=VARCHAR},
+      </if>
+      <if test="showorder != null">
+        #{showorder,jdbcType=DECIMAL},
+      </if>
+      <if test="canceled != null">
+        #{canceled,jdbcType=CHAR},
+      </if>
+      <if test="departmentcode != null">
+        #{departmentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="coadjutant != null">
+        #{coadjutant,jdbcType=DECIMAL},
+      </if>
+      <if test="zzjgbmfzr != null">
+        #{zzjgbmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="zzjgbmfgld != null">
+        #{zzjgbmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="jzglbmfzr != null">
+        #{jzglbmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="jzglbmfgld != null">
+        #{jzglbmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="bmfzr != null">
+        #{bmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="bmfgld != null">
+        #{bmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="budgetatuomoveorder != null">
+        #{budgetatuomoveorder,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tingo.weaver.model.po.HrmDepartment">
+    update HRMDEPARTMENT
+    <set>
+      <if test="departmentmark != null">
+        DEPARTMENTMARK = #{departmentmark,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentname != null">
+        DEPARTMENTNAME = #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanyid1 != null">
+        SUBCOMPANYID1 = #{subcompanyid1,jdbcType=DECIMAL},
+      </if>
+      <if test="supdepid != null">
+        SUPDEPID = #{supdepid,jdbcType=DECIMAL},
+      </if>
+      <if test="allsupdepid != null">
+        ALLSUPDEPID = #{allsupdepid,jdbcType=VARCHAR},
+      </if>
+      <if test="showorder != null">
+        SHOWORDER = #{showorder,jdbcType=DECIMAL},
+      </if>
+      <if test="canceled != null">
+        CANCELED = #{canceled,jdbcType=CHAR},
+      </if>
+      <if test="departmentcode != null">
+        DEPARTMENTCODE = #{departmentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="coadjutant != null">
+        COADJUTANT = #{coadjutant,jdbcType=DECIMAL},
+      </if>
+      <if test="zzjgbmfzr != null">
+        ZZJGBMFZR = #{zzjgbmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="zzjgbmfgld != null">
+        ZZJGBMFGLD = #{zzjgbmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="jzglbmfzr != null">
+        JZGLBMFZR = #{jzglbmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="jzglbmfgld != null">
+        JZGLBMFGLD = #{jzglbmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="bmfzr != null">
+        BMFZR = #{bmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="bmfgld != null">
+        BMFGLD = #{bmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="budgetatuomoveorder != null">
+        BUDGETATUOMOVEORDER = #{budgetatuomoveorder,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.HrmDepartment">
+    update HRMDEPARTMENT
+    set DEPARTMENTMARK = #{departmentmark,jdbcType=VARCHAR},
+      DEPARTMENTNAME = #{departmentname,jdbcType=VARCHAR},
+      SUBCOMPANYID1 = #{subcompanyid1,jdbcType=DECIMAL},
+      SUPDEPID = #{supdepid,jdbcType=DECIMAL},
+      ALLSUPDEPID = #{allsupdepid,jdbcType=VARCHAR},
+      SHOWORDER = #{showorder,jdbcType=DECIMAL},
+      CANCELED = #{canceled,jdbcType=CHAR},
+      DEPARTMENTCODE = #{departmentcode,jdbcType=VARCHAR},
+      COADJUTANT = #{coadjutant,jdbcType=DECIMAL},
+      ZZJGBMFZR = #{zzjgbmfzr,jdbcType=VARCHAR},
+      ZZJGBMFGLD = #{zzjgbmfgld,jdbcType=VARCHAR},
+      JZGLBMFZR = #{jzglbmfzr,jdbcType=VARCHAR},
+      JZGLBMFGLD = #{jzglbmfgld,jdbcType=VARCHAR},
+      BMFZR = #{bmfzr,jdbcType=VARCHAR},
+      BMFGLD = #{bmfgld,jdbcType=VARCHAR},
+      BUDGETATUOMOVEORDER = #{budgetatuomoveorder,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.HrmDepartment">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="DEPARTMENTMARK" jdbcType="VARCHAR" property="departmentmark" />
+    <result column="DEPARTMENTNAME" jdbcType="VARCHAR" property="departmentname" />
+    <result column="SUBCOMPANYID1" jdbcType="DECIMAL" property="subcompanyid1" />
+    <result column="SUPDEPID" jdbcType="DECIMAL" property="supdepid" />
+    <result column="ALLSUPDEPID" jdbcType="VARCHAR" property="allsupdepid" />
+    <result column="SHOWORDER" jdbcType="DECIMAL" property="showorder" />
+    <result column="CANCELED" jdbcType="CHAR" property="canceled" />
+    <result column="DEPARTMENTCODE" jdbcType="VARCHAR" property="departmentcode" />
+    <result column="COADJUTANT" jdbcType="DECIMAL" property="coadjutant" />
+    <result column="ZZJGBMFZR" jdbcType="VARCHAR" property="zzjgbmfzr" />
+    <result column="ZZJGBMFGLD" jdbcType="VARCHAR" property="zzjgbmfgld" />
+    <result column="JZGLBMFZR" jdbcType="VARCHAR" property="jzglbmfzr" />
+    <result column="JZGLBMFGLD" jdbcType="VARCHAR" property="jzglbmfgld" />
+    <result column="BMFZR" jdbcType="VARCHAR" property="bmfzr" />
+    <result column="BMFGLD" jdbcType="VARCHAR" property="bmfgld" />
+    <result column="FID" jdbcType="VARCHAR" property="fid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, DEPARTMENTMARK, DEPARTMENTNAME, SUBCOMPANYID1, SUPDEPID, ALLSUPDEPID, SHOWORDER, 
+    CANCELED, DEPARTMENTCODE, COADJUTANT, ZZJGBMFZR, ZZJGBMFGLD, JZGLBMFZR, JZGLBMFGLD, 
+    BMFZR, BMFGLD, FID
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from HRMDEPARTMENT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from HRMDEPARTMENT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.tingo.weaver.model.po.HrmDepartment">
+    insert into HRMDEPARTMENT (ID, DEPARTMENTMARK, DEPARTMENTNAME, 
+      SUBCOMPANYID1, SUPDEPID, ALLSUPDEPID, 
+      SHOWORDER, CANCELED, DEPARTMENTCODE, 
+      COADJUTANT, ZZJGBMFZR, ZZJGBMFGLD, 
+      JZGLBMFZR, JZGLBMFGLD, BMFZR, 
+      BMFGLD, FID)
+    values (#{id,jdbcType=DECIMAL}, #{departmentmark,jdbcType=VARCHAR}, #{departmentname,jdbcType=VARCHAR}, 
+      #{subcompanyid1,jdbcType=DECIMAL}, #{supdepid,jdbcType=DECIMAL}, #{allsupdepid,jdbcType=VARCHAR}, 
+      #{showorder,jdbcType=DECIMAL}, #{canceled,jdbcType=CHAR}, #{departmentcode,jdbcType=VARCHAR}, 
+      #{coadjutant,jdbcType=DECIMAL}, #{zzjgbmfzr,jdbcType=VARCHAR}, #{zzjgbmfgld,jdbcType=VARCHAR}, 
+      #{jzglbmfzr,jdbcType=VARCHAR}, #{jzglbmfgld,jdbcType=VARCHAR}, #{bmfzr,jdbcType=VARCHAR}, 
+      #{bmfgld,jdbcType=VARCHAR}, #{fid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.HrmDepartment">
+    insert into HRMDEPARTMENT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="departmentmark != null">
+        DEPARTMENTMARK,
+      </if>
+      <if test="departmentname != null">
+        DEPARTMENTNAME,
+      </if>
+      <if test="subcompanyid1 != null">
+        SUBCOMPANYID1,
+      </if>
+      <if test="supdepid != null">
+        SUPDEPID,
+      </if>
+      <if test="allsupdepid != null">
+        ALLSUPDEPID,
+      </if>
+      <if test="showorder != null">
+        SHOWORDER,
+      </if>
+      <if test="canceled != null">
+        CANCELED,
+      </if>
+      <if test="departmentcode != null">
+        DEPARTMENTCODE,
+      </if>
+      <if test="coadjutant != null">
+        COADJUTANT,
+      </if>
+      <if test="zzjgbmfzr != null">
+        ZZJGBMFZR,
+      </if>
+      <if test="zzjgbmfgld != null">
+        ZZJGBMFGLD,
+      </if>
+      <if test="jzglbmfzr != null">
+        JZGLBMFZR,
+      </if>
+      <if test="jzglbmfgld != null">
+        JZGLBMFGLD,
+      </if>
+      <if test="bmfzr != null">
+        BMFZR,
+      </if>
+      <if test="bmfgld != null">
+        BMFGLD,
+      </if>
+      <if test="fid != null">
+        FID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="departmentmark != null">
+        #{departmentmark,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentname != null">
+        #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanyid1 != null">
+        #{subcompanyid1,jdbcType=DECIMAL},
+      </if>
+      <if test="supdepid != null">
+        #{supdepid,jdbcType=DECIMAL},
+      </if>
+      <if test="allsupdepid != null">
+        #{allsupdepid,jdbcType=VARCHAR},
+      </if>
+      <if test="showorder != null">
+        #{showorder,jdbcType=DECIMAL},
+      </if>
+      <if test="canceled != null">
+        #{canceled,jdbcType=CHAR},
+      </if>
+      <if test="departmentcode != null">
+        #{departmentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="coadjutant != null">
+        #{coadjutant,jdbcType=DECIMAL},
+      </if>
+      <if test="zzjgbmfzr != null">
+        #{zzjgbmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="zzjgbmfgld != null">
+        #{zzjgbmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="jzglbmfzr != null">
+        #{jzglbmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="jzglbmfgld != null">
+        #{jzglbmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="bmfzr != null">
+        #{bmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="bmfgld != null">
+        #{bmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="fid != null">
+        #{fid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tingo.weaver.model.po.HrmDepartment">
+    update HRMDEPARTMENT
+    <set>
+      <if test="departmentmark != null">
+        DEPARTMENTMARK = #{departmentmark,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentname != null">
+        DEPARTMENTNAME = #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanyid1 != null">
+        SUBCOMPANYID1 = #{subcompanyid1,jdbcType=DECIMAL},
+      </if>
+      <if test="supdepid != null">
+        SUPDEPID = #{supdepid,jdbcType=DECIMAL},
+      </if>
+      <if test="allsupdepid != null">
+        ALLSUPDEPID = #{allsupdepid,jdbcType=VARCHAR},
+      </if>
+      <if test="showorder != null">
+        SHOWORDER = #{showorder,jdbcType=DECIMAL},
+      </if>
+      <if test="canceled != null">
+        CANCELED = #{canceled,jdbcType=CHAR},
+      </if>
+      <if test="departmentcode != null">
+        DEPARTMENTCODE = #{departmentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="coadjutant != null">
+        COADJUTANT = #{coadjutant,jdbcType=DECIMAL},
+      </if>
+      <if test="zzjgbmfzr != null">
+        ZZJGBMFZR = #{zzjgbmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="zzjgbmfgld != null">
+        ZZJGBMFGLD = #{zzjgbmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="jzglbmfzr != null">
+        JZGLBMFZR = #{jzglbmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="jzglbmfgld != null">
+        JZGLBMFGLD = #{jzglbmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="bmfzr != null">
+        BMFZR = #{bmfzr,jdbcType=VARCHAR},
+      </if>
+      <if test="bmfgld != null">
+        BMFGLD = #{bmfgld,jdbcType=VARCHAR},
+      </if>
+      <if test="fid != null">
+        FID = #{fid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.HrmDepartment">
+    update HRMDEPARTMENT
+    set DEPARTMENTMARK = #{departmentmark,jdbcType=VARCHAR},
+      DEPARTMENTNAME = #{departmentname,jdbcType=VARCHAR},
+      SUBCOMPANYID1 = #{subcompanyid1,jdbcType=DECIMAL},
+      SUPDEPID = #{supdepid,jdbcType=DECIMAL},
+      ALLSUPDEPID = #{allsupdepid,jdbcType=VARCHAR},
+      SHOWORDER = #{showorder,jdbcType=DECIMAL},
+      CANCELED = #{canceled,jdbcType=CHAR},
+      DEPARTMENTCODE = #{departmentcode,jdbcType=VARCHAR},
+      COADJUTANT = #{coadjutant,jdbcType=DECIMAL},
+      ZZJGBMFZR = #{zzjgbmfzr,jdbcType=VARCHAR},
+      ZZJGBMFGLD = #{zzjgbmfgld,jdbcType=VARCHAR},
+      JZGLBMFZR = #{jzglbmfzr,jdbcType=VARCHAR},
+      JZGLBMFGLD = #{jzglbmfgld,jdbcType=VARCHAR},
+      BMFZR = #{bmfzr,jdbcType=VARCHAR},
+      BMFGLD = #{bmfgld,jdbcType=VARCHAR},
+      FID = #{fid,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

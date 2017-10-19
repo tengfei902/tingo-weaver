@@ -37,7 +37,7 @@
 		</javaClientGenerator>
 
 		<!-- 正式生成之前需要删除 此事例 -->
-		<table tableName="kp_check_item_detail_pub_pf" domainObjectName="KpCheckItemDetailPubPf"
+		<table tableName="hrmdepartment" domainObjectName="HrmDepartment"
 			   enableCountByExample="false" enableUpdateByExample="false"
 			   enableDeleteByExample="false" enableSelectByExample="false"
 			   selectByExampleQueryId="false">
