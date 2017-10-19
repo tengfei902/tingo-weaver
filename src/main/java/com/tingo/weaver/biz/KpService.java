@@ -13,4 +13,5 @@ public interface KpService {
     List<QingdanDetailGson> selectQdDetail(Integer jd);
     List<KpZcGson> getKpZcGson(ZcListRequest zcListRequest);
     List<CheckItemGson> getCheckItem(Long qdId);
+    void saveCheckItem(CheckItemGson itemGson);
 }

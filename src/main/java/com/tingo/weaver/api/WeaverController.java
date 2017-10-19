@@ -7,12 +7,16 @@ import com.tingo.weaver.model.gson.TableGson;
 import com.tingo.weaver.model.gson.ZcListRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 
+import javax.ws.rs.FormParam;
+import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by user on 17/9/27.
@@ -52,7 +56,15 @@ public class WeaverController {
         return new Gson().toJson(list);
     }
 
-    @RequestMapping(value = "/getPageInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/saveCheckItem",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
+    public @ResponseBody String saveCheckItem(@RequestBody String itemStr) throws Exception {
+        itemStr = URLDecoder.decode(itemStr,"utf-8").replace("=","");
+        CheckItemGson checkItemGson = new Gson().fromJson(itemStr,CheckItemGson.class);
+        kpService.saveCheckItem(checkItemGson);
+        return "SUCCESS";
+    }
+
+    @RequestMapping(value = "/getPageInfo",method = RequestMethod.POST)
     public @ResponseBody String getPageInfo(String pageName) {
         TableGson tableGson = new TableGson();
         tableGson.setTitle("action test");

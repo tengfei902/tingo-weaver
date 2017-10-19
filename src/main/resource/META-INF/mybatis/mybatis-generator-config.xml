@@ -37,12 +37,15 @@
 		</javaClientGenerator>
 
 		<!-- 正式生成之前需要删除 此事例 -->
-		<table tableName="hrmdepartment" domainObjectName="HrmDepartment"
+		<table tableName="kp_check_item" domainObjectName="KpCheckItem"
 			   enableCountByExample="false" enableUpdateByExample="false"
 			   enableDeleteByExample="false" enableSelectByExample="false"
 			   selectByExampleQueryId="false">
 		</table>
 		<!-- 正式生成之前需要删除 此事例 -->
+		<javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+			<property name="forceBigDecimals" value="false"/>
+		</javaTypeResolver>
 
 	</context>
 </generatorConfiguration>

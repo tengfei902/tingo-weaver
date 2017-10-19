@@ -1,5 +1,6 @@
 package com.tingo.weaver.biz.impl;
 
+import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.biz.HrmService;
 import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.dao.HrmResourceDao;
@@ -8,6 +9,7 @@ import com.tingo.weaver.dao.KpCheckItemDetailDao;
 import com.tingo.weaver.dao.QingdanDao;
 import com.tingo.weaver.model.gson.*;
 import com.tingo.weaver.model.po.*;
+import com.tingo.weaver.utils.Utils;
 import com.tingo.weaver.utils.enums.Jd;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Administrator on 2017/10/18.
@@ -33,6 +36,8 @@ public class KpServiceImpl implements KpService {
     private KpCheckItemDetailDao kpCheckItemDetailDao;
     @Autowired
     private HrmService hrmService;
+    @Autowired
+    private CheckItemService checkItemService;
 
     @Override
     public QingdanGson selectQdById(Integer id) {
@@ -120,5 +125,39 @@ public class KpServiceImpl implements KpService {
             detailGsons.add(detailGson);
         }
         return checkItemGson;
+    }
+
+    @Override
+    public void saveCheckItem(CheckItemGson itemGson) {
+        KpCheckItem item = new KpCheckItem();
+        item.setPfbm(itemGson.getPfbm());
+        item.setKpnr(itemGson.getKpnr());
+        item.setJd(new BigDecimal(Utils.getCurrentSeason()));
+        item.setKpfs(itemGson.getKpfs());
+
+        item.setQdId(new BigDecimal(itemGson.getQdId()));
+
+        Qingdan qingdan = qingdanDao.selectByPrimaryKey(item.getQdId());
+        item.setQd(qingdan.getQingdanmc());
+
+        if(itemGson.getItemId()!= null) {
+            item.setId(new BigDecimal(itemGson.getItemId()));
+        }
+
+        List<KpCheckItemDetail> details = new ArrayList<>();
+
+        for(CheckItemDetailGson detailGson: itemGson.getDetails()) {
+            KpCheckItemDetail detail = new KpCheckItemDetail();
+            detail.setJd(new BigDecimal(Utils.getCurrentSeason()));
+            detail.setPfbz(detailGson.getPfbz());
+            detail.setFs(detailGson.getFs());
+            detail.setTkxz(detailGson.getTkxz());
+            detail.setId(detailGson.getDetailId() == null?null:new BigDecimal(detailGson.getDetailId()));
+            if(itemGson.getItemId()!= null) {
+                detail.setItemId(new BigDecimal(itemGson.getItemId()));
+            }
+        }
+
+        checkItemService.saveCheckItem(item,details);
     }
 }

@@ -1,5 +1,7 @@
 package com.tingo.weaver.utils;
 
+import java.util.Calendar;
+
 /**
  * Created by user on 17/10/16.
  */
@@ -12,5 +14,10 @@ public class Utils {
             obj[i] = strArray[i];
         }
         return obj;
+    }
+
+    public static int getCurrentSeason() {
+        Calendar now = Calendar.getInstance();
+        return ((now.get(Calendar.MONTH)+1)/3)+1;
     }
 }

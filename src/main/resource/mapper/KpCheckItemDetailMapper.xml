@@ -46,6 +46,9 @@
       <if test="pfbz != null" >
         PFBZ,
       </if>
+      <if test="tkxz != null" >
+        TKXZ,
+      </if>
       <if test="fs != null" >
         FS,
       </if>
@@ -74,6 +77,9 @@
       </if>
       <if test="pfbz != null" >
         #{pfbz,jdbcType=VARCHAR},
+      </if>
+      <if test="tkxz != null" >
+        #{tkxz,jdbcType=VARCHAR},
       </if>
       <if test="fs != null" >
         #{fs,jdbcType=DECIMAL},
@@ -106,6 +112,9 @@
       </if>
       <if test="fs != null" >
         FS = #{fs,jdbcType=DECIMAL},
+      </if>
+      <if test="tkxz != null" >
+        TKXZ = #{tkxz,jdbcType=VARCHAR},
       </if>
       <if test="jd != null" >
         JD = #{jd,jdbcType=DECIMAL},
