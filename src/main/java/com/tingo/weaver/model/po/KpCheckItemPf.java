@@ -3,10 +3,12 @@ package com.tingo.weaver.model.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class KpCheckItemPubPf {
+public class KpCheckItemPf {
     private BigDecimal id;
 
-    private BigDecimal pubId;
+    private BigDecimal itemId;
+
+    private BigDecimal zpId;
 
     private BigDecimal orgId;
 
@@ -18,13 +20,13 @@ public class KpCheckItemPubPf {
 
     private BigDecimal jd;
 
-    private BigDecimal type;
-
     private Date createTime;
 
     private Date updateTime;
 
     private BigDecimal version;
+
+    private BigDecimal toOrgId;
 
     public BigDecimal getId() {
         return id;
@@ -34,12 +36,20 @@ public class KpCheckItemPubPf {
         this.id = id;
     }
 
-    public BigDecimal getPubId() {
-        return pubId;
+    public BigDecimal getItemId() {
+        return itemId;
     }
 
-    public void setPubId(BigDecimal pubId) {
-        this.pubId = pubId;
+    public void setItemId(BigDecimal itemId) {
+        this.itemId = itemId;
+    }
+
+    public BigDecimal getZpId() {
+        return zpId;
+    }
+
+    public void setZpId(BigDecimal zpId) {
+        this.zpId = zpId;
     }
 
     public BigDecimal getOrgId() {
@@ -82,14 +92,6 @@ public class KpCheckItemPubPf {
         this.jd = jd;
     }
 
-    public BigDecimal getType() {
-        return type;
-    }
-
-    public void setType(BigDecimal type) {
-        this.type = type;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -112,5 +114,13 @@ public class KpCheckItemPubPf {
 
     public void setVersion(BigDecimal version) {
         this.version = version;
+    }
+
+    public BigDecimal getToOrgId() {
+        return toOrgId;
+    }
+
+    public void setToOrgId(BigDecimal toOrgId) {
+        this.toOrgId = toOrgId;
     }
 }

@@ -11,6 +11,7 @@ import com.tingo.weaver.model.gson.*;
 import com.tingo.weaver.model.po.*;
 import com.tingo.weaver.utils.Utils;
 import com.tingo.weaver.utils.enums.Jd;
+import com.tingo.weaver.utils.enums.PfType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,9 @@ public class KpServiceImpl implements KpService {
     @Override
     public QingdanGson selectQdById(Integer id) {
         Qingdan qingdan = qingdanDao.selectByPrimaryKey(Long.valueOf(id));
+        if(Objects.isNull(qingdan)) {
+            return new QingdanGson();
+        }
         return new QingdanGson(qingdan.getId(),qingdan.getQingdanmc());
     }
 
@@ -76,7 +80,7 @@ public class KpServiceImpl implements KpService {
     @Override
     public List<CheckItemGson> getCheckItem(Long qdId) {
 
-        List<KpCheckItem> items = kpCheckItemDao.selectByQdId(new BigDecimal(qdId));
+        List<KpCheckItem> items = kpCheckItemDao.selectByQdId(qdId);
         List<CheckItemGson> list = new ArrayList<>();
         items.stream().forEach(kpCheckItem -> list.add(convertItem2Gson(kpCheckItem)));
 
@@ -169,5 +173,12 @@ public class KpServiceImpl implements KpService {
         }
 
         checkItemService.saveCheckItem(item,details);
+    }
+
+    @Override
+    public void doPublish(Long userId, List<String> qdIds, Integer kpMonth, List<String> companyIds) {
+        qdIds.stream().forEach(s -> {
+            checkItemService.publishItem(s,kpMonth,companyIds);
+        });
     }
 }

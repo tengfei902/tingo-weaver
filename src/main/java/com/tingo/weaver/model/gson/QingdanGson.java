@@ -8,6 +8,10 @@ public class QingdanGson {
     private Long id;
     private String qingdanmc;
 
+    public QingdanGson() {
+
+    }
+
     public QingdanGson(Long id ,String qingdanmc) {
         this.id = id;
         this.qingdanmc = qingdanmc;

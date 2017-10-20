@@ -15,4 +15,5 @@ public interface KpService {
     List<CheckItemGson> getCheckItem(Long qdId);
     CheckItemGson getCheckItemByItemId(Long itemId);
     void saveCheckItem(CheckItemGson itemGson);
+    void doPublish(Long userId,List<String> qdIds,Integer kpMonth,List<String> companyIds);
 }

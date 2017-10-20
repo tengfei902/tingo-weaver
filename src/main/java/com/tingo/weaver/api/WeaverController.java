@@ -1,5 +1,6 @@
 package com.tingo.weaver.api;
 
+import com.google.common.reflect.TypeToken;
 import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.model.gson.CheckItemGson;
 import com.tingo.weaver.model.gson.QingdanGson;
@@ -15,6 +16,7 @@ import com.google.gson.Gson;
 
 import javax.ws.rs.FormParam;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -84,6 +86,19 @@ public class WeaverController {
     @RequestMapping(value = "/zc/getZcList",method = RequestMethod.GET)
     public @ResponseBody String getZcList(ZcListRequest zcRequest) {
         return null;
+    }
+
+    @RequestMapping(value = "/doPublish",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
+    public @ResponseBody String doPublish(@RequestBody String str) throws Exception {
+        str = URLDecoder.decode(str,"utf-8").replace("=","");
+        Map<String,String> request = new Gson().fromJson(str,new TypeToken<Map<String,String>>(){}.getType());
+        Long userId = Long.parseLong(request.get("userId"));
+        List<String> qdIds = Arrays.asList(request.get("qdIds").split(","));
+        Integer kpMonth = Integer.parseInt(request.get("kpMonth"));
+        List<String> companyIds = Arrays.asList(request.get("companyIds").split(","));
+
+//        kpService.saveCheckItem(checkItemGson);
+        return "SUCCESS";
     }
 
 }

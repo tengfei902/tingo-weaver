@@ -150,7 +150,7 @@
     where ID = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="selectByQdId" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+  <select id="selectByQdId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
     <include refid="Base_Column_List" />
     from KP_CHECK_ITEM

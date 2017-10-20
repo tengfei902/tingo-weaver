@@ -14,6 +14,5 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:/META-INF/spring/app-bootstrap.xml"})
 @Rollback
-//extends AbstractTransactionalJUnit4SpringContextTests
-public class BaseTestCase  {
+public class BaseTestCase extends AbstractTransactionalJUnit4SpringContextTests {
 }
