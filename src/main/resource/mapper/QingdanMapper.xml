@@ -2,31 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tingo.weaver.dao.QingdanDao" >
   <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.Qingdan" >
-    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <id column="ID" property="id" jdbcType="BIGINT" />
     <result column="QINGDANMC" property="qingdanmc" jdbcType="VARCHAR" />
     <result column="QZ" property="qz" jdbcType="DECIMAL" />
-    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
     <result column="JD" property="jd" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     ID, QINGDANMC, QZ, STATUS,JD
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
     <include refid="Base_Column_List" />
     from QINGDAN
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
-    delete from QINGDAN
-    where ID = #{id,jdbcType=DECIMAL}
-  </delete>
-  <insert id="insert" parameterType="com.tingo.weaver.model.po.Qingdan" >
-    insert into QINGDAN (ID, QINGDANMC, QZ, 
-      `STATUS`)
-    values (#{id,jdbcType=DECIMAL}, #{qingdanmc,jdbcType=VARCHAR}, #{qz,jdbcType=DECIMAL}, 
-      #{status,jdbcType=DECIMAL})
-  </insert>
+
   <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.Qingdan" >
     insert into QINGDAN
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -45,7 +36,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=DECIMAL},
+        #{id,jdbcType=BIGINT},
       </if>
       <if test="qingdanmc != null" >
         #{qingdanmc,jdbcType=VARCHAR},
@@ -54,7 +45,7 @@
         #{qz,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=DECIMAL},
+        #{status,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -68,25 +59,25 @@
         QZ = #{qz,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        `STATUS` = #{status,jdbcType=DECIMAL},
+        STATUS = #{status,jdbcType=BIGINT},
       </if>
     </set>
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.Qingdan" >
     update QINGDAN
     set QINGDANMC = #{qingdanmc,jdbcType=VARCHAR},
       QZ = #{qz,jdbcType=DECIMAL},
-      `STATUS` = #{status,jdbcType=DECIMAL}
-    where ID = #{id,jdbcType=DECIMAL}
+      STATUS = #{status,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="selectAvailableList" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+  <select id="selectAvailableList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
     from QINGDAN
     where status = 0
-    and jd = #{jd,jdbcType=DECIMAL}
+    and jd = #{jd,jdbcType=INTEGER}
     order by id desc
   </select>
 </mapper>

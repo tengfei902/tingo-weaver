@@ -2,39 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tingo.weaver.dao.KpCheckItemDetailDao" >
   <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.KpCheckItemDetail" >
-    <id column="ID" property="id" jdbcType="DECIMAL" />
-    <result column="ITEM_ID" property="itemId" jdbcType="DECIMAL" />
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="ITEM_ID" property="itemId" jdbcType="BIGINT" />
     <result column="PFBZ" property="pfbz" jdbcType="VARCHAR" />
     <result column="FS" property="fs" jdbcType="DECIMAL" />
     <result column="TKXZ" property="tkxz" jdbcType="VARCHAR" />
-    <result column="JD" property="jd" jdbcType="DECIMAL" />
-    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="JD" property="jd" jdbcType="INTEGER" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
     <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
-    <result column="VERSION" property="version" jdbcType="DECIMAL" />
+    <result column="VERSION" property="version" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     ID, ITEM_ID, PFBZ, FS,TKXZ, JD, STATUS, CREATE_TIME, UPDATE_TIME, VERSION
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from KP_CHECK_ITEM_DETAIL
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from KP_CHECK_ITEM_DETAIL
-    where ID = #{id,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.tingo.weaver.model.po.KpCheckItemDetail" >
-    insert into KP_CHECK_ITEM_DETAIL (ID, ITEM_ID, PFBZ, 
-      FS, JD, `STATUS`, CREATE_TIME, 
-      UPDATE_TIME, VERSION)
-    values (#{id,jdbcType=DECIMAL}, #{itemId,jdbcType=DECIMAL}, #{pfbz,jdbcType=VARCHAR}, 
-      #{fs,jdbcType=DECIMAL}, #{jd,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, #{createTime,jdbcType=DATE}, 
-      #{updateTime,jdbcType=DATE}, #{version,jdbcType=DECIMAL})
-  </insert>
   <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.KpCheckItemDetail" >
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">
+      select KP_CHECK_ITEM_DETAIL_ID.NEXTVAL from dual
+    </selectKey>
+
     insert into KP_CHECK_ITEM_DETAIL
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -70,10 +66,10 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=DECIMAL},
+        #{id,jdbcType=BIGINT},
       </if>
       <if test="itemId != null" >
-        #{itemId,jdbcType=DECIMAL},
+        #{itemId,jdbcType=BIGINT},
       </if>
       <if test="pfbz != null" >
         #{pfbz,jdbcType=VARCHAR},
@@ -85,10 +81,10 @@
         #{fs,jdbcType=DECIMAL},
       </if>
       <if test="jd != null" >
-        #{jd,jdbcType=DECIMAL},
+        #{jd,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=DECIMAL},
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=DATE},
@@ -97,7 +93,7 @@
         #{updateTime,jdbcType=DATE},
       </if>
       <if test="version != null" >
-        #{version,jdbcType=DECIMAL},
+        #{version,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -105,7 +101,7 @@
     update KP_CHECK_ITEM_DETAIL
     <set >
       <if test="itemId != null" >
-        ITEM_ID = #{itemId,jdbcType=DECIMAL},
+        ITEM_ID = #{itemId,jdbcType=BIGINT},
       </if>
       <if test="pfbz != null" >
         PFBZ = #{pfbz,jdbcType=VARCHAR},
@@ -117,10 +113,10 @@
         TKXZ = #{tkxz,jdbcType=VARCHAR},
       </if>
       <if test="jd != null" >
-        JD = #{jd,jdbcType=DECIMAL},
+        JD = #{jd,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
-        `STATUS` = #{status,jdbcType=DECIMAL},
+        `STATUS` = #{status,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=DATE},
@@ -129,29 +125,17 @@
         UPDATE_TIME = #{updateTime,jdbcType=DATE},
       </if>
       <if test="version != null" >
-        VERSION = #{version,jdbcType=DECIMAL},
+        VERSION = #{version,jdbcType=INTEGER},
       </if>
     </set>
     where ID = #{id,jdbcType=DECIMAL}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.KpCheckItemDetail" >
-    update KP_CHECK_ITEM_DETAIL
-    set ITEM_ID = #{itemId,jdbcType=DECIMAL},
-      PFBZ = #{pfbz,jdbcType=VARCHAR},
-      FS = #{fs,jdbcType=DECIMAL},
-      JD = #{jd,jdbcType=DECIMAL},
-      `STATUS` = #{status,jdbcType=DECIMAL},
-      CREATE_TIME = #{createTime,jdbcType=DATE},
-      UPDATE_TIME = #{updateTime,jdbcType=DATE},
-      VERSION = #{version,jdbcType=DECIMAL}
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
 
-  <select id="selectByItemId" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+  <select id="selectByItemId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
     <include refid="Base_Column_List" />
     from KP_CHECK_ITEM_DETAIL
-    where item_id = #{itemId,jdbcType=DECIMAL}
+    where item_id = #{itemId,jdbcType=BIGINT}
   </select>
 
 </mapper>

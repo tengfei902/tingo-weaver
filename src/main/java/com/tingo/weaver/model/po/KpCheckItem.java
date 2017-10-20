@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class KpCheckItem {
-    private BigDecimal id;
+    private Long id;
 
-    private BigDecimal qdId;
+    private Long qdId;
 
     private String qd;
 
@@ -16,29 +16,29 @@ public class KpCheckItem {
 
     private String pfbm;
 
-    private BigDecimal jd;
+    private Integer jd;
 
-    private BigDecimal status;
+    private Integer status;
 
     private Date createTime;
 
     private Date updateTime;
 
-    private BigDecimal version;
+    private Integer version;
 
-    public BigDecimal getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public BigDecimal getQdId() {
+    public Long getQdId() {
         return qdId;
     }
 
-    public void setQdId(BigDecimal qdId) {
+    public void setQdId(Long qdId) {
         this.qdId = qdId;
     }
 
@@ -47,7 +47,7 @@ public class KpCheckItem {
     }
 
     public void setQd(String qd) {
-        this.qd = qd == null ? null : qd.trim();
+        this.qd = qd;
     }
 
     public String getKpnr() {
@@ -55,7 +55,7 @@ public class KpCheckItem {
     }
 
     public void setKpnr(String kpnr) {
-        this.kpnr = kpnr == null ? null : kpnr.trim();
+        this.kpnr = kpnr;
     }
 
     public String getKpfs() {
@@ -63,7 +63,7 @@ public class KpCheckItem {
     }
 
     public void setKpfs(String kpfs) {
-        this.kpfs = kpfs == null ? null : kpfs.trim();
+        this.kpfs = kpfs;
     }
 
     public String getPfbm() {
@@ -71,22 +71,22 @@ public class KpCheckItem {
     }
 
     public void setPfbm(String pfbm) {
-        this.pfbm = pfbm == null ? null : pfbm.trim();
+        this.pfbm = pfbm;
     }
 
-    public BigDecimal getJd() {
+    public Integer getJd() {
         return jd;
     }
 
-    public void setJd(BigDecimal jd) {
+    public void setJd(Integer jd) {
         this.jd = jd;
     }
 
-    public BigDecimal getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(BigDecimal status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -106,11 +106,11 @@ public class KpCheckItem {
         this.updateTime = updateTime;
     }
 
-    public BigDecimal getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(BigDecimal version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 }

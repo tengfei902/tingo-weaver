@@ -9,7 +9,7 @@ public class Qingdan {
 
     private BigDecimal qz;
 
-    private BigDecimal status;
+    private Integer status;
 
     private int jd;
 
@@ -37,11 +37,11 @@ public class Qingdan {
         this.qz = qz;
     }
 
-    public BigDecimal getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(BigDecimal status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

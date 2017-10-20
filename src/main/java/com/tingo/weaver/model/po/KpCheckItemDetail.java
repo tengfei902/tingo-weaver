@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class KpCheckItemDetail {
-    private BigDecimal id;
+    private Long id;
 
-    private BigDecimal itemId;
+    private Long itemId;
 
     private String pfbz;
 
@@ -14,29 +14,29 @@ public class KpCheckItemDetail {
 
     private String tkxz;
 
-    private BigDecimal jd;
+    private Integer jd;
 
-    private BigDecimal status;
+    private Integer status;
 
     private Date createTime;
 
     private Date updateTime;
 
-    private BigDecimal version;
+    private Integer version;
 
-    public BigDecimal getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public BigDecimal getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 
-    public void setItemId(BigDecimal itemId) {
+    public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
 
@@ -45,7 +45,7 @@ public class KpCheckItemDetail {
     }
 
     public void setPfbz(String pfbz) {
-        this.pfbz = pfbz == null ? null : pfbz.trim();
+        this.pfbz = pfbz;
     }
 
     public BigDecimal getFs() {
@@ -56,19 +56,27 @@ public class KpCheckItemDetail {
         this.fs = fs;
     }
 
-    public BigDecimal getJd() {
+    public String getTkxz() {
+        return tkxz;
+    }
+
+    public void setTkxz(String tkxz) {
+        this.tkxz = tkxz;
+    }
+
+    public Integer getJd() {
         return jd;
     }
 
-    public void setJd(BigDecimal jd) {
+    public void setJd(Integer jd) {
         this.jd = jd;
     }
 
-    public BigDecimal getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(BigDecimal status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -88,19 +96,11 @@ public class KpCheckItemDetail {
         this.updateTime = updateTime;
     }
 
-    public BigDecimal getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(BigDecimal version) {
+    public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public String getTkxz() {
-        return tkxz;
-    }
-
-    public void setTkxz(String tkxz) {
-        this.tkxz = tkxz;
     }
 }

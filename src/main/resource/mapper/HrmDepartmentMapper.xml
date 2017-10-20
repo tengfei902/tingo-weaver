@@ -18,12 +18,11 @@
     <result column="JZGLBMFGLD" jdbcType="VARCHAR" property="jzglbmfgld" />
     <result column="BMFZR" jdbcType="VARCHAR" property="bmfzr" />
     <result column="BMFGLD" jdbcType="VARCHAR" property="bmfgld" />
-    <result column="BUDGETATUOMOVEORDER" jdbcType="DECIMAL" property="budgetatuomoveorder" />
   </resultMap>
   <sql id="Base_Column_List">
     ID, DEPARTMENTMARK, DEPARTMENTNAME, SUBCOMPANYID1, SUPDEPID, ALLSUPDEPID, SHOWORDER, 
     CANCELED, DEPARTMENTCODE, COADJUTANT, ZZJGBMFZR, ZZJGBMFGLD, JZGLBMFZR, JZGLBMFGLD, 
-    BMFZR, BMFGLD, BUDGETATUOMOVEORDER
+    BMFZR, BMFGLD
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
     select 
@@ -41,13 +40,13 @@
       SHOWORDER, CANCELED, DEPARTMENTCODE, 
       COADJUTANT, ZZJGBMFZR, ZZJGBMFGLD, 
       JZGLBMFZR, JZGLBMFGLD, BMFZR, 
-      BMFGLD, BUDGETATUOMOVEORDER)
+      BMFGLD)
     values (#{id,jdbcType=DECIMAL}, #{departmentmark,jdbcType=VARCHAR}, #{departmentname,jdbcType=VARCHAR}, 
       #{subcompanyid1,jdbcType=DECIMAL}, #{supdepid,jdbcType=DECIMAL}, #{allsupdepid,jdbcType=VARCHAR}, 
       #{showorder,jdbcType=DECIMAL}, #{canceled,jdbcType=CHAR}, #{departmentcode,jdbcType=VARCHAR}, 
       #{coadjutant,jdbcType=DECIMAL}, #{zzjgbmfzr,jdbcType=VARCHAR}, #{zzjgbmfgld,jdbcType=VARCHAR}, 
       #{jzglbmfzr,jdbcType=VARCHAR}, #{jzglbmfgld,jdbcType=VARCHAR}, #{bmfzr,jdbcType=VARCHAR}, 
-      #{bmfgld,jdbcType=VARCHAR}, #{budgetatuomoveorder,jdbcType=DECIMAL})
+      #{bmfgld,jdbcType=VARCHAR}})
   </insert>
   <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.HrmDepartment">
     insert into HRMDEPARTMENT
@@ -100,9 +99,6 @@
       <if test="bmfgld != null">
         BMFGLD,
       </if>
-      <if test="budgetatuomoveorder != null">
-        BUDGETATUOMOVEORDER,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -152,9 +148,6 @@
       </if>
       <if test="bmfgld != null">
         #{bmfgld,jdbcType=VARCHAR},
-      </if>
-      <if test="budgetatuomoveorder != null">
-        #{budgetatuomoveorder,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -206,9 +199,6 @@
       <if test="bmfgld != null">
         BMFGLD = #{bmfgld,jdbcType=VARCHAR},
       </if>
-      <if test="budgetatuomoveorder != null">
-        BUDGETATUOMOVEORDER = #{budgetatuomoveorder,jdbcType=DECIMAL},
-      </if>
     </set>
     where ID = #{id,jdbcType=DECIMAL}
   </update>
@@ -228,8 +218,18 @@
       JZGLBMFZR = #{jzglbmfzr,jdbcType=VARCHAR},
       JZGLBMFGLD = #{jzglbmfgld,jdbcType=VARCHAR},
       BMFZR = #{bmfzr,jdbcType=VARCHAR},
-      BMFGLD = #{bmfgld,jdbcType=VARCHAR},
-      BUDGETATUOMOVEORDER = #{budgetatuomoveorder,jdbcType=DECIMAL}
+      BMFGLD = #{bmfgld,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
+  <select id="selectByIds" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from HRMDEPARTMENT
+    where
+    id in
+    <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </select>
 </mapper>

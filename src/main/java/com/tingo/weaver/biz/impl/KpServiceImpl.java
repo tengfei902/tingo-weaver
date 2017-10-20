@@ -41,14 +41,14 @@ public class KpServiceImpl implements KpService {
 
     @Override
     public QingdanGson selectQdById(Integer id) {
-        Qingdan qingdan = qingdanDao.selectByPrimaryKey(new BigDecimal(id));
+        Qingdan qingdan = qingdanDao.selectByPrimaryKey(Long.valueOf(id));
         return new QingdanGson(qingdan.getId(),qingdan.getQingdanmc());
     }
 
     @Override
     public List<QingdanGson> selectQdList(Integer jd) {
         List<QingdanGson> list = new ArrayList<>();
-        List<Qingdan> qingdans = qingdanDao.selectAvailableList(new BigDecimal(jd));
+        List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd);
         qingdans.stream().forEach(qingdan -> list.add(new QingdanGson(qingdan.getId(),qingdan.getQingdanmc())));
         return list;
     }
@@ -56,7 +56,7 @@ public class KpServiceImpl implements KpService {
     @Override
     public List<QingdanDetailGson> selectQdDetail(Integer jd) {
         List<QingdanGson> list = new ArrayList<>();
-        List<Qingdan> qingdans = qingdanDao.selectAvailableList(new BigDecimal(jd));
+        List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd);
 
         return null;
     }
@@ -83,6 +83,13 @@ public class KpServiceImpl implements KpService {
         return list;
     }
 
+    @Override
+    public CheckItemGson getCheckItemByItemId(Long itemId) {
+        KpCheckItem kpCheckItem = kpCheckItemDao.selectByPrimaryKey(itemId);
+        CheckItemGson checkItemGson = convertItem2Gson(kpCheckItem);
+        return checkItemGson;
+    }
+
     private CheckItemGson convertItem2Gson(KpCheckItem item) {
         CheckItemGson checkItemGson = new CheckItemGson();
         checkItemGson.setItemId(item.getId().longValue());
@@ -104,6 +111,7 @@ public class KpServiceImpl implements KpService {
         debtNames.stream().forEach(s -> debtName.append(s));
 
         checkItemGson.setPfbm(debtName.toString());
+        checkItemGson.setPfbmId(item.getPfbm());
 
         checkItemGson.setQdId(item.getQdId().longValue());
         checkItemGson.setQd(item.getQd());
@@ -132,30 +140,32 @@ public class KpServiceImpl implements KpService {
         KpCheckItem item = new KpCheckItem();
         item.setPfbm(itemGson.getPfbm());
         item.setKpnr(itemGson.getKpnr());
-        item.setJd(new BigDecimal(Utils.getCurrentSeason()));
+        item.setJd(Utils.getCurrentSeason());
         item.setKpfs(itemGson.getKpfs());
 
-        item.setQdId(new BigDecimal(itemGson.getQdId()));
+        item.setQdId(itemGson.getQdId());
 
         Qingdan qingdan = qingdanDao.selectByPrimaryKey(item.getQdId());
         item.setQd(qingdan.getQingdanmc());
 
         if(itemGson.getItemId()!= null) {
-            item.setId(new BigDecimal(itemGson.getItemId()));
+            item.setId(itemGson.getItemId());
         }
 
         List<KpCheckItemDetail> details = new ArrayList<>();
 
         for(CheckItemDetailGson detailGson: itemGson.getDetails()) {
             KpCheckItemDetail detail = new KpCheckItemDetail();
-            detail.setJd(new BigDecimal(Utils.getCurrentSeason()));
+            detail.setJd(Utils.getCurrentSeason());
             detail.setPfbz(detailGson.getPfbz());
             detail.setFs(detailGson.getFs());
             detail.setTkxz(detailGson.getTkxz());
-            detail.setId(detailGson.getDetailId() == null?null:new BigDecimal(detailGson.getDetailId()));
+            detail.setId(detailGson.getDetailId() == null?null:detailGson.getDetailId());
             if(itemGson.getItemId()!= null) {
-                detail.setItemId(new BigDecimal(itemGson.getItemId()));
+                detail.setItemId(itemGson.getItemId());
             }
+
+            details.add(detail);
         }
 
         checkItemService.saveCheckItem(item,details);

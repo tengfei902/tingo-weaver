@@ -26,14 +26,14 @@ public class CheckItemServiceImpl implements CheckItemService {
     @Transactional
     @Override
     public void saveCheckItem(KpCheckItem item, List<KpCheckItemDetail> details) {
-        if(Objects.isNull(item.getId()) || item.getId().compareTo(BigDecimal.ZERO)<=0) {
+        if(Objects.isNull(item.getId()) || item.getId()<=0) {
             kpCheckItemDao.insertSelective(item);
         } else {
             kpCheckItemDao.updateByPrimaryKeySelective(item);
         }
 
         for (KpCheckItemDetail detail : details) {
-            if(Objects.isNull(detail.getId()) || detail.getId().compareTo(BigDecimal.ZERO)<=0) {
+            if(Objects.isNull(detail.getId()) || detail.getId()<=0) {
                 detail.setItemId(item.getId());
                 kpCheckItemDetailDao.insertSelective(detail);
             } else {

@@ -13,11 +13,11 @@ public interface QingdanDao {
 
     int insertSelective(Qingdan record);
 
-    Qingdan selectByPrimaryKey(BigDecimal id);
+    Qingdan selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(Qingdan record);
 
     int updateByPrimaryKey(Qingdan record);
 
-    List<Qingdan> selectAvailableList(@Param("jd") BigDecimal jd);
+    List<Qingdan> selectAvailableList(@Param("jd") Integer jd);
 }

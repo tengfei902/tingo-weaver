@@ -13,6 +13,7 @@ public class CheckItemGson {
     private String kpnr;
     private String kpfs;
     private String pfbm;
+    private String pfbmId;
     private String jd;
     private List<CheckItemDetailGson> details;
 
@@ -78,5 +79,13 @@ public class CheckItemGson {
 
     public void setQd(String qd) {
         this.qd = qd;
+    }
+
+    public String getPfbmId() {
+        return pfbmId;
+    }
+
+    public void setPfbmId(String pfbmId) {
+        this.pfbmId = pfbmId;
     }
 }

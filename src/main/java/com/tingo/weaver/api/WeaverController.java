@@ -56,6 +56,12 @@ public class WeaverController {
         return new Gson().toJson(list);
     }
 
+    @RequestMapping(value = "/getCheckItemByItemId",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
+    public @ResponseBody String getCheckItemByItemId(Long itemId) {
+        CheckItemGson checkItemGson = kpService.getCheckItemByItemId(itemId);
+        return new Gson().toJson(checkItemGson);
+    }
+
     @RequestMapping(value = "/saveCheckItem",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
     public @ResponseBody String saveCheckItem(@RequestBody String itemStr) throws Exception {
         itemStr = URLDecoder.decode(itemStr,"utf-8").replace("=","");
