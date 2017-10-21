@@ -6,6 +6,7 @@ import com.tingo.weaver.model.gson.CheckItemGson;
 import com.tingo.weaver.model.gson.QingdanGson;
 import com.tingo.weaver.model.gson.TableGson;
 import com.tingo.weaver.model.gson.ZcListRequest;
+import com.tingo.weaver.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,12 +93,11 @@ public class WeaverController {
     public @ResponseBody String doPublish(@RequestBody String str) throws Exception {
         str = URLDecoder.decode(str,"utf-8").replace("=","");
         Map<String,String> request = new Gson().fromJson(str,new TypeToken<Map<String,String>>(){}.getType());
-        Long userId = Long.parseLong(request.get("userId"));
+        Long userId = Utils.o2l(request.get("userId"));
         List<String> qdIds = Arrays.asList(request.get("qdIds").split(","));
-        Integer kpMonth = Integer.parseInt(request.get("kpMonth"));
+        Integer jd = Integer.parseInt(request.get("kpMonth"));
         List<String> companyIds = Arrays.asList(request.get("companyIds").split(","));
-
-//        kpService.saveCheckItem(checkItemGson);
+        kpService.doPublish(userId,qdIds,jd,companyIds);
         return "SUCCESS";
     }
 

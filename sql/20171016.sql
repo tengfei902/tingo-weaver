@@ -109,6 +109,8 @@ create table kp_check_item_zp
   version integer default 1 not null
 );
 
+alter table kp_check_item_zp add constraint unq_zp unique( item_id,org_id);
+
 create sequence kp_check_item_zp_id
 start with 1
 increment by 1

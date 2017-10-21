@@ -3,12 +3,8 @@ package com.tingo.weaver;
 import com.tingo.BaseTestCase;
 import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.dao.KpCheckItemDao;
-import com.tingo.weaver.model.po.KpCheckItem;
-import junit.framework.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 

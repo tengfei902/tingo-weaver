@@ -4,14 +4,17 @@ import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.dao.*;
 import com.tingo.weaver.model.po.*;
 import com.tingo.weaver.utils.enums.PfType;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -53,7 +56,8 @@ public class CheckItemServiceImpl implements CheckItemService {
     }
     @Transactional
     @Override
-    public void publishItem(String qdId, Integer jd, List<String> companyIds) {
+    public synchronized void publishItem(String qdId, Integer jd, List<String> companyIds) {
+        Map<String,List<String>> result = MapUtils
         List<KpCheckItem> items = kpCheckItemDao.selectByQdId(Long.parseLong(qdId));
         for(KpCheckItem item:items) {
             List<KpCheckItemDetail> itemDetails = kpCheckItemDetailDao.selectByItemId(item.getId());
@@ -66,7 +70,11 @@ public class CheckItemServiceImpl implements CheckItemService {
                 kpCheckItemZp.setItemId(new BigDecimal(item.getId()));
                 kpCheckItemZp.setJd(new BigDecimal(jd));
 
-                kpCheckItemZpDao.insertSelective(kpCheckItemZp);
+                try {
+                    kpCheckItemZpDao.insertSelective(kpCheckItemZp);
+                } catch (DuplicateKeyException e) {
+
+                }
 
                 for(KpCheckItemDetail detail:itemDetails) {
                     KpCheckItemDetailZp kpCheckItemDetailZp = new KpCheckItemDetailZp();
@@ -75,7 +83,11 @@ public class CheckItemServiceImpl implements CheckItemService {
                     kpCheckItemDetailZp.setDetailId(new BigDecimal(detail.getId()));
                     kpCheckItemDetailZp.setZpId(kpCheckItemZp.getId());
 
-                    kpCheckItemDetailZpDao.insertSelective(kpCheckItemDetailZp);
+                    try {
+                        kpCheckItemDetailZpDao.insertSelective(kpCheckItemDetailZp);
+                    } catch (DuplicateKeyException e) {
+
+                    }
                 }
 
                 for(String orgId:item.getPfbm().split(",")) {
@@ -90,7 +102,11 @@ public class CheckItemServiceImpl implements CheckItemService {
                     kpCheckItemPf.setJd(new BigDecimal(jd));
                     kpCheckItemPf.setToOrgId(new BigDecimal(companyId));
 
-                    kpCheckItemPfDao.insertSelective(kpCheckItemPf);
+                    try {
+                        kpCheckItemPfDao.insertSelective(kpCheckItemPf);
+                    } catch (DuplicateKeyException e) {
+
+                    }
 
                     for(KpCheckItemDetail detail:itemDetails) {
                         KpCheckItemDetailPf kpCheckItemDetailPf = new KpCheckItemDetailPf();
@@ -101,7 +117,11 @@ public class CheckItemServiceImpl implements CheckItemService {
                         kpCheckItemDetailPf.setZpId(kpCheckItemZp.getId());
                         kpCheckItemDetailPf.setPfId(kpCheckItemPf.getId());
 
-                        kpCheckItemDetailPfDao.insertSelective(kpCheckItemDetailPf);
+                        try {
+                            kpCheckItemDetailPfDao.insertSelective(kpCheckItemDetailPf);
+                        }catch (DuplicateKeyException e) {
+
+                        }
                     }
                 }
             }
