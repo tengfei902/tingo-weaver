@@ -3,20 +3,20 @@ package com.tingo.weaver.model.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class KpCheckItemDetailPub {
+public class KpCheckItemDetailZp {
     private BigDecimal id;
 
     private BigDecimal itemId;
 
-    private BigDecimal itemDetailId;
+    private BigDecimal detailId;
 
-    private String pfbz;
+    private BigDecimal zpId;
 
-    private BigDecimal fs;
+    private BigDecimal orgId;
 
-    private BigDecimal jd;
+    private BigDecimal pf;
 
-    private BigDecimal status;
+    private Date zpTime;
 
     private Date createTime;
 
@@ -40,44 +40,44 @@ public class KpCheckItemDetailPub {
         this.itemId = itemId;
     }
 
-    public BigDecimal getItemDetailId() {
-        return itemDetailId;
+    public BigDecimal getDetailId() {
+        return detailId;
     }
 
-    public void setItemDetailId(BigDecimal itemDetailId) {
-        this.itemDetailId = itemDetailId;
+    public void setDetailId(BigDecimal detailId) {
+        this.detailId = detailId;
     }
 
-    public String getPfbz() {
-        return pfbz;
+    public BigDecimal getZpId() {
+        return zpId;
     }
 
-    public void setPfbz(String pfbz) {
-        this.pfbz = pfbz == null ? null : pfbz.trim();
+    public void setZpId(BigDecimal zpId) {
+        this.zpId = zpId;
     }
 
-    public BigDecimal getFs() {
-        return fs;
+    public BigDecimal getOrgId() {
+        return orgId;
     }
 
-    public void setFs(BigDecimal fs) {
-        this.fs = fs;
+    public void setOrgId(BigDecimal orgId) {
+        this.orgId = orgId;
     }
 
-    public BigDecimal getJd() {
-        return jd;
+    public BigDecimal getPf() {
+        return pf;
     }
 
-    public void setJd(BigDecimal jd) {
-        this.jd = jd;
+    public void setPf(BigDecimal pf) {
+        this.pf = pf;
     }
 
-    public BigDecimal getStatus() {
-        return status;
+    public Date getZpTime() {
+        return zpTime;
     }
 
-    public void setStatus(BigDecimal status) {
-        this.status = status;
+    public void setZpTime(Date zpTime) {
+        this.zpTime = zpTime;
     }
 
     public Date getCreateTime() {

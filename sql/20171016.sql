@@ -26,13 +26,6 @@ increment by 1
 nomaxvalue
 nocycle;
 
-create or replace trigger kp_check_item_id_trigger
-before insert on kp_check_item
-for each row
-begin
-select kp_check_item_id.nextval into :new.id from dual;
-end;
-
 create table kp_check_item_detail
 (
   id integer primary key not null,
@@ -55,20 +48,13 @@ increment by 1
 nomaxvalue
 nocycle;
 
-create or replace trigger kp_check_item_d_id_trigger
-before insert on kp_check_item_detail
-for each row
-begin
-select kp_check_item_detail_id.nextval into :new.id from dual;
-end;
-
 create table kp_check_item_pub (
   id INTEGER primary key not null,
   item_id integer not null,
   qd_id INTEGER not null,
   qd VARCHAR(100) default '' not null,
   kpnr VARCHAR(1000) default '' not null,
-  kpfs INTEGER default 0 not null,
+  kpfs varchar(10) default 'ADD' not null,
   pfbm VARCHAR(1000) not null,
   jd integer not null,
   status integer default 0 not null,
@@ -85,13 +71,6 @@ start with 1
 increment by 1
 nomaxvalue
 nocycle;
-
-create or replace trigger kp_check_item_pub_id_trigger
-before insert on kp_check_item_pub
-for each row
-begin
-select kp_check_item_pub_id.nextval into :new.id from dual;
-end;
 
 create table kp_check_item_detail_pub
 (
@@ -116,73 +95,89 @@ increment by 1
 nomaxvalue
 nocycle;
 
-create or replace trigger kp_check_item_d_pub_id_trigger
-before insert on kp_check_item_detail_pub
-for each row
-begin
-select kp_check_item_detail_pub_id.nextval into :new.id from dual;
-end;
-
-create table kp_check_item_pub_pf
+create table kp_check_item_zp
 (
   id integer primary key not null,
-  pub_id integer not null,
+  item_id integer not null,
   org_id integer not null,
   status integer default 0 not null,
-  pfsm varchar(2000) default '' not null,
+  zpsm varchar(2000) default '',
+  zp_time date ,
+  jd integer not null,
+  create_time date default sysdate not null,
+  update_time date default sysdate not null,
+  version integer default 1 not null
+);
+
+alter table kp_check_item_zp add constraint unq_zp unique( item_id,org_id);
+
+create sequence kp_check_item_zp_id
+start with 1
+increment by 1
+nomaxvalue
+nocycle;
+
+create table kp_check_item_detail_zp
+(
+  id integer primary key not null,
+  item_id integer not null,
+  detail_id integer not null,
+  zp_id integer not null,
+  org_id integer not null,
+  pf number(4,2) default 0 not null,
+  zp_time date ,
+  create_time date default sysdate not null,
+  update_time date default sysdate not null,
+  version integer default 1 not null
+);
+
+create sequence kp_check_item_detail_zp_id
+start with 1
+increment by 1
+nomaxvalue
+nocycle;
+
+create table kp_check_item_pf
+(
+  id integer primary key not null,
+  item_id integer not null,
+  zp_id integer not null,
+  org_id integer not null,
+  to_org_id INTEGER  not null,
+  status integer default 0 not null,
+  pfsm varchar(2000) default '',
   kp_time date ,
   jd integer not null,
-  type integer default 0 not null,
   create_time date default sysdate not null,
   update_time date default sysdate not null,
   version integer default 1 not null
 );
 
-create index pf_pub_id on kp_check_item_pub_pf(pub_id asc);
-create index pf_org_id on kp_check_item_pub_pf(org_id asc);
-
-create sequence kp_check_item_pub_pf_id
+create sequence kp_check_item_pf_id
 start with 1
 increment by 1
 nomaxvalue
 nocycle;
 
-create or replace trigger kp_c_i_pub_pf_id_trigger
-before insert on kp_check_item_pub_pf
-for each row
-begin
-select kp_check_item_pub_pf_id.nextval into :new.id from dual;
-end;
-
-create table kp_check_item_detail_pub_pf
+create table kp_check_item_detail_pf
 (
   id integer primary key not null,
-  pub_id integer not null,
-  pub_detail_id integer not null,
+  pf_id integer not null,
+  item_id integer not null,
+  item_detail_id integer not null,
+  zp_id integer not null,
   org_id integer not null,
-  status integer default 0 not null,
+  to_org_id integer not null,
   pf number(4,2) default 0 not null,
-  type integer default 0 not null,
   kp_time date ,
   create_time date default sysdate not null,
   update_time date default sysdate not null,
   version integer default 1 not null
 );
 
-create index pf_detail_pub_id on kp_check_item_detail_pub_pf(pub_id asc);
-create index pf_detail_org_id on kp_check_item_detail_pub_pf(org_id asc);
-create index pf_detail_pub_detail_id on kp_check_item_detail_pub_pf(pub_detail_id asc);
-
-create sequence kp_check_item_d_pub_pf_id
+create sequence kp_check_item_d_pf_id
 start with 1
 increment by 1
 nomaxvalue
 nocycle;
-
-create or replace trigger kp_c_i_d_pub_pf_id_trigger
-before insert on kp_check_item_detail_pub_pf
-for each row
-begin
-select kp_check_item_d_pub_pf_id.nextval into :new.id from dual;
-end;
 

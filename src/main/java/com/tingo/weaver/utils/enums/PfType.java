@@ -22,4 +22,8 @@ public enum PfType {
         }
         return null;
     }
+
+    public int getValue() {
+        return this.value;
+    }
 }

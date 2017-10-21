@@ -1,54 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tingo.weaver.dao.KpCheckItemDetailPubPfDao" >
-  <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.KpCheckItemDetailPubPf" >
+<mapper namespace="com.tingo.weaver.dao.KpCheckItemZpDao" >
+  <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.KpCheckItemZp" >
     <id column="ID" property="id" jdbcType="DECIMAL" />
-    <result column="PUB_ID" property="pubId" jdbcType="DECIMAL" />
-    <result column="PUB_DETAIL_ID" property="pubDetailId" jdbcType="DECIMAL" />
+    <result column="ITEM_ID" property="itemId" jdbcType="DECIMAL" />
     <result column="ORG_ID" property="orgId" jdbcType="DECIMAL" />
     <result column="STATUS" property="status" jdbcType="DECIMAL" />
-    <result column="PF" property="pf" jdbcType="DECIMAL" />
-    <result column="TYPE" property="type" jdbcType="DECIMAL" />
-    <result column="KP_TIME" property="kpTime" jdbcType="DATE" />
+    <result column="ZPSM" property="zpsm" jdbcType="VARCHAR" />
+    <result column="ZP_TIME" property="zpTime" jdbcType="DATE" />
+    <result column="JD" property="jd" jdbcType="DECIMAL" />
     <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
     <result column="VERSION" property="version" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, PUB_ID, PUB_DETAIL_ID, ORG_ID, `STATUS`, PF, `TYPE`, KP_TIME, CREATE_TIME, UPDATE_TIME, 
-    VERSION
+    ID, ITEM_ID, ORG_ID, `STATUS`, ZPSM, ZP_TIME, JD, CREATE_TIME, UPDATE_TIME, VERSION
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
     select 
     <include refid="Base_Column_List" />
-    from KP_CHECK_ITEM_DETAIL_PUB_PF
+    from KP_CHECK_ITEM_ZP
     where ID = #{id,jdbcType=DECIMAL}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
-    delete from KP_CHECK_ITEM_DETAIL_PUB_PF
+    delete from KP_CHECK_ITEM_ZP
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
-  <insert id="insert" parameterType="com.tingo.weaver.model.po.KpCheckItemDetailPubPf" >
-    insert into KP_CHECK_ITEM_DETAIL_PUB_PF (ID, PUB_ID, PUB_DETAIL_ID, 
-      ORG_ID, `STATUS`, PF, 
-      `TYPE`, KP_TIME, CREATE_TIME, 
-      UPDATE_TIME, VERSION)
-    values (#{id,jdbcType=DECIMAL}, #{pubId,jdbcType=DECIMAL}, #{pubDetailId,jdbcType=DECIMAL}, 
-      #{orgId,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, #{pf,jdbcType=DECIMAL}, 
-      #{type,jdbcType=DECIMAL}, #{kpTime,jdbcType=DATE}, #{createTime,jdbcType=DATE}, 
-      #{updateTime,jdbcType=DATE}, #{version,jdbcType=DECIMAL})
+  <insert id="insert" parameterType="com.tingo.weaver.model.po.KpCheckItemZp" >
+    insert into KP_CHECK_ITEM_ZP (ID, ITEM_ID, ORG_ID, 
+      `STATUS`, ZPSM, ZP_TIME, 
+      JD, CREATE_TIME, UPDATE_TIME, 
+      VERSION)
+    values (#{id,jdbcType=DECIMAL}, #{itemId,jdbcType=DECIMAL}, #{orgId,jdbcType=DECIMAL}, 
+      #{status,jdbcType=DECIMAL}, #{zpsm,jdbcType=VARCHAR}, #{zpTime,jdbcType=DATE}, 
+      #{jd,jdbcType=DECIMAL}, #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE}, 
+      #{version,jdbcType=DECIMAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.KpCheckItemDetailPubPf" >
-    insert into KP_CHECK_ITEM_DETAIL_PUB_PF
+  <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.KpCheckItemZp" >
+    <selectKey keyProperty="id" resultType="BigDecimal" order="BEFORE">
+      select KP_CHECK_ITEM_ZP_ID.NEXTVAL from dual
+    </selectKey>
+    insert into KP_CHECK_ITEM_ZP
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         ID,
       </if>
-      <if test="pubId != null" >
-        PUB_ID,
-      </if>
-      <if test="pubDetailId != null" >
-        PUB_DETAIL_ID,
+      <if test="itemId != null" >
+        ITEM_ID,
       </if>
       <if test="orgId != null" >
         ORG_ID,
@@ -56,14 +54,14 @@
       <if test="status != null" >
         `STATUS`,
       </if>
-      <if test="pf != null" >
-        PF,
+      <if test="zpsm != null" >
+        ZPSM,
       </if>
-      <if test="type != null" >
-        `TYPE`,
+      <if test="zpTime != null" >
+        ZP_TIME,
       </if>
-      <if test="kpTime != null" >
-        KP_TIME,
+      <if test="jd != null" >
+        JD,
       </if>
       <if test="createTime != null" >
         CREATE_TIME,
@@ -79,11 +77,8 @@
       <if test="id != null" >
         #{id,jdbcType=DECIMAL},
       </if>
-      <if test="pubId != null" >
-        #{pubId,jdbcType=DECIMAL},
-      </if>
-      <if test="pubDetailId != null" >
-        #{pubDetailId,jdbcType=DECIMAL},
+      <if test="itemId != null" >
+        #{itemId,jdbcType=DECIMAL},
       </if>
       <if test="orgId != null" >
         #{orgId,jdbcType=DECIMAL},
@@ -91,14 +86,14 @@
       <if test="status != null" >
         #{status,jdbcType=DECIMAL},
       </if>
-      <if test="pf != null" >
-        #{pf,jdbcType=DECIMAL},
+      <if test="zpsm != null" >
+        #{zpsm,jdbcType=VARCHAR},
       </if>
-      <if test="type != null" >
-        #{type,jdbcType=DECIMAL},
+      <if test="zpTime != null" >
+        #{zpTime,jdbcType=DATE},
       </if>
-      <if test="kpTime != null" >
-        #{kpTime,jdbcType=DATE},
+      <if test="jd != null" >
+        #{jd,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=DATE},
@@ -111,14 +106,11 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tingo.weaver.model.po.KpCheckItemDetailPubPf" >
-    update KP_CHECK_ITEM_DETAIL_PUB_PF
+  <update id="updateByPrimaryKeySelective" parameterType="com.tingo.weaver.model.po.KpCheckItemZp" >
+    update KP_CHECK_ITEM_ZP
     <set >
-      <if test="pubId != null" >
-        PUB_ID = #{pubId,jdbcType=DECIMAL},
-      </if>
-      <if test="pubDetailId != null" >
-        PUB_DETAIL_ID = #{pubDetailId,jdbcType=DECIMAL},
+      <if test="itemId != null" >
+        ITEM_ID = #{itemId,jdbcType=DECIMAL},
       </if>
       <if test="orgId != null" >
         ORG_ID = #{orgId,jdbcType=DECIMAL},
@@ -126,14 +118,14 @@
       <if test="status != null" >
         `STATUS` = #{status,jdbcType=DECIMAL},
       </if>
-      <if test="pf != null" >
-        PF = #{pf,jdbcType=DECIMAL},
+      <if test="zpsm != null" >
+        ZPSM = #{zpsm,jdbcType=VARCHAR},
       </if>
-      <if test="type != null" >
-        `TYPE` = #{type,jdbcType=DECIMAL},
+      <if test="zpTime != null" >
+        ZP_TIME = #{zpTime,jdbcType=DATE},
       </if>
-      <if test="kpTime != null" >
-        KP_TIME = #{kpTime,jdbcType=DATE},
+      <if test="jd != null" >
+        JD = #{jd,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=DATE},
@@ -147,15 +139,14 @@
     </set>
     where ID = #{id,jdbcType=DECIMAL}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.KpCheckItemDetailPubPf" >
-    update KP_CHECK_ITEM_DETAIL_PUB_PF
-    set PUB_ID = #{pubId,jdbcType=DECIMAL},
-      PUB_DETAIL_ID = #{pubDetailId,jdbcType=DECIMAL},
+  <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.KpCheckItemZp" >
+    update KP_CHECK_ITEM_ZP
+    set ITEM_ID = #{itemId,jdbcType=DECIMAL},
       ORG_ID = #{orgId,jdbcType=DECIMAL},
       `STATUS` = #{status,jdbcType=DECIMAL},
-      PF = #{pf,jdbcType=DECIMAL},
-      `TYPE` = #{type,jdbcType=DECIMAL},
-      KP_TIME = #{kpTime,jdbcType=DATE},
+      ZPSM = #{zpsm,jdbcType=VARCHAR},
+      ZP_TIME = #{zpTime,jdbcType=DATE},
+      JD = #{jd,jdbcType=DECIMAL},
       CREATE_TIME = #{createTime,jdbcType=DATE},
       UPDATE_TIME = #{updateTime,jdbcType=DATE},
       VERSION = #{version,jdbcType=DECIMAL}

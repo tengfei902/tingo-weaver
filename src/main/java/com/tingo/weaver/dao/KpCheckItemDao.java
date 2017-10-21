@@ -19,5 +19,5 @@ public interface KpCheckItemDao {
 
     int updateByPrimaryKey(KpCheckItem record);
 
-    List<KpCheckItem> selectByQdId(@Param("qdId") BigDecimal qdId);
+    List<KpCheckItem> selectByQdId(@Param("qdId") Long qdId);
 }

@@ -3,20 +3,20 @@ package com.tingo.weaver.model.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class KpCheckItemDetailPubPf {
+public class KpCheckItemDetailPf {
     private BigDecimal id;
 
-    private BigDecimal pubId;
+    private BigDecimal itemId;
 
-    private BigDecimal pubDetailId;
+    private BigDecimal itemDetailId;
+
+    private BigDecimal zpId;
 
     private BigDecimal orgId;
 
-    private BigDecimal status;
+    private BigDecimal toOrgId;
 
     private BigDecimal pf;
-
-    private BigDecimal type;
 
     private Date kpTime;
 
@@ -26,6 +26,8 @@ public class KpCheckItemDetailPubPf {
 
     private BigDecimal version;
 
+    private BigDecimal pfId;
+
     public BigDecimal getId() {
         return id;
     }
@@ -34,20 +36,28 @@ public class KpCheckItemDetailPubPf {
         this.id = id;
     }
 
-    public BigDecimal getPubId() {
-        return pubId;
+    public BigDecimal getItemId() {
+        return itemId;
     }
 
-    public void setPubId(BigDecimal pubId) {
-        this.pubId = pubId;
+    public void setItemId(BigDecimal itemId) {
+        this.itemId = itemId;
     }
 
-    public BigDecimal getPubDetailId() {
-        return pubDetailId;
+    public BigDecimal getItemDetailId() {
+        return itemDetailId;
     }
 
-    public void setPubDetailId(BigDecimal pubDetailId) {
-        this.pubDetailId = pubDetailId;
+    public void setItemDetailId(BigDecimal itemDetailId) {
+        this.itemDetailId = itemDetailId;
+    }
+
+    public BigDecimal getZpId() {
+        return zpId;
+    }
+
+    public void setZpId(BigDecimal zpId) {
+        this.zpId = zpId;
     }
 
     public BigDecimal getOrgId() {
@@ -58,12 +68,12 @@ public class KpCheckItemDetailPubPf {
         this.orgId = orgId;
     }
 
-    public BigDecimal getStatus() {
-        return status;
+    public BigDecimal getToOrgId() {
+        return toOrgId;
     }
 
-    public void setStatus(BigDecimal status) {
-        this.status = status;
+    public void setToOrgId(BigDecimal toOrgId) {
+        this.toOrgId = toOrgId;
     }
 
     public BigDecimal getPf() {
@@ -72,14 +82,6 @@ public class KpCheckItemDetailPubPf {
 
     public void setPf(BigDecimal pf) {
         this.pf = pf;
-    }
-
-    public BigDecimal getType() {
-        return type;
-    }
-
-    public void setType(BigDecimal type) {
-        this.type = type;
     }
 
     public Date getKpTime() {
@@ -112,5 +114,13 @@ public class KpCheckItemDetailPubPf {
 
     public void setVersion(BigDecimal version) {
         this.version = version;
+    }
+
+    public BigDecimal getPfId() {
+        return pfId;
+    }
+
+    public void setPfId(BigDecimal pfId) {
+        this.pfId = pfId;
     }
 }

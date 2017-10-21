@@ -77,7 +77,9 @@
     <include refid="Base_Column_List" />
     from QINGDAN
     where status = 0
-    and jd = #{jd,jdbcType=INTEGER}
+    <if test="jd != null and jd!=0" >
+      and jd = #{jd,jdbcType=INTEGER}
+    </if>
     order by id desc
   </select>
 </mapper>

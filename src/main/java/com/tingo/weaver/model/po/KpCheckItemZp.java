@@ -3,24 +3,20 @@ package com.tingo.weaver.model.po;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class KpCheckItemPub {
+public class KpCheckItemZp {
     private BigDecimal id;
 
     private BigDecimal itemId;
 
-    private BigDecimal qdId;
-
-    private String qd;
-
-    private String kpnr;
-
-    private BigDecimal kpfs;
-
-    private String pfbm;
-
-    private BigDecimal jd;
+    private BigDecimal orgId;
 
     private BigDecimal status;
+
+    private String zpsm;
+
+    private Date zpTime;
+
+    private BigDecimal jd;
 
     private Date createTime;
 
@@ -44,52 +40,12 @@ public class KpCheckItemPub {
         this.itemId = itemId;
     }
 
-    public BigDecimal getQdId() {
-        return qdId;
+    public BigDecimal getOrgId() {
+        return orgId;
     }
 
-    public void setQdId(BigDecimal qdId) {
-        this.qdId = qdId;
-    }
-
-    public String getQd() {
-        return qd;
-    }
-
-    public void setQd(String qd) {
-        this.qd = qd == null ? null : qd.trim();
-    }
-
-    public String getKpnr() {
-        return kpnr;
-    }
-
-    public void setKpnr(String kpnr) {
-        this.kpnr = kpnr == null ? null : kpnr.trim();
-    }
-
-    public BigDecimal getKpfs() {
-        return kpfs;
-    }
-
-    public void setKpfs(BigDecimal kpfs) {
-        this.kpfs = kpfs;
-    }
-
-    public String getPfbm() {
-        return pfbm;
-    }
-
-    public void setPfbm(String pfbm) {
-        this.pfbm = pfbm == null ? null : pfbm.trim();
-    }
-
-    public BigDecimal getJd() {
-        return jd;
-    }
-
-    public void setJd(BigDecimal jd) {
-        this.jd = jd;
+    public void setOrgId(BigDecimal orgId) {
+        this.orgId = orgId;
     }
 
     public BigDecimal getStatus() {
@@ -98,6 +54,30 @@ public class KpCheckItemPub {
 
     public void setStatus(BigDecimal status) {
         this.status = status;
+    }
+
+    public String getZpsm() {
+        return zpsm;
+    }
+
+    public void setZpsm(String zpsm) {
+        this.zpsm = zpsm == null ? null : zpsm.trim();
+    }
+
+    public Date getZpTime() {
+        return zpTime;
+    }
+
+    public void setZpTime(Date zpTime) {
+        this.zpTime = zpTime;
+    }
+
+    public BigDecimal getJd() {
+        return jd;
+    }
+
+    public void setJd(BigDecimal jd) {
+        this.jd = jd;
     }
 
     public Date getCreateTime() {
