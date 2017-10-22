@@ -104,6 +104,8 @@ create table kp_check_item_zp
   zpsm varchar(2000) default '',
   zp_time date ,
   jd integer not null,
+  qd_id integer not null,
+  qd varchar(100) default '' not null,
   create_time date default sysdate not null,
   update_time date default sysdate not null,
   version integer default 1 not null

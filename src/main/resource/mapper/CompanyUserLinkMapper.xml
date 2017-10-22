@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tingo.weaver.dao.CompanyUserLinkDao" >
+
   <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.CompanyUserLink" >
     <result column="ID" property="id" jdbcType="DECIMAL" />
     <result column="USERID" property="userid" jdbcType="DECIMAL" />
     <result column="STATUS" property="status" jdbcType="VARCHAR" />
     <result column="COMPANYID" property="companyid" jdbcType="DECIMAL" />
   </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, USERID, STATUS, COMPANYID
+  </sql>
+
   <insert id="insert" parameterType="com.tingo.weaver.model.po.CompanyUserLink" >
     insert into T_COMPANY_USER_LINK (ID, USERID, STATUS,
       COMPANYID)
@@ -49,7 +55,7 @@
     select
     <include refid="Base_Column_List" />
     from T_COMPANY_USER_LINK
-    where USER_ID = #{userId,jdbcType=DECIMAL}
+    where USERID = #{userId,jdbcType=DECIMAL}
     and STATUS = 'VALID'
   </select>
 </mapper>

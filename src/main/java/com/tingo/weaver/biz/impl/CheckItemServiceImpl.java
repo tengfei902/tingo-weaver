@@ -1,11 +1,8 @@
 package com.tingo.weaver.biz.impl;
 
-import com.google.gson.Gson;
 import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.dao.*;
 import com.tingo.weaver.model.po.*;
-import com.tingo.weaver.utils.enums.PfType;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -70,6 +67,8 @@ public class CheckItemServiceImpl implements CheckItemService {
                 kpCheckItemZp.setOrgId(new BigDecimal(companyId));
                 kpCheckItemZp.setItemId(new BigDecimal(item.getId()));
                 kpCheckItemZp.setJd(new BigDecimal(jd));
+                kpCheckItemZp.setQd(item.getQd());
+                kpCheckItemZp.setQdId(new BigDecimal(item.getQdId()));
 
                 try {
                     kpCheckItemZpDao.insertSelective(kpCheckItemZp);

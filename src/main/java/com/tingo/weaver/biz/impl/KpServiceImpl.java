@@ -45,6 +45,8 @@ public class KpServiceImpl implements KpService {
     private KpCheckItemZpDao kpCheckItemZpDao;
     @Autowired
     private KpCheckItemDetailZpDao kpCheckItemDetailZpDao;
+    @Autowired
+    private HrmSubCompanyDao hrmSubCompanyDao;
 
     @Override
     public QingdanGson selectQdById(Integer id) {
@@ -78,8 +80,11 @@ public class KpServiceImpl implements KpService {
             return Collections.EMPTY_LIST;
         }
         List<BigDecimal> orgIds = userLinks.stream().map(CompanyUserLink::getCompanyid).collect(Collectors.toList());
-        Map<String,Object> params = MapUtils.buildMap("orgIds",orgIds,"qdId",zcListRequest.getQd(),"jd",zcListRequest.getJd());
+        Map<String,Object> params = MapUtils.buildMap("orgIds",orgIds,"qdId",zcListRequest.getQd(),"jd",zcListRequest.getJd(),"status",zcListRequest.getStatus());
         List<KpCheckItemZp> zps = kpCheckItemZpDao.selectForList(params);
+        if(CollectionUtils.isEmpty(zps)) {
+            return Collections.EMPTY_LIST;
+        }
 
         Set<Long> itemIds = zps.stream().map(KpCheckItemZp::getItemId).map(BigDecimal::longValue).collect(Collectors.toSet());
         List<KpCheckItem> items = kpCheckItemDao.selectByIds(itemIds);
@@ -90,7 +95,8 @@ public class KpServiceImpl implements KpService {
         Map<Long,KpCheckItemDetail> itemDetailMap = itemDetails.stream().collect(Collectors.toMap(KpCheckItemDetail::getId,Function.identity()));
 
         List<BigDecimal> companyIds = userLinks.stream().map(CompanyUserLink::getCompanyid).collect(Collectors.toList());
-
+        List<HrmSubCompany> companies = hrmSubCompanyDao.selectByIds(companyIds);
+        Map<BigDecimal,HrmSubCompany> companyMap = companies.stream().collect(Collectors.toMap(HrmSubCompany::getId,Function.identity()));
 
         for(KpCheckItemZp zp:zps) {
             ZcListGson zc = new ZcListGson();
@@ -99,11 +105,11 @@ public class KpServiceImpl implements KpService {
             KpCheckItem item = itemMap.get(zp.getItemId().longValue());
 
             zc.setJd(Jd.parse(zp.getJd().intValue()).getDesc());
-            zc.setItemId(zc.getItemId().longValue());
+            zc.setItemId(zp.getItemId().longValue());
             zc.setZpsm(zp.getZpsm());
             zc.setKpnr(item.getKpnr());
             zc.setOrgId(zp.getOrgId().longValue());
-            zc.setOrgName();
+            zc.setOrgName(companyMap.get(zp.getOrgId()).getSubcompanyname());
             zc.setQd(item.getQd());
             zc.setQdId(item.getQdId());
             zc.setStatus(zp.getStatus().intValue());

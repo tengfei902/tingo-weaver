@@ -3,10 +3,7 @@ package com.tingo.weaver.api;
 import com.google.common.reflect.TypeToken;
 import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.model.ResponseResult;
-import com.tingo.weaver.model.gson.CheckItemGson;
-import com.tingo.weaver.model.gson.QingdanGson;
-import com.tingo.weaver.model.gson.TableGson;
-import com.tingo.weaver.model.gson.ZcListRequest;
+import com.tingo.weaver.model.gson.*;
 import com.tingo.weaver.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -85,9 +82,10 @@ public class WeaverController {
         return new Gson().toJson(tableGson);
     }
 
-    @RequestMapping(value = "/zc/getZcList",method = RequestMethod.GET)
+    @RequestMapping(value = "/zc/getZcList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
     public @ResponseBody String getZcList(ZcListRequest zcRequest) {
-        return null;
+        List<ZcListGson> list = kpService.getKpZcGson(zcRequest);
+        return new Gson().toJson(list);
     }
 
     @RequestMapping(value = "/doPublish",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")

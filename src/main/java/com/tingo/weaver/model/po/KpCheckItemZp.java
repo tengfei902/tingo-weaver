@@ -18,6 +18,10 @@ public class KpCheckItemZp {
 
     private BigDecimal jd;
 
+    private BigDecimal qdId;
+
+    private String qd;
+
     private Date createTime;
 
     private Date updateTime;
@@ -102,5 +106,21 @@ public class KpCheckItemZp {
 
     public void setVersion(BigDecimal version) {
         this.version = version;
+    }
+
+    public BigDecimal getQdId() {
+        return qdId;
+    }
+
+    public void setQdId(BigDecimal qdId) {
+        this.qdId = qdId;
+    }
+
+    public String getQd() {
+        return qd;
+    }
+
+    public void setQd(String qd) {
+        this.qd = qd;
     }
 }

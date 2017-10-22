@@ -160,4 +160,11 @@
     where DETAIL_ID = #{detailId,jdbcType=DECIMAL}
     and ORG_ID = #{orgId,jdbcType=DECIMAL}
   </select>
+
+  <select id="selectByZpId" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_DETAIL_ZP
+    where ZP_ID = #{zpId,jdbcType=DECIMAL}
+  </select>
 </mapper>

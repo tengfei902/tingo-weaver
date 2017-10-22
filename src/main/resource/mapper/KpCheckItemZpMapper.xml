@@ -9,12 +9,14 @@
     <result column="ZPSM" property="zpsm" jdbcType="VARCHAR" />
     <result column="ZP_TIME" property="zpTime" jdbcType="DATE" />
     <result column="JD" property="jd" jdbcType="DECIMAL" />
+    <result column="QD_ID" property="qdId" jdbcType="DECIMAL" />
+    <result column="QD" property="qd" jdbcType="VARCHAR" />
     <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
     <result column="VERSION" property="version" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, ITEM_ID, ORG_ID, STATUS, ZPSM, ZP_TIME, JD, CREATE_TIME, UPDATE_TIME, VERSION
+    ID, ITEM_ID, ORG_ID, STATUS, ZPSM, ZP_TIME, JD,QD_ID,QD, CREATE_TIME, UPDATE_TIME, VERSION
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
     select 
@@ -63,6 +65,12 @@
       <if test="jd != null" >
         JD,
       </if>
+      <if test="qdId != null" >
+        QD_ID,
+      </if>
+      <if test="qd != null" >
+        QD,
+      </if>
       <if test="createTime != null" >
         CREATE_TIME,
       </if>
@@ -94,6 +102,12 @@
       </if>
       <if test="jd != null" >
         #{jd,jdbcType=DECIMAL},
+      </if>
+      <if test="qdId != null" >
+        #{qdId,jdbcType=DECIMAL},
+      </if>
+      <if test="qd != null" >
+        #{qd,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=DATE},
@@ -160,5 +174,27 @@
     where
     ITEM_ID = #{itemId,jdbcType=DECIMAL}
     AND ORG_ID = #{orgId,jdbcType=DECIMAL}
+  </select>
+
+  <select id="selectForList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_ZP
+    where 1=1
+    <if test="qdId != null" >
+      and QD_ID = #{qdId,jdbcType=DECIMAL}
+    </if>
+    <if test="orgIds != null" >
+      and ORG_ID in
+      <foreach collection="orgIds" item="orgId" index="index" open="(" close=")" separator=",">
+        #{orgId}
+      </foreach>
+    </if>
+    <if test="jd != null" >
+      and JD =  #{jd,jdbcType=DECIMAL}
+    </if>
+    <if test="status != null" >
+      and STATUS =  #{status,jdbcType=DECIMAL}
+    </if>
   </select>
 </mapper>
