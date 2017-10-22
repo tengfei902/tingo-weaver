@@ -16,7 +16,7 @@
     <result column="TO_ORG_ID" property="toOrgId" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, ITEM_ID, ZP_ID, ORG_ID, `STATUS`, PFSM, KP_TIME, JD, CREATE_TIME, UPDATE_TIME, 
+    ID, ITEM_ID, ZP_ID, ORG_ID, STATUS, PFSM, KP_TIME, JD, CREATE_TIME, UPDATE_TIME, 
     VERSION, TO_ORG_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
@@ -31,7 +31,7 @@
   </delete>
   <insert id="insert" parameterType="com.tingo.weaver.model.po.KpCheckItemPf" >
     insert into KP_CHECK_ITEM_PF (ID, ITEM_ID, ZP_ID, 
-      ORG_ID, `STATUS`, PFSM, 
+      ORG_ID, STATUS, PFSM, 
       KP_TIME, JD, CREATE_TIME, UPDATE_TIME, 
       VERSION, TO_ORG_ID)
     values (#{id,jdbcType=DECIMAL}, #{itemId,jdbcType=DECIMAL}, #{zpId,jdbcType=DECIMAL}, 
@@ -58,7 +58,7 @@
         ORG_ID,
       </if>
       <if test="status != null" >
-        `STATUS`,
+        STATUS,
       </if>
       <if test="pfsm != null" >
         PFSM,
@@ -134,7 +134,7 @@
         ORG_ID = #{orgId,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        `STATUS` = #{status,jdbcType=DECIMAL},
+        STATUS = #{status,jdbcType=DECIMAL},
       </if>
       <if test="pfsm != null" >
         PFSM = #{pfsm,jdbcType=VARCHAR},
@@ -165,7 +165,7 @@
     set ITEM_ID = #{itemId,jdbcType=DECIMAL},
       ZP_ID = #{zpId,jdbcType=DECIMAL},
       ORG_ID = #{orgId,jdbcType=DECIMAL},
-      `STATUS` = #{status,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
       PFSM = #{pfsm,jdbcType=VARCHAR},
       KP_TIME = #{kpTime,jdbcType=DATE},
       JD = #{jd,jdbcType=DECIMAL},
@@ -175,4 +175,11 @@
       TO_ORG_ID = #{toOrgId,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
+  <select id="selectByUnq" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_PF
+    where  ITEM_ID = #{itemId,jdbcType=DECIMAL} and  ORG_ID = #{orgId,jdbcType=DECIMAL} and TO_ORG_ID = #{toOrgId,jdbcType=DECIMAL}
+  </select>
 </mapper>

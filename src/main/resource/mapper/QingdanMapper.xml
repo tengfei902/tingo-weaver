@@ -31,7 +31,7 @@
         QZ,
       </if>
       <if test="status != null" >
-        `STATUS`,
+        STATUS,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >

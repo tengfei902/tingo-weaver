@@ -1,7 +1,10 @@
 package com.tingo.weaver.dao;
 
 import com.tingo.weaver.model.po.KpCheckItemDetailZp;
+import org.apache.ibatis.annotations.Param;
+
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface KpCheckItemDetailZpDao {
     int deleteByPrimaryKey(BigDecimal id);
@@ -15,4 +18,8 @@ public interface KpCheckItemDetailZpDao {
     int updateByPrimaryKeySelective(KpCheckItemDetailZp record);
 
     int updateByPrimaryKey(KpCheckItemDetailZp record);
+
+    KpCheckItemDetailZp selectByUnq(@Param("detailId")BigDecimal detailId,@Param("orgId")BigDecimal orgId);
+
+    List<KpCheckItemDetailZp> selectByZpId(@Param("zpId") BigDecimal zpId);
 }

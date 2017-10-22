@@ -3,24 +3,24 @@ package com.tingo.weaver.biz.impl;
 import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.biz.HrmService;
 import com.tingo.weaver.biz.KpService;
-import com.tingo.weaver.dao.HrmResourceDao;
-import com.tingo.weaver.dao.KpCheckItemDao;
-import com.tingo.weaver.dao.KpCheckItemDetailDao;
-import com.tingo.weaver.dao.QingdanDao;
+import com.tingo.weaver.dao.*;
 import com.tingo.weaver.model.gson.*;
 import com.tingo.weaver.model.po.*;
+import com.tingo.weaver.utils.MapUtils;
 import com.tingo.weaver.utils.Utils;
 import com.tingo.weaver.utils.enums.Jd;
 import com.tingo.weaver.utils.enums.PfType;
+import com.tingo.weaver.utils.enums.ZpStatus;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.util.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2017/10/18.
@@ -39,6 +39,12 @@ public class KpServiceImpl implements KpService {
     private HrmService hrmService;
     @Autowired
     private CheckItemService checkItemService;
+    @Autowired
+    private CompanyUserLinkDao companyUserLinkDao;
+    @Autowired
+    private KpCheckItemZpDao kpCheckItemZpDao;
+    @Autowired
+    private KpCheckItemDetailZpDao kpCheckItemDetailZpDao;
 
     @Override
     public QingdanGson selectQdById(Integer id) {
@@ -61,20 +67,64 @@ public class KpServiceImpl implements KpService {
     public List<QingdanDetailGson> selectQdDetail(Integer jd) {
         List<QingdanGson> list = new ArrayList<>();
         List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd);
-
         return null;
     }
 
     @Override
-    public List<KpZcGson> getKpZcGson(ZcListRequest zcListRequest) {
-//        KpCheckItemPub kpCheckItemPub = new KpCheckItemPub();
-//        if(!StringUtils.isEmpty(zcListRequest.getUserId())) {
-//            HrmResource hrmResource = hrmResourceDao.selectByPrimaryKey(new BigDecimal(zcListRequest.getUserId()));
-//            kpCheckItemPub.set
-//        }
-//        kpCheckItemPub.setQdId();
-//        List<KpCheckItemPub> items = kpCheckItemPupDao.selectByPrimaryKey()
-        return null;
+    public List<ZcListGson> getKpZcGson(ZcListRequest zcListRequest) {
+        List<ZcListGson> zcListGsons = new ArrayList<>();
+        List<CompanyUserLink> userLinks = companyUserLinkDao.selectByUserId(new BigDecimal(zcListRequest.getUserId()));
+        if(CollectionUtils.isEmpty(userLinks)) {
+            return Collections.EMPTY_LIST;
+        }
+        List<BigDecimal> orgIds = userLinks.stream().map(CompanyUserLink::getCompanyid).collect(Collectors.toList());
+        Map<String,Object> params = MapUtils.buildMap("orgIds",orgIds,"qdId",zcListRequest.getQd(),"jd",zcListRequest.getJd());
+        List<KpCheckItemZp> zps = kpCheckItemZpDao.selectForList(params);
+
+        Set<BigDecimal> itemIds = zps.stream().map(KpCheckItemZp::getItemId).collect(Collectors.toSet());
+        List<KpCheckItem> items = kpCheckItemDao.selectByIds(itemIds);
+
+        Map<Long,KpCheckItem> itemMap = items.stream().collect(Collectors.toMap(KpCheckItem::getId, Function.<KpCheckItem>identity()));
+
+        List<KpCheckItemDetail> itemDetails = kpCheckItemDetailDao.selectByItemIds(itemIds);
+        Map<Long,KpCheckItemDetail> itemDetailMap = itemDetails.stream().collect(Collectors.toMap(KpCheckItemDetail::getId,Function.identity()));
+
+        for(KpCheckItemZp zp:zps) {
+            ZcListGson zc = new ZcListGson();
+            zcListGsons.add(zc);
+
+            KpCheckItem item = itemMap.get(zp.getItemId().longValue());
+
+            zc.setJd(Jd.parse(zp.getJd().intValue()).getDesc());
+            zc.setItemId(zc.getItemId().longValue());
+            zc.setZpsm(zp.getZpsm());
+            zc.setKpnr(item.getKpnr());
+            zc.setOrgId(zp.getOrgId().longValue());
+            zc.setOrgName();
+            zc.setQd(item.getQd());
+            zc.setQdId(item.getQdId());
+            zc.setStatus(zp.getStatus().intValue());
+            zc.setStatusDesc(ZpStatus.parse(zp.getStatus().intValue()).getDesc());
+            zc.setZpId(zp.getId().longValue());
+
+            List<ZcDetailListGson> zcDetailListGsons = new ArrayList<>();
+            zc.setDetails(zcDetailListGsons);
+
+            List<KpCheckItemDetailZp> kpCheckItemDetailZps = kpCheckItemDetailZpDao.selectByZpId(zp.getId());
+            for(KpCheckItemDetailZp detailZp:kpCheckItemDetailZps) {
+                ZcDetailListGson zcDetailListGson = new ZcDetailListGson();
+                zcDetailListGsons.add(zcDetailListGson);
+
+                KpCheckItemDetail itemDetail = itemDetailMap.get(detailZp.getDetailId().longValue());
+                zcDetailListGson.setFz(itemDetail.getFs());
+                zcDetailListGson.setItemDetailId(itemDetail.getId());
+                zcDetailListGson.setPfbz(itemDetail.getPfbz());
+                zcDetailListGson.setTkxz(itemDetail.getTkxz());
+                zcDetailListGson.setZpDetailId(detailZp.getId().longValue());
+                zcDetailListGson.setZpf(detailZp.getPf());
+            }
+        }
+        return zcListGsons;
     }
 
     @Override
@@ -176,9 +226,11 @@ public class KpServiceImpl implements KpService {
     }
 
     @Override
-    public void doPublish(Long userId, List<String> qdIds, Integer kpMonth, List<String> companyIds) {
+    public String doPublish(Long userId, List<String> qdIds, Integer kpMonth, List<String> companyIds) {
+        List<Map<String,List<String>>> list = new ArrayList<>();
         qdIds.stream().forEach(s -> {
-            checkItemService.publishItem(s,kpMonth,companyIds);
+            list.add(checkItemService.publishItem(s, kpMonth, companyIds));
         });
+        return new com.google.gson.Gson().toJson(list);
     }
 }

@@ -23,6 +23,12 @@ public class ItemTest extends BaseTestCase {
         List<String> qdIds = Arrays.asList("5","6");
         Integer jd = 4;
         List<String> companyIds = Arrays.asList("12","15","15");
-        kpService.doPublish(userId,qdIds,jd,companyIds);
+        String result = kpService.doPublish(userId,qdIds,jd,companyIds);
+
+        System.out.println(result);
+
+        result = kpService.doPublish(userId,qdIds,jd,companyIds);
+
+        System.out.println(result);
     }
 }

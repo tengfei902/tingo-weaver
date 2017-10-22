@@ -2,6 +2,7 @@ package com.tingo.weaver.api;
 
 import com.google.common.reflect.TypeToken;
 import com.tingo.weaver.biz.KpService;
+import com.tingo.weaver.model.ResponseResult;
 import com.tingo.weaver.model.gson.CheckItemGson;
 import com.tingo.weaver.model.gson.QingdanGson;
 import com.tingo.weaver.model.gson.TableGson;
@@ -90,15 +91,15 @@ public class WeaverController {
     }
 
     @RequestMapping(value = "/doPublish",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
-    public @ResponseBody String doPublish(@RequestBody String str) throws Exception {
+    public @ResponseBody ResponseResult<String> doPublish(@RequestBody String str) throws Exception {
         str = URLDecoder.decode(str,"utf-8").replace("=","");
         Map<String,String> request = new Gson().fromJson(str,new TypeToken<Map<String,String>>(){}.getType());
         Long userId = Utils.o2l(request.get("userId"));
         List<String> qdIds = Arrays.asList(request.get("qdIds").split(","));
         Integer jd = Integer.parseInt(request.get("kpMonth"));
         List<String> companyIds = Arrays.asList(request.get("companyIds").split(","));
-        kpService.doPublish(userId,qdIds,jd,companyIds);
-        return "SUCCESS";
+        String result = kpService.doPublish(userId,qdIds,jd,companyIds);
+        return ResponseResult.success("SUCCESS", result);
     }
 
 }

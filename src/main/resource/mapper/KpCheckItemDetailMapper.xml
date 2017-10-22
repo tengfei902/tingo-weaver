@@ -52,7 +52,7 @@
         JD,
       </if>
       <if test="status != null" >
-        `STATUS`,
+        STATUS,
       </if>
       <if test="createTime != null" >
         CREATE_TIME,
@@ -116,7 +116,7 @@
         JD = #{jd,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
-        `STATUS` = #{status,jdbcType=INTEGER},
+        STATUS = #{status,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=DATE},

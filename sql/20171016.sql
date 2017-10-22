@@ -131,6 +131,8 @@ create table kp_check_item_detail_zp
   version integer default 1 not null
 );
 
+alter table kp_check_item_detail_zp add constraint unq_zp_detail unique(detail_id,org_id);
+
 create sequence kp_check_item_detail_zp_id
 start with 1
 increment by 1
@@ -152,7 +154,7 @@ create table kp_check_item_pf
   update_time date default sysdate not null,
   version integer default 1 not null
 );
-
+alter table kp_check_item_pf add constraint unq_pf unique(item_id,org_id,to_org_id);
 create sequence kp_check_item_pf_id
 start with 1
 increment by 1
@@ -174,6 +176,8 @@ create table kp_check_item_detail_pf
   update_time date default sysdate not null,
   version integer default 1 not null
 );
+
+alter table kp_check_item_detail_pf add constraint unq_pf_detail unique(item_detail_id,org_id,to_org_id);
 
 create sequence kp_check_item_d_pf_id
 start with 1

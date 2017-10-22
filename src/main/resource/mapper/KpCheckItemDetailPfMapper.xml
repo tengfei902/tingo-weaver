@@ -175,4 +175,13 @@
       PF_ID = #{pfId,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
+  <select id="selectByUnq" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_DETAIL_PF
+    where ITEM_DETAIL_ID = #{detail,jdbcType=DECIMAL}
+    and ORG_ID = #{orgId,jdbcType=DECIMAL}
+    and TO_ORG_ID = #{toOrgId,jdbcType=DECIMAL}
+  </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.tingo.weaver.biz.impl;
 
+import com.google.gson.Gson;
 import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.dao.*;
 import com.tingo.weaver.model.po.*;
@@ -56,8 +57,8 @@ public class CheckItemServiceImpl implements CheckItemService {
     }
     @Transactional
     @Override
-    public synchronized void publishItem(String qdId, Integer jd, List<String> companyIds) {
-        Map<String,List<String>> result = MapUtils
+    public synchronized Map<String,List<String>> publishItem(String qdId, Integer jd, List<String> companyIds) {
+        Map<String,List<String>> result = com.tingo.weaver.utils.MapUtils.buildMap("zp",new ArrayList<>(),"zpd",new ArrayList<>(),"kp",new ArrayList<>(),"kpd",new ArrayList<>());
         List<KpCheckItem> items = kpCheckItemDao.selectByQdId(Long.parseLong(qdId));
         for(KpCheckItem item:items) {
             List<KpCheckItemDetail> itemDetails = kpCheckItemDetailDao.selectByItemId(item.getId());
@@ -72,8 +73,9 @@ public class CheckItemServiceImpl implements CheckItemService {
 
                 try {
                     kpCheckItemZpDao.insertSelective(kpCheckItemZp);
+                    result.get("zp").add(String.valueOf(kpCheckItemZp.getId()));
                 } catch (DuplicateKeyException e) {
-
+                    kpCheckItemZp = kpCheckItemZpDao.selectByUnq(kpCheckItemZp.getItemId(),kpCheckItemZp.getOrgId());
                 }
 
                 for(KpCheckItemDetail detail:itemDetails) {
@@ -85,8 +87,9 @@ public class CheckItemServiceImpl implements CheckItemService {
 
                     try {
                         kpCheckItemDetailZpDao.insertSelective(kpCheckItemDetailZp);
+                        result.get("zpd").add(String.valueOf(kpCheckItemDetailZp.getId()));
                     } catch (DuplicateKeyException e) {
-
+//                        kpCheckItemDetailZp = kpCheckItemDetailZpDao.selectByUnq(kpCheckItemDetailZp.getDetailId(),kpCheckItemDetailZp.getOrgId());
                     }
                 }
 
@@ -104,8 +107,9 @@ public class CheckItemServiceImpl implements CheckItemService {
 
                     try {
                         kpCheckItemPfDao.insertSelective(kpCheckItemPf);
+                        result.get("kp").add(String.valueOf(kpCheckItemPf.getId()));
                     } catch (DuplicateKeyException e) {
-
+                        kpCheckItemPf = kpCheckItemPfDao.selectByUnq(kpCheckItemPf.getItemId(),kpCheckItemPf.getOrgId(),kpCheckItemPf.getToOrgId());
                     }
 
                     for(KpCheckItemDetail detail:itemDetails) {
@@ -119,6 +123,7 @@ public class CheckItemServiceImpl implements CheckItemService {
 
                         try {
                             kpCheckItemDetailPfDao.insertSelective(kpCheckItemDetailPf);
+                            result.get("kpd").add(String.valueOf(kpCheckItemDetailPf.getId()));
                         }catch (DuplicateKeyException e) {
 
                         }
@@ -126,5 +131,7 @@ public class CheckItemServiceImpl implements CheckItemService {
                 }
             }
         }
+
+        return result;
     }
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tingo.weaver.dao.DeptUserLinkDao" >
+  <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.DeptUserLink" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USERID" property="userid" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="DEPTID" property="deptid" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="insert" parameterType="com.tingo.weaver.model.po.DeptUserLink" >
+    insert into T_DEPT_USER_LINK (ID, USERID, `STATUS`, 
+      DEPTID)
+    values (#{id,jdbcType=DECIMAL}, #{userid,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, 
+      #{deptid,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.DeptUserLink" >
+    insert into T_DEPT_USER_LINK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userid != null" >
+        USERID,
+      </if>
+      <if test="status != null" >
+        `STATUS`,
+      </if>
+      <if test="deptid != null" >
+        DEPTID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="deptid != null" >
+        #{deptid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>

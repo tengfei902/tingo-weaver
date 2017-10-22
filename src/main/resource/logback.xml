@@ -128,7 +128,7 @@
 	</logger>
 
 	<!-- 默认日志,凡是没有指定的日志全部输出到frameworkLog中，业务日志一般会直接写到bizlog中，而没有配置的基本都是框架级日志 -->
-	<root level="DEBUG">
+	<root level="INFO">
 		<appender-ref ref="console" />
 	</root>
 

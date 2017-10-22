@@ -1,17 +1,117 @@
 package com.tingo.weaver.model.gson;
 
+import java.util.List;
+
 /**
  * Created by user on 17/10/18.
  */
 public class ZcListGson {
+    private Long zpId;
+    private Long itemId;
+    private Long orgId;
+    private String orgName;
+    private Long qdId;
+    private String qd;
+    private String kpnr;
+    private String jd;
+    private int status;
+    private String statusDesc;
+    private String zpsm;
+    private List<ZcDetailListGson> details;
 
-//    .addColumn(new Column("xmnr", "xmnr","项目内容",1).style("width:80px;").width("10%").type(TdType.LABEL))
-//            .addColumn(new Column("tkxz","tkxz","条款细则",2).style("width:80px;").width("20%").type(TdType.LABEL))
-//            .addColumn(new Column("fz","fz","分值",3).style("width:80px;").width("5%").type(TdType.LABEL))
-//            .addColumn(new Column("pfbz","pfbz","评分标准",4).style("width:80px;").width("10%").type(TdType.LABEL))
-//            .addColumn(new Column("kpjd","kpjd","考评季度",5).style("width:80px;").width("5%").type(TdType.LABEL))
-//            .addColumn(new Column("zt","zt","状态",6).style("width:80px;").width("5%").type(TdType.LABEL))
-//            .addColumn(new Column("zpf","zpf","自评分",7).style("width:80px;").width("5%").type(TdType.TEXT))
-//            .addColumn(new Column("zpsm","zpsm","自评说明",8).style("width:80px;").width("20%").type(TdType.TEXT));
+    public Long getZpId() {
+        return zpId;
+    }
 
+    public void setZpId(Long zpId) {
+        this.zpId = zpId;
+    }
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
+
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
+    public Long getQdId() {
+        return qdId;
+    }
+
+    public void setQdId(Long qdId) {
+        this.qdId = qdId;
+    }
+
+    public String getQd() {
+        return qd;
+    }
+
+    public void setQd(String qd) {
+        this.qd = qd;
+    }
+
+    public String getKpnr() {
+        return kpnr;
+    }
+
+    public void setKpnr(String kpnr) {
+        this.kpnr = kpnr;
+    }
+
+    public String getJd() {
+        return jd;
+    }
+
+    public void setJd(String jd) {
+        this.jd = jd;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
+
+    public String getZpsm() {
+        return zpsm;
+    }
+
+    public void setZpsm(String zpsm) {
+        this.zpsm = zpsm;
+    }
+
+    public List<ZcDetailListGson> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<ZcDetailListGson> details) {
+        this.details = details;
+    }
 }

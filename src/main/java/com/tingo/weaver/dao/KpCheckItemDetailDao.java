@@ -20,4 +20,6 @@ public interface KpCheckItemDetailDao {
     int updateByPrimaryKey(KpCheckItemDetail record);
 
     List<KpCheckItemDetail> selectByItemId(@Param("itemId") Long itemId);
+
+    List<KpCheckItemDetail> selectByItemIds(@Param("itemIds") List<Long> itemIds);
 }

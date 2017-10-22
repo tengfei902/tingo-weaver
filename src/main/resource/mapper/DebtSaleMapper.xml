@@ -34,7 +34,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, user_id, bo_id, va_id, transfer_num, original_price, price, one_price, op_type, 
-    to_type, title, transfer_rate, `percent`, expect, residue_num, deadline, `status`, 
+    to_type, title, transfer_rate, percent, expect, residue_num, deadline, status, 
     interest, trans_amount, pay_amount, lock_num, seri_no, version, create_time, update_time, 
     db_id, transfer_type, handing_fee_rate, yield_rate
   </sql>
@@ -53,8 +53,8 @@
       va_id, transfer_num, original_price, 
       price, one_price, op_type, 
       to_type, title, transfer_rate, 
-      `percent`, expect, residue_num, 
-      deadline, `status`, interest, 
+      percent, expect, residue_num, 
+      deadline, status, interest, 
       trans_amount, pay_amount, lock_num, 
       seri_no, version, create_time, 
       update_time, db_id, transfer_type, 
@@ -110,7 +110,7 @@
         transfer_rate,
       </if>
       <if test="percent != null" >
-        `percent`,
+        percent,
       </if>
       <if test="expect != null" >
         expect,
@@ -122,7 +122,7 @@
         deadline,
       </if>
       <if test="status != null" >
-        `status`,
+        status,
       </if>
       <if test="interest != null" >
         interest,
@@ -288,7 +288,7 @@
         transfer_rate = #{transferRate,jdbcType=DECIMAL},
       </if>
       <if test="percent != null" >
-        `percent` = #{percent,jdbcType=DECIMAL},
+        percent = #{percent,jdbcType=DECIMAL},
       </if>
       <if test="expect != null" >
         expect = #{expect,jdbcType=TINYINT},
@@ -300,7 +300,7 @@
         deadline = #{deadline,jdbcType=TIMESTAMP},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=BIT},
+        status = #{status,jdbcType=BIT},
       </if>
       <if test="interest != null" >
         interest = #{interest,jdbcType=DECIMAL},
@@ -354,11 +354,11 @@
       to_type = #{toType,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
       transfer_rate = #{transferRate,jdbcType=DECIMAL},
-      `percent` = #{percent,jdbcType=DECIMAL},
+      percent = #{percent,jdbcType=DECIMAL},
       expect = #{expect,jdbcType=TINYINT},
       residue_num = #{residueNum,jdbcType=DECIMAL},
       deadline = #{deadline,jdbcType=TIMESTAMP},
-      `status` = #{status,jdbcType=BIT},
+      status = #{status,jdbcType=BIT},
       interest = #{interest,jdbcType=DECIMAL},
       trans_amount = #{transAmount,jdbcType=DECIMAL},
       pay_amount = #{payAmount,jdbcType=DECIMAL},

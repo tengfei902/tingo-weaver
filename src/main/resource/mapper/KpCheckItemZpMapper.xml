@@ -14,7 +14,7 @@
     <result column="VERSION" property="version" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, ITEM_ID, ORG_ID, `STATUS`, ZPSM, ZP_TIME, JD, CREATE_TIME, UPDATE_TIME, VERSION
+    ID, ITEM_ID, ORG_ID, STATUS, ZPSM, ZP_TIME, JD, CREATE_TIME, UPDATE_TIME, VERSION
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
     select 
@@ -28,7 +28,7 @@
   </delete>
   <insert id="insert" parameterType="com.tingo.weaver.model.po.KpCheckItemZp" >
     insert into KP_CHECK_ITEM_ZP (ID, ITEM_ID, ORG_ID, 
-      `STATUS`, ZPSM, ZP_TIME, 
+      STATUS, ZPSM, ZP_TIME, 
       JD, CREATE_TIME, UPDATE_TIME, 
       VERSION)
     values (#{id,jdbcType=DECIMAL}, #{itemId,jdbcType=DECIMAL}, #{orgId,jdbcType=DECIMAL}, 
@@ -52,7 +52,7 @@
         ORG_ID,
       </if>
       <if test="status != null" >
-        `STATUS`,
+        STATUS,
       </if>
       <if test="zpsm != null" >
         ZPSM,
@@ -116,7 +116,7 @@
         ORG_ID = #{orgId,jdbcType=DECIMAL},
       </if>
       <if test="status != null" >
-        `STATUS` = #{status,jdbcType=DECIMAL},
+        STATUS = #{status,jdbcType=DECIMAL},
       </if>
       <if test="zpsm != null" >
         ZPSM = #{zpsm,jdbcType=VARCHAR},
@@ -143,7 +143,7 @@
     update KP_CHECK_ITEM_ZP
     set ITEM_ID = #{itemId,jdbcType=DECIMAL},
       ORG_ID = #{orgId,jdbcType=DECIMAL},
-      `STATUS` = #{status,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
       ZPSM = #{zpsm,jdbcType=VARCHAR},
       ZP_TIME = #{zpTime,jdbcType=DATE},
       JD = #{jd,jdbcType=DECIMAL},
@@ -152,4 +152,13 @@
       VERSION = #{version,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
+  <select id="selectByUnq" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_ZP
+    where
+    ITEM_ID = #{itemId,jdbcType=DECIMAL}
+    AND ORG_ID = #{orgId,jdbcType=DECIMAL}
+  </select>
 </mapper>

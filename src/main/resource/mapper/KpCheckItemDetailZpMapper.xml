@@ -152,4 +152,12 @@
       VERSION = #{version,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+
+  <select id="selectByUnq" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_DETAIL_ZP
+    where DETAIL_ID = #{detailId,jdbcType=DECIMAL}
+    and ORG_ID = #{orgId,jdbcType=DECIMAL}
+  </select>
 </mapper>

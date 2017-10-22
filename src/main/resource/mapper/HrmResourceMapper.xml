@@ -110,7 +110,7 @@
     <result column="FID" jdbcType="VARCHAR" property="fid" />
   </resultMap>
   <sql id="Base_Column_List">
-    ID, LOGINID, `PASSWORD`, LASTNAME, SEX, BIRTHDAY, NATIONALITY, SYSTEMLANGUAGE, MARITALSTATUS, 
+    ID, LOGINID, PASSWORD, LASTNAME, SEX, BIRTHDAY, NATIONALITY, SYSTEMLANGUAGE, MARITALSTATUS, 
     TELEPHONE, MOBILE, MOBILECALL, EMAIL, LOCATIONID, WORKROOM, HOMEADDRESS, RESOURCETYPE, 
     STARTDATE, ENDDATE, JOBTITLE, JOBACTIVITYDESC, JOBLEVEL, SECLEVEL, DEPARTMENTID, 
     SUBCOMPANYID1, COSTCENTERID, MANAGERID, ASSISTANTID, BANKID1, ACCOUNTID1, RESOURCEIMAGEID, 
@@ -119,8 +119,8 @@
     NUMBERFIELD5, TEXTFIELD1, TEXTFIELD2, TEXTFIELD3, TEXTFIELD4, TEXTFIELD5, TINYINTFIELD1, 
     TINYINTFIELD2, TINYINTFIELD3, TINYINTFIELD4, TINYINTFIELD5, CERTIFICATENUM, NATIVEPLACE, 
     EDUCATIONLEVEL, BEMEMBERDATE, BEPARTYDATE, WORKCODE, REGRESIDENTPLACE, HEALTHINFO, 
-    RESIDENTPLACE, POLICY, `DEGREE`, HEIGHT, USEKIND, JOBCALL, ACCUMFUNDACCOUNT, BIRTHPLACE, 
-    FOLK, RESIDENTPHONE, RESIDENTPOSTCODE, EXTPHONE, MANAGERSTR, `STATUS`, FAX, ISLABOUUNION, 
+    RESIDENTPLACE, POLICY, DEGREE, HEIGHT, USEKIND, JOBCALL, ACCUMFUNDACCOUNT, BIRTHPLACE, 
+    FOLK, RESIDENTPHONE, RESIDENTPOSTCODE, EXTPHONE, MANAGERSTR, STATUS, FAX, ISLABOUUNION, 
     WEIGHT, TEMPRESIDENTNUMBER, PROBATIONENDDATE, COUNTRYID, PASSWDCHGDATE, NEEDUSB, 
     SERIAL, ACCOUNT, LLOGINID, NEEDDYNAPASS, DSPORDER, PASSWORDSTATE, ACCOUNTTYPE, BELONGTO, 
     DACTYLOGRAM, ASSISTANTDACTYLOGRAM, PASSWORDLOCK, SUMPASSWORDWRONG, OLDPASSWORD1, 
@@ -137,7 +137,7 @@
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
   <insert id="insert" parameterType="com.tingo.weaver.model.po.HrmResource">
-    insert into HRMRESOURCE (ID, LOGINID, `PASSWORD`, 
+    insert into HRMRESOURCE (ID, LOGINID, PASSWORD, 
       LASTNAME, SEX, BIRTHDAY, 
       NATIONALITY, SYSTEMLANGUAGE, MARITALSTATUS, 
       TELEPHONE, MOBILE, MOBILECALL, 
@@ -159,10 +159,10 @@
       NATIVEPLACE, EDUCATIONLEVEL, BEMEMBERDATE, 
       BEPARTYDATE, WORKCODE, REGRESIDENTPLACE, 
       HEALTHINFO, RESIDENTPLACE, POLICY, 
-      `DEGREE`, HEIGHT, USEKIND, 
+      DEGREE, HEIGHT, USEKIND, 
       JOBCALL, ACCUMFUNDACCOUNT, BIRTHPLACE, 
       FOLK, RESIDENTPHONE, RESIDENTPOSTCODE, 
-      EXTPHONE, MANAGERSTR, `STATUS`, 
+      EXTPHONE, MANAGERSTR, STATUS, 
       FAX, ISLABOUUNION, WEIGHT, 
       TEMPRESIDENTNUMBER, PROBATIONENDDATE, COUNTRYID, 
       PASSWDCHGDATE, NEEDUSB, SERIAL, 
@@ -220,7 +220,7 @@
         LOGINID,
       </if>
       <if test="password != null">
-        `PASSWORD`,
+        PASSWORD,
       </if>
       <if test="lastname != null">
         LASTNAME,
@@ -412,7 +412,7 @@
         POLICY,
       </if>
       <if test="degree != null">
-        `DEGREE`,
+        DEGREE,
       </if>
       <if test="height != null">
         HEIGHT,
@@ -445,7 +445,7 @@
         MANAGERSTR,
       </if>
       <if test="status != null">
-        `STATUS`,
+        STATUS,
       </if>
       <if test="fax != null">
         FAX,
@@ -860,7 +860,7 @@
         LOGINID = #{loginid,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
-        `PASSWORD` = #{password,jdbcType=VARCHAR},
+        PASSWORD = #{password,jdbcType=VARCHAR},
       </if>
       <if test="lastname != null">
         LASTNAME = #{lastname,jdbcType=VARCHAR},
@@ -1052,7 +1052,7 @@
         POLICY = #{policy,jdbcType=VARCHAR},
       </if>
       <if test="degree != null">
-        `DEGREE` = #{degree,jdbcType=VARCHAR},
+        DEGREE = #{degree,jdbcType=VARCHAR},
       </if>
       <if test="height != null">
         HEIGHT = #{height,jdbcType=VARCHAR},
@@ -1085,7 +1085,7 @@
         MANAGERSTR = #{managerstr,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
-        `STATUS` = #{status,jdbcType=DECIMAL},
+        STATUS = #{status,jdbcType=DECIMAL},
       </if>
       <if test="fax != null">
         FAX = #{fax,jdbcType=VARCHAR},
@@ -1177,7 +1177,7 @@
   <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.HrmResource">
     update HRMRESOURCE
     set LOGINID = #{loginid,jdbcType=VARCHAR},
-      `PASSWORD` = #{password,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
       LASTNAME = #{lastname,jdbcType=VARCHAR},
       SEX = #{sex,jdbcType=CHAR},
       BIRTHDAY = #{birthday,jdbcType=CHAR},
@@ -1241,7 +1241,7 @@
       HEALTHINFO = #{healthinfo,jdbcType=CHAR},
       RESIDENTPLACE = #{residentplace,jdbcType=VARCHAR},
       POLICY = #{policy,jdbcType=VARCHAR},
-      `DEGREE` = #{degree,jdbcType=VARCHAR},
+      DEGREE = #{degree,jdbcType=VARCHAR},
       HEIGHT = #{height,jdbcType=VARCHAR},
       USEKIND = #{usekind,jdbcType=DECIMAL},
       JOBCALL = #{jobcall,jdbcType=DECIMAL},
@@ -1252,7 +1252,7 @@
       RESIDENTPOSTCODE = #{residentpostcode,jdbcType=VARCHAR},
       EXTPHONE = #{extphone,jdbcType=VARCHAR},
       MANAGERSTR = #{managerstr,jdbcType=VARCHAR},
-      `STATUS` = #{status,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
       FAX = #{fax,jdbcType=VARCHAR},
       ISLABOUUNION = #{islabouunion,jdbcType=CHAR},
       WEIGHT = #{weight,jdbcType=DECIMAL},

@@ -1,6 +1,8 @@
 package com.tingo.weaver.dao;
 
 import com.tingo.weaver.model.po.KpCheckItemDetailPf;
+import org.apache.ibatis.annotations.Param;
+
 import java.math.BigDecimal;
 
 public interface KpCheckItemDetailPfDao {
@@ -15,4 +17,6 @@ public interface KpCheckItemDetailPfDao {
     int updateByPrimaryKeySelective(KpCheckItemDetailPf record);
 
     int updateByPrimaryKey(KpCheckItemDetailPf record);
+
+    KpCheckItemDetailPf selectByUnq(@Param("detailId") BigDecimal detailId,@Param("orgId")BigDecimal orgId,@Param("toOrgId")BigDecimal toOrgId);
 }
