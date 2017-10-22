@@ -81,13 +81,16 @@ public class KpServiceImpl implements KpService {
         Map<String,Object> params = MapUtils.buildMap("orgIds",orgIds,"qdId",zcListRequest.getQd(),"jd",zcListRequest.getJd());
         List<KpCheckItemZp> zps = kpCheckItemZpDao.selectForList(params);
 
-        Set<BigDecimal> itemIds = zps.stream().map(KpCheckItemZp::getItemId).collect(Collectors.toSet());
+        Set<Long> itemIds = zps.stream().map(KpCheckItemZp::getItemId).map(BigDecimal::longValue).collect(Collectors.toSet());
         List<KpCheckItem> items = kpCheckItemDao.selectByIds(itemIds);
 
         Map<Long,KpCheckItem> itemMap = items.stream().collect(Collectors.toMap(KpCheckItem::getId, Function.<KpCheckItem>identity()));
 
         List<KpCheckItemDetail> itemDetails = kpCheckItemDetailDao.selectByItemIds(itemIds);
         Map<Long,KpCheckItemDetail> itemDetailMap = itemDetails.stream().collect(Collectors.toMap(KpCheckItemDetail::getId,Function.identity()));
+
+        List<BigDecimal> companyIds = userLinks.stream().map(CompanyUserLink::getCompanyid).collect(Collectors.toList());
+
 
         for(KpCheckItemZp zp:zps) {
             ZcListGson zc = new ZcListGson();

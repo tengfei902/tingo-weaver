@@ -138,4 +138,13 @@
     where item_id = #{itemId,jdbcType=BIGINT}
   </select>
 
+  <select id="selectByItemIds" resultMap="BaseResultMap" parameterType="java.util.List" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_DETAIL
+    where item_id in
+    <foreach collection="itemIds" item="itemId" index="index" open="(" close=")" separator=",">
+      #{itemId}
+    </foreach>
+  </select>
 </mapper>

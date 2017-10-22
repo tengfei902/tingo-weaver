@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 public interface KpCheckItemDetailDao {
     int deleteByPrimaryKey(BigDecimal id);
@@ -21,5 +22,5 @@ public interface KpCheckItemDetailDao {
 
     List<KpCheckItemDetail> selectByItemId(@Param("itemId") Long itemId);
 
-    List<KpCheckItemDetail> selectByItemIds(@Param("itemIds") List<Long> itemIds);
+    List<KpCheckItemDetail> selectByItemIds(@Param("itemIds") Set<Long> itemIds);
 }

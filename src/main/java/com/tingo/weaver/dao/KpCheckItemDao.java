@@ -22,5 +22,5 @@ public interface KpCheckItemDao {
 
     List<KpCheckItem> selectByQdId(@Param("qdId") Long qdId);
 
-    List<KpCheckItem> selectByIds(@Param("ids") Set<BigDecimal> ids);
+    List<KpCheckItem> selectByIds(@Param("ids") Set<Long> ids);
 }
