@@ -4,7 +4,7 @@ package com.tingo.weaver.utils.enums;
  * Created by Administrator on 2017/10/21.
  */
 public enum ZpStatus {
-    NEW(0,"Î´×ÔÆÀ"),CHECKED(1,"ÒÑ×ÔÆÀ");
+    NEW(0,"æœªè‡ªè¯„"),CHECKED(1,"å·²è‡ªè¯„");
 
     private int value;
     private String desc;
@@ -25,5 +25,9 @@ public enum ZpStatus {
 
     public String getDesc() {
         return this.desc;
+    }
+
+    public int getValue() {
+        return this.value;
     }
 }

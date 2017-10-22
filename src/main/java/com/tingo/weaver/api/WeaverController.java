@@ -5,6 +5,7 @@ import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.model.ResponseResult;
 import com.tingo.weaver.model.gson.*;
 import com.tingo.weaver.utils.Utils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by user on 17/9/27.
@@ -84,6 +86,15 @@ public class WeaverController {
 
     @RequestMapping(value = "/zc/getZcList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
     public @ResponseBody String getZcList(ZcListRequest zcRequest) {
+        if(!NumberUtils.isNumber(zcRequest.getJd())) {
+            zcRequest.setJd(null);
+        }
+        if(!NumberUtils.isNumber(zcRequest.getQd())) {
+            zcRequest.setQd(null);
+        }
+        if(!NumberUtils.isNumber(zcRequest.getStatus())) {
+            zcRequest.setStatus(null);
+        }
         List<ZcListGson> list = kpService.getKpZcGson(zcRequest);
         return new Gson().toJson(list);
     }
@@ -100,4 +111,19 @@ public class WeaverController {
         return ResponseResult.success("SUCCESS", result);
     }
 
+    @RequestMapping(value = "/saveZp",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
+    public @ResponseBody String saveZp(@RequestBody String itemStr) throws Exception {
+        itemStr = URLDecoder.decode(itemStr,"utf-8").replace("=","");
+        Map<String,List<Map<String,String>>> request = new Gson().fromJson(itemStr,new TypeToken<Map<String,List<Map<String,String>>>>(){}.getType());
+        kpService.saveZp(request.get("zps"),request.get("details"));
+        return "SUCCESS";
+    }
+
+    @RequestMapping(value = "/submitZp",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
+    public @ResponseBody String submitZp(@RequestBody String itemStr) throws Exception {
+        itemStr = URLDecoder.decode(itemStr,"utf-8").replace("=","");
+        Map<String,List<Map<String,String>>> request = new Gson().fromJson(itemStr,new TypeToken<Map<String,List<Map<String,String>>>>(){}.getType());
+        kpService.submitZp(request.get("zps"),request.get("details"));
+        return "SUCCESS";
+    }
 }

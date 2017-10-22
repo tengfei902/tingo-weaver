@@ -181,10 +181,10 @@
     <include refid="Base_Column_List" />
     from KP_CHECK_ITEM_ZP
     where 1=1
-    <if test="qdId != null" >
+    <if test="qdId != null and qdId != ''" >
       and QD_ID = #{qdId,jdbcType=DECIMAL}
     </if>
-    <if test="orgIds != null" >
+    <if test="orgIds != null and orgIds.size() > 0" >
       and ORG_ID in
       <foreach collection="orgIds" item="orgId" index="index" open="(" close=")" separator=",">
         #{orgId}

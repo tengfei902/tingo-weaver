@@ -92,11 +92,11 @@ public class KpServiceImpl implements KpService {
         Map<Long,KpCheckItem> itemMap = items.stream().collect(Collectors.toMap(KpCheckItem::getId, Function.<KpCheckItem>identity()));
 
         List<KpCheckItemDetail> itemDetails = kpCheckItemDetailDao.selectByItemIds(itemIds);
-        Map<Long,KpCheckItemDetail> itemDetailMap = itemDetails.stream().collect(Collectors.toMap(KpCheckItemDetail::getId,Function.identity()));
+        Map<Long,KpCheckItemDetail> itemDetailMap = itemDetails.stream().collect(Collectors.toMap(KpCheckItemDetail::getId, Function.identity()));
 
         List<BigDecimal> companyIds = userLinks.stream().map(CompanyUserLink::getCompanyid).collect(Collectors.toList());
         List<HrmSubCompany> companies = hrmSubCompanyDao.selectByIds(companyIds);
-        Map<BigDecimal,HrmSubCompany> companyMap = companies.stream().collect(Collectors.toMap(HrmSubCompany::getId,Function.identity()));
+        Map<BigDecimal,HrmSubCompany> companyMap = companies.stream().collect(Collectors.toMap(HrmSubCompany::getId, Function.identity()));
 
         for(KpCheckItemZp zp:zps) {
             ZcListGson zc = new ZcListGson();
@@ -241,5 +241,64 @@ public class KpServiceImpl implements KpService {
             list.add(checkItemService.publishItem(s, kpMonth, companyIds));
         });
         return new com.google.gson.Gson().toJson(list);
+    }
+
+    @Override
+    public void saveZp(List<Map<String, String>> zps,List<Map<String, String>> details) {
+        for(Map<String,String> zp:zps) {
+            KpCheckItemZp itemZp = kpCheckItemZpDao.selectByPrimaryKey(new BigDecimal(zp.get("zpId")));
+            if(ZpStatus.parse(itemZp.getStatus().intValue())== ZpStatus.CHECKED) {
+                continue;
+            }
+
+            KpCheckItemZp kpCheckItemZp = new KpCheckItemZp();
+            kpCheckItemZp.setId(new BigDecimal(zp.get("zpId")));
+            kpCheckItemZp.setZpsm(zp.get("zpsm"));
+            kpCheckItemZpDao.updateByPrimaryKeySelective(kpCheckItemZp);
+        }
+
+        for(Map<String,String> detail:details) {
+            KpCheckItemDetailZp detailZp = kpCheckItemDetailZpDao.selectByPrimaryKey(new BigDecimal(detail.get("detailId")));
+            KpCheckItemZp itemZp = kpCheckItemZpDao.selectByPrimaryKey(detailZp.getZpId());
+            if(ZpStatus.parse(itemZp.getStatus().intValue())== ZpStatus.CHECKED) {
+                continue;
+            }
+
+            KpCheckItemDetailZp kpCheckItemDetailZp = new KpCheckItemDetailZp();
+            kpCheckItemDetailZp.setId(new BigDecimal(detail.get("detailId")));
+            kpCheckItemDetailZp.setPf(new BigDecimal(detail.get("zpf")));
+            kpCheckItemDetailZpDao.updateByPrimaryKeySelective(kpCheckItemDetailZp);
+        }
+    }
+
+    @Override
+    public void submitZp(List<Map<String, String>> zps, List<Map<String, String>> details) {
+        for(Map<String,String> zp:zps) {
+            KpCheckItemZp itemZp = kpCheckItemZpDao.selectByPrimaryKey(new BigDecimal(zp.get("zpId")));
+            if(ZpStatus.parse(itemZp.getStatus().intValue())== ZpStatus.CHECKED) {
+                continue;
+            }
+
+            KpCheckItemZp kpCheckItemZp = new KpCheckItemZp();
+            kpCheckItemZp.setId(new BigDecimal(zp.get("zpId")));
+            kpCheckItemZp.setZpsm(zp.get("zpsm"));
+            kpCheckItemZp.setZpTime(new Date());
+            kpCheckItemZp.setStatus(new BigDecimal(ZpStatus.CHECKED.getValue()));
+            kpCheckItemZpDao.updateByPrimaryKeySelective(kpCheckItemZp);
+        }
+
+        for(Map<String,String> detail:details) {
+            KpCheckItemDetailZp detailZp = kpCheckItemDetailZpDao.selectByPrimaryKey(new BigDecimal(detail.get("detailId")));
+            KpCheckItemZp itemZp = kpCheckItemZpDao.selectByPrimaryKey(detailZp.getZpId());
+            if(ZpStatus.parse(itemZp.getStatus().intValue())== ZpStatus.CHECKED) {
+                continue;
+            }
+
+            KpCheckItemDetailZp kpCheckItemDetailZp = new KpCheckItemDetailZp();
+            kpCheckItemDetailZp.setId(new BigDecimal(detail.get("detailId")));
+            kpCheckItemDetailZp.setPf(new BigDecimal(detail.get("zpf")));
+            kpCheckItemDetailZp.setZpTime(new Date());
+            kpCheckItemDetailZpDao.updateByPrimaryKeySelective(kpCheckItemDetailZp);
+        }
     }
 }
