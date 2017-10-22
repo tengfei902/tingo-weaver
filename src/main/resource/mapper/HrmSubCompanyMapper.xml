@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tingo.weaver.dao.HrmSubCompanyDao">
+  <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.HrmSubCompany">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="SUBCOMPANYNAME" jdbcType="VARCHAR" property="subcompanyname" />
+    <result column="SUBCOMPANYDESC" jdbcType="VARCHAR" property="subcompanydesc" />
+    <result column="COMPANYID" jdbcType="DECIMAL" property="companyid" />
+    <result column="SUPSUBCOMID" jdbcType="DECIMAL" property="supsubcomid" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="SHOWORDER" jdbcType="DECIMAL" property="showorder" />
+    <result column="CANCELED" jdbcType="CHAR" property="canceled" />
+    <result column="SUBCOMPANYCODE" jdbcType="VARCHAR" property="subcompanycode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, SUBCOMPANYNAME, SUBCOMPANYDESC, COMPANYID, SUPSUBCOMID, URL, SHOWORDER, CANCELED, 
+    SUBCOMPANYCODE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from HRMSUBCOMPANY
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from HRMSUBCOMPANY
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.tingo.weaver.model.po.HrmSubCompany">
+    insert into HRMSUBCOMPANY (ID, SUBCOMPANYNAME, SUBCOMPANYDESC, 
+      COMPANYID, SUPSUBCOMID, URL, 
+      SHOWORDER, CANCELED, SUBCOMPANYCODE
+      )
+    values (#{id,jdbcType=DECIMAL}, #{subcompanyname,jdbcType=VARCHAR}, #{subcompanydesc,jdbcType=VARCHAR}, 
+      #{companyid,jdbcType=DECIMAL}, #{supsubcomid,jdbcType=DECIMAL}, #{url,jdbcType=VARCHAR}, 
+      #{showorder,jdbcType=DECIMAL}, #{canceled,jdbcType=CHAR}, #{subcompanycode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.HrmSubCompany">
+    insert into HRMSUBCOMPANY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="subcompanyname != null">
+        SUBCOMPANYNAME,
+      </if>
+      <if test="subcompanydesc != null">
+        SUBCOMPANYDESC,
+      </if>
+      <if test="companyid != null">
+        COMPANYID,
+      </if>
+      <if test="supsubcomid != null">
+        SUPSUBCOMID,
+      </if>
+      <if test="url != null">
+        URL,
+      </if>
+      <if test="showorder != null">
+        SHOWORDER,
+      </if>
+      <if test="canceled != null">
+        CANCELED,
+      </if>
+      <if test="subcompanycode != null">
+        SUBCOMPANYCODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="subcompanyname != null">
+        #{subcompanyname,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanydesc != null">
+        #{subcompanydesc,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null">
+        #{companyid,jdbcType=DECIMAL},
+      </if>
+      <if test="supsubcomid != null">
+        #{supsubcomid,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="showorder != null">
+        #{showorder,jdbcType=DECIMAL},
+      </if>
+      <if test="canceled != null">
+        #{canceled,jdbcType=CHAR},
+      </if>
+      <if test="subcompanycode != null">
+        #{subcompanycode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tingo.weaver.model.po.HrmSubCompany">
+    update HRMSUBCOMPANY
+    <set>
+      <if test="subcompanyname != null">
+        SUBCOMPANYNAME = #{subcompanyname,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanydesc != null">
+        SUBCOMPANYDESC = #{subcompanydesc,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null">
+        COMPANYID = #{companyid,jdbcType=DECIMAL},
+      </if>
+      <if test="supsubcomid != null">
+        SUPSUBCOMID = #{supsubcomid,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null">
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="showorder != null">
+        SHOWORDER = #{showorder,jdbcType=DECIMAL},
+      </if>
+      <if test="canceled != null">
+        CANCELED = #{canceled,jdbcType=CHAR},
+      </if>
+      <if test="subcompanycode != null">
+        SUBCOMPANYCODE = #{subcompanycode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.HrmSubCompany">
+    update HRMSUBCOMPANY
+    set SUBCOMPANYNAME = #{subcompanyname,jdbcType=VARCHAR},
+      SUBCOMPANYDESC = #{subcompanydesc,jdbcType=VARCHAR},
+      COMPANYID = #{companyid,jdbcType=DECIMAL},
+      SUPSUBCOMID = #{supsubcomid,jdbcType=DECIMAL},
+      URL = #{url,jdbcType=VARCHAR},
+      SHOWORDER = #{showorder,jdbcType=DECIMAL},
+      CANCELED = #{canceled,jdbcType=CHAR},
+      SUBCOMPANYCODE = #{subcompanycode,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <resultMap id="BaseResultMap" type="com.tingo.weaver.model.po.HrmSubCompany">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="SUBCOMPANYNAME" jdbcType="VARCHAR" property="subcompanyname" />
+    <result column="SUBCOMPANYDESC" jdbcType="VARCHAR" property="subcompanydesc" />
+    <result column="COMPANYID" jdbcType="DECIMAL" property="companyid" />
+    <result column="SUPSUBCOMID" jdbcType="DECIMAL" property="supsubcomid" />
+    <result column="URL" jdbcType="VARCHAR" property="url" />
+    <result column="SHOWORDER" jdbcType="DECIMAL" property="showorder" />
+    <result column="CANCELED" jdbcType="CHAR" property="canceled" />
+    <result column="SUBCOMPANYCODE" jdbcType="VARCHAR" property="subcompanycode" />
+    <result column="BUDGETATUOMOVEORDER" jdbcType="DECIMAL" property="budgetatuomoveorder" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, SUBCOMPANYNAME, SUBCOMPANYDESC, COMPANYID, SUPSUBCOMID, URL, SHOWORDER, CANCELED, 
+    SUBCOMPANYCODE, BUDGETATUOMOVEORDER
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from HRMSUBCOMPANY
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from HRMSUBCOMPANY
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.tingo.weaver.model.po.HrmSubCompany">
+    insert into HRMSUBCOMPANY (ID, SUBCOMPANYNAME, SUBCOMPANYDESC, 
+      COMPANYID, SUPSUBCOMID, URL, 
+      SHOWORDER, CANCELED, SUBCOMPANYCODE, 
+      BUDGETATUOMOVEORDER)
+    values (#{id,jdbcType=DECIMAL}, #{subcompanyname,jdbcType=VARCHAR}, #{subcompanydesc,jdbcType=VARCHAR}, 
+      #{companyid,jdbcType=DECIMAL}, #{supsubcomid,jdbcType=DECIMAL}, #{url,jdbcType=VARCHAR}, 
+      #{showorder,jdbcType=DECIMAL}, #{canceled,jdbcType=CHAR}, #{subcompanycode,jdbcType=VARCHAR}, 
+      #{budgetatuomoveorder,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.HrmSubCompany">
+    insert into HRMSUBCOMPANY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="subcompanyname != null">
+        SUBCOMPANYNAME,
+      </if>
+      <if test="subcompanydesc != null">
+        SUBCOMPANYDESC,
+      </if>
+      <if test="companyid != null">
+        COMPANYID,
+      </if>
+      <if test="supsubcomid != null">
+        SUPSUBCOMID,
+      </if>
+      <if test="url != null">
+        URL,
+      </if>
+      <if test="showorder != null">
+        SHOWORDER,
+      </if>
+      <if test="canceled != null">
+        CANCELED,
+      </if>
+      <if test="subcompanycode != null">
+        SUBCOMPANYCODE,
+      </if>
+      <if test="budgetatuomoveorder != null">
+        BUDGETATUOMOVEORDER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="subcompanyname != null">
+        #{subcompanyname,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanydesc != null">
+        #{subcompanydesc,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null">
+        #{companyid,jdbcType=DECIMAL},
+      </if>
+      <if test="supsubcomid != null">
+        #{supsubcomid,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="showorder != null">
+        #{showorder,jdbcType=DECIMAL},
+      </if>
+      <if test="canceled != null">
+        #{canceled,jdbcType=CHAR},
+      </if>
+      <if test="subcompanycode != null">
+        #{subcompanycode,jdbcType=VARCHAR},
+      </if>
+      <if test="budgetatuomoveorder != null">
+        #{budgetatuomoveorder,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tingo.weaver.model.po.HrmSubCompany">
+    update HRMSUBCOMPANY
+    <set>
+      <if test="subcompanyname != null">
+        SUBCOMPANYNAME = #{subcompanyname,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanydesc != null">
+        SUBCOMPANYDESC = #{subcompanydesc,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null">
+        COMPANYID = #{companyid,jdbcType=DECIMAL},
+      </if>
+      <if test="supsubcomid != null">
+        SUPSUBCOMID = #{supsubcomid,jdbcType=DECIMAL},
+      </if>
+      <if test="url != null">
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="showorder != null">
+        SHOWORDER = #{showorder,jdbcType=DECIMAL},
+      </if>
+      <if test="canceled != null">
+        CANCELED = #{canceled,jdbcType=CHAR},
+      </if>
+      <if test="subcompanycode != null">
+        SUBCOMPANYCODE = #{subcompanycode,jdbcType=VARCHAR},
+      </if>
+      <if test="budgetatuomoveorder != null">
+        BUDGETATUOMOVEORDER = #{budgetatuomoveorder,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tingo.weaver.model.po.HrmSubCompany">
+    update HRMSUBCOMPANY
+    set SUBCOMPANYNAME = #{subcompanyname,jdbcType=VARCHAR},
+      SUBCOMPANYDESC = #{subcompanydesc,jdbcType=VARCHAR},
+      COMPANYID = #{companyid,jdbcType=DECIMAL},
+      SUPSUBCOMID = #{supsubcomid,jdbcType=DECIMAL},
+      URL = #{url,jdbcType=VARCHAR},
+      SHOWORDER = #{showorder,jdbcType=DECIMAL},
+      CANCELED = #{canceled,jdbcType=CHAR},
+      SUBCOMPANYCODE = #{subcompanycode,jdbcType=VARCHAR},
+      BUDGETATUOMOVEORDER = #{budgetatuomoveorder,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>
