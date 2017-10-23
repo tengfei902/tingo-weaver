@@ -18,6 +18,5 @@ public interface KpService {
     void saveCheckItem(CheckItemGson itemGson);
     String doPublish(Long userId,List<String> qdIds,Integer kpMonth,List<String> companyIds);
     void saveZp(List<Map<String,String>> zps,List<Map<String,String>> details);
-    void saveZpDetail(List<Map<String,String>> details);
     void submitZp(List<Map<String,String>> zps,List<Map<String,String>> details);
 }
