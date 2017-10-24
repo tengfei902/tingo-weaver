@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 public interface KpCheckItemDetailZpDao {
     int deleteByPrimaryKey(BigDecimal id);
@@ -22,4 +23,6 @@ public interface KpCheckItemDetailZpDao {
     KpCheckItemDetailZp selectByUnq(@Param("detailId")BigDecimal detailId,@Param("orgId")BigDecimal orgId);
 
     List<KpCheckItemDetailZp> selectByZpId(@Param("zpId") BigDecimal zpId);
+
+    List<KpCheckItemDetailZp> selectByZpIds(@Param("zpIds")Set<BigDecimal> zpIds);
 }

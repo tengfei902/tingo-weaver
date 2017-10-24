@@ -126,4 +126,19 @@ public class WeaverController {
         kpService.submitZp(request.get("zps"),request.get("details"));
         return "SUCCESS";
     }
+
+    @RequestMapping(value = "/zc/getKpList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
+    public @ResponseBody String getKpList(ZcListRequest zcRequest) {
+//        if(!NumberUtils.isNumber(zcRequest.getJd())) {
+//            zcRequest.setJd(null);
+//        }
+//        if(!NumberUtils.isNumber(zcRequest.getQd())) {
+//            zcRequest.setQd(null);
+//        }
+//        if(!NumberUtils.isNumber(zcRequest.getStatus())) {
+//            zcRequest.setStatus(null);
+//        }
+        List<ZcListGson> list = kpService.getKpZcGson(zcRequest);
+        return new Gson().toJson(list);
+    }
 }

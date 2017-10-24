@@ -196,5 +196,11 @@
     <if test="status != null" >
       and STATUS =  #{status,jdbcType=DECIMAL}
     </if>
+    <if test="ids != null and ids.size() > 0" >
+      and ID in
+      <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </if>
   </select>
 </mapper>

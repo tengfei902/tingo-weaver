@@ -9,6 +9,7 @@ import com.tingo.weaver.model.po.*;
 import com.tingo.weaver.utils.MapUtils;
 import com.tingo.weaver.utils.Utils;
 import com.tingo.weaver.utils.enums.Jd;
+import com.tingo.weaver.utils.enums.PfStatus;
 import com.tingo.weaver.utils.enums.PfType;
 import com.tingo.weaver.utils.enums.ZpStatus;
 import org.apache.commons.collections.CollectionUtils;
@@ -47,6 +48,14 @@ public class KpServiceImpl implements KpService {
     private KpCheckItemDetailZpDao kpCheckItemDetailZpDao;
     @Autowired
     private HrmSubCompanyDao hrmSubCompanyDao;
+    @Autowired
+    private DeptUserLinkDao deptUserLinkDao;
+    @Autowired
+    private KpCheckItemPfDao kpCheckItemPfDao;
+    @Autowired
+    private KpCheckItemDetailPfDao kpCheckItemDetailPfDao;
+    @Autowired
+    private HrmDepartmentDao hrmDepartmentDao;
 
     @Override
     public QingdanGson selectQdById(Integer id) {
@@ -300,5 +309,102 @@ public class KpServiceImpl implements KpService {
             kpCheckItemDetailZp.setZpTime(new Date());
             kpCheckItemDetailZpDao.updateByPrimaryKeySelective(kpCheckItemDetailZp);
         }
+    }
+
+    @Override
+    public List<PfListGson> getKpList(ZcListRequest zcListRequest) {
+        List<PfListGson> result = new ArrayList<>();
+
+        List<DeptUserLink> links = deptUserLinkDao.selectByUserId(new BigDecimal(zcListRequest.getUserId()));
+        List<BigDecimal> deptIds = links.stream().map(DeptUserLink::getDeptid).collect(Collectors.toList());
+
+        if(CollectionUtils.isEmpty(deptIds)) {
+            return result;
+        }
+
+        Map<String,Object> params = MapUtils.buildMap("orgIds",deptIds,"jd",zcListRequest.getJd(),"status",zcListRequest.getStatus(),"qdId",zcListRequest.getQd());
+        List<KpCheckItemPf> pfs = kpCheckItemPfDao.selectForList(params);
+
+        if(CollectionUtils.isEmpty(pfs)) {
+            return result;
+        }
+
+        Set<Long> itemIds = pfs.stream().map(KpCheckItemPf::getItemId).map(BigDecimal::longValue).collect(Collectors.toSet());
+        List<KpCheckItem> items = kpCheckItemDao.selectByIds(itemIds);
+
+        Map<Long,KpCheckItem> itemMap = items.stream().collect(Collectors.toMap(KpCheckItem::getId,Function.identity()));
+
+        Set<BigDecimal> zpIds = pfs.stream().map(KpCheckItemPf::getZpId).collect(Collectors.toSet());
+        List<KpCheckItemZp> zps = kpCheckItemZpDao.selectForList(MapUtils.buildMap("ids",zpIds));
+
+        Map<BigDecimal,KpCheckItemZp> zpMap = zps.stream().collect(Collectors.toMap(KpCheckItemZp::getId,Function.identity()));
+
+        List<KpCheckItemDetail> itemDetails = kpCheckItemDetailDao.selectByItemIds(itemIds);
+        Map<Long,KpCheckItemDetail> itemDetailMap = itemDetails.stream().collect(Collectors.toMap(KpCheckItemDetail::getId,Function.identity()));
+
+        List<KpCheckItemDetailZp> detailZps = kpCheckItemDetailZpDao.selectByZpIds(zpIds);
+        Map<String,KpCheckItemDetailZp> zpDetailMap = detailZps.stream().collect(Collectors.toMap(kpCheckItemDetailZp -> String.format("%s_%s",kpCheckItemDetailZp.getDetailId(),kpCheckItemDetailZp.getOrgId()),Function.identity()));
+
+        List<HrmDepartment> departments = hrmDepartmentDao.selectByIds(deptIds);
+        Map<BigDecimal,HrmDepartment> deptMap = departments.stream().collect(Collectors.toMap(HrmDepartment::getId,Function.identity()));
+
+        List<BigDecimal> companyIds = pfs.stream().map(KpCheckItemPf::getToOrgId).collect(Collectors.toList());
+        List<HrmSubCompany> companies = hrmSubCompanyDao.selectByIds(companyIds);
+        Map<BigDecimal,HrmSubCompany> subCompanyMap = companies.stream().collect(Collectors.toMap(HrmSubCompany::getId,Function.identity()));
+
+        if(CollectionUtils.isEmpty(pfs)) {
+            return result;
+        }
+
+        for (KpCheckItemPf pf:pfs) {
+            PfListGson pfListGson = new PfListGson();
+            result.add(pfListGson);
+
+            KpCheckItem kpCheckItem = itemMap.get(pf.getItemId().longValue());
+            KpCheckItemZp zp = zpMap.get(pf.getZpId());
+
+            pfListGson.setQdId(pf.getQdId());
+            pfListGson.setQd(pf.getQd());
+            pfListGson.setJd(String.valueOf(pf.getJd()));
+            pfListGson.setItemId(pf.getItemId().longValue());
+            pfListGson.setKpnr(kpCheckItem.getKpnr());
+            pfListGson.setOrgId(pf.getOrgId().longValue());
+            pfListGson.setOrgName(deptMap.get(pf.getOrgId()).getDepartmentname());
+            pfListGson.setPfId(pf.getId().longValue());
+            pfListGson.setPfsm(pf.getPfsm());
+            pfListGson.setStatus(pf.getStatus().intValue());
+            pfListGson.setStatusDesc(PfStatus.parse(pf.getStatus().intValue()).getDesc());
+            pfListGson.setToOrgId(pf.getToOrgId().longValue());
+            pfListGson.setToOrgName(subCompanyMap.get(pf.getToOrgId()).getSubcompanyname());
+            pfListGson.setZpId(pf.getZpId().longValue());
+            pfListGson.setZpsm(zp.getZpsm());
+            pfListGson.setZpStatus(zp.getStatus().intValue());
+            pfListGson.setZpStatusDesc(ZpStatus.parse(zp.getStatus().intValue()).getDesc());
+
+            List<PfDetailListGson> pfDetails = new ArrayList<>();
+            pfListGson.setDetails(pfDetails);
+
+            List<KpCheckItemDetailPf> details = kpCheckItemDetailPfDao.selectByPfId(pf.getId());
+            for(KpCheckItemDetailPf detailPf : details) {
+                KpCheckItemDetail detail = itemDetailMap.get(detailPf.getItemDetailId().longValue());
+                KpCheckItemDetailZp detailZp = zpDetailMap.get(String.format("%s_%s",detailPf.getItemDetailId(),detailPf.getToOrgId()));
+
+                PfDetailListGson pfDetail = new PfDetailListGson();
+                pfDetail.setZpId(detailPf.getZpId().longValue());
+                pfDetail.setFz(detail.getFs());
+                pfDetail.setItemDetailId(detail.getId());
+                pfDetail.setItemId(detailPf.getItemId().longValue());
+                pfDetail.setKpDetailId(detailPf.getId().longValue());
+                pfDetail.setKpId(detailPf.getPfId().longValue());
+                pfDetail.setPf(detailPf.getPf());
+                pfDetail.setPfbz(detail.getPfbz());
+                pfDetail.setTkxz(detail.getTkxz());
+                pfDetail.setZpf(detailZp.getPf());
+
+                pfDetails.add(pfDetail);
+            }
+        }
+
+        return result;
     }
 }

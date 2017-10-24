@@ -147,6 +147,8 @@ create table kp_check_item_pf
   item_id integer not null,
   zp_id integer not null,
   org_id integer not null,
+  qd_id integer default 0 not null,
+  qd varchar(100) default '' not null,
   to_org_id INTEGER  not null,
   status integer default 0 not null,
   pfsm varchar(2000) default '',

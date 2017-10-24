@@ -7,6 +7,11 @@
     <result column="STATUS" property="status" jdbcType="VARCHAR" />
     <result column="DEPTID" property="deptid" jdbcType="DECIMAL" />
   </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, USERID, STATUS, DEPTID
+  </sql>
+
   <insert id="insert" parameterType="com.tingo.weaver.model.po.DeptUserLink" >
     insert into T_DEPT_USER_LINK (ID, USERID, `STATUS`, 
       DEPTID)
@@ -44,4 +49,12 @@
       </if>
     </trim>
   </insert>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select
+    <include refid="Base_Column_List" />
+    from T_DEPT_USER_LINK
+    where USERID = #{userId,jdbcType=DECIMAL}
+    and STATUS = 'VALID'
+  </select>
 </mapper>

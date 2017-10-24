@@ -103,6 +103,8 @@ public class CheckItemServiceImpl implements CheckItemService {
                     kpCheckItemPf.setItemId(new BigDecimal(item.getId()));
                     kpCheckItemPf.setJd(new BigDecimal(jd));
                     kpCheckItemPf.setToOrgId(new BigDecimal(companyId));
+                    kpCheckItemPf.setQdId(item.getQdId());
+                    kpCheckItemPf.setQd(item.getQd());
 
                     try {
                         kpCheckItemPfDao.insertSelective(kpCheckItemPf);

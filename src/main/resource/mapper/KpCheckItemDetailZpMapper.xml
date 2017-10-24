@@ -167,4 +167,14 @@
     from KP_CHECK_ITEM_DETAIL_ZP
     where ZP_ID = #{zpId,jdbcType=DECIMAL}
   </select>
+
+  <select id="selectByZpIds" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_DETAIL_ZP
+    where ZP_ID in
+      <foreach collection="zpIds" item="zpId" index="index" open="(" close=")" separator=",">
+        #{zpId}
+      </foreach>
+  </select>
 </mapper>

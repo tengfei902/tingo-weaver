@@ -12,6 +12,10 @@ public class KpCheckItemPf {
 
     private BigDecimal orgId;
 
+    private Long qdId;
+
+    private String qd;
+
     private BigDecimal status;
 
     private String pfsm;
@@ -122,5 +126,21 @@ public class KpCheckItemPf {
 
     public void setToOrgId(BigDecimal toOrgId) {
         this.toOrgId = toOrgId;
+    }
+
+    public Long getQdId() {
+        return qdId;
+    }
+
+    public void setQdId(Long qdId) {
+        this.qdId = qdId;
+    }
+
+    public String getQd() {
+        return qd;
+    }
+
+    public void setQd(String qd) {
+        this.qd = qd;
     }
 }

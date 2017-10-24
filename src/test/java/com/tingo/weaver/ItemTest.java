@@ -5,6 +5,7 @@ import com.tingo.BaseTestCase;
 import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.dao.KpCheckItemDao;
 import com.tingo.weaver.dao.KpCheckItemZpDao;
+import com.tingo.weaver.model.gson.PfListGson;
 import com.tingo.weaver.model.gson.ZcListGson;
 import com.tingo.weaver.model.gson.ZcListRequest;
 import com.tingo.weaver.model.po.KpCheckItemZp;
@@ -72,5 +73,17 @@ public class ItemTest extends BaseTestCase {
     public void testGetZpItemList() {
         Map<String,Object> params = MapUtils.buildMap("orgIds",Arrays.asList(6L,5L),"qdId",6L,"jd",4);
         List<KpCheckItemZp> zps = kpCheckItemZpDao.selectForList(params);
+    }
+
+    @Test
+    public void testGetKpList() {
+        ZcListRequest request = new ZcListRequest();
+        request.setQd("6");
+        request.setJd("4");
+        request.setStatus("0");
+        request.setUserId("1243");
+        List<PfListGson> list = kpService.getKpList(request);
+        System.out.println(new Gson().toJson(list));
+
     }
 }

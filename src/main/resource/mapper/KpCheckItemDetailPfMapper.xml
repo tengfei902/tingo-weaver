@@ -184,4 +184,11 @@
     and ORG_ID = #{orgId,jdbcType=DECIMAL}
     and TO_ORG_ID = #{toOrgId,jdbcType=DECIMAL}
   </select>
+
+  <select id="selectByPfId" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_DETAIL_PF
+    where PF_ID = #{pfId,jdbcType=DECIMAL}
+  </select>
 </mapper>

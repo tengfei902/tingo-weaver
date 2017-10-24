@@ -6,6 +6,8 @@
     <result column="ITEM_ID" property="itemId" jdbcType="DECIMAL" />
     <result column="ZP_ID" property="zpId" jdbcType="DECIMAL" />
     <result column="ORG_ID" property="orgId" jdbcType="DECIMAL" />
+    <result column="QD_ID" property="qdId" jdbcType="BIGINT" />
+    <result column="QD" property="qd" jdbcType="VARCHAR" />
     <result column="STATUS" property="status" jdbcType="DECIMAL" />
     <result column="PFSM" property="pfsm" jdbcType="VARCHAR" />
     <result column="KP_TIME" property="kpTime" jdbcType="DATE" />
@@ -16,7 +18,7 @@
     <result column="TO_ORG_ID" property="toOrgId" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, ITEM_ID, ZP_ID, ORG_ID, STATUS, PFSM, KP_TIME, JD, CREATE_TIME, UPDATE_TIME, 
+    ID, ITEM_ID, ZP_ID, ORG_ID,QD_ID,QD, STATUS, PFSM, KP_TIME, JD, CREATE_TIME, UPDATE_TIME,
     VERSION, TO_ORG_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
@@ -57,6 +59,12 @@
       <if test="orgId != null" >
         ORG_ID,
       </if>
+      <if test="qdId != null" >
+        QD_ID,
+      </if>
+      <if test="qd != null" >
+        QD,
+      </if>
       <if test="status != null" >
         STATUS,
       </if>
@@ -94,6 +102,12 @@
       </if>
       <if test="orgId != null" >
         #{orgId,jdbcType=DECIMAL},
+      </if>
+      <if test="qdId != null" >
+        #{qdId,jdbcType=BIGINT},
+      </if>
+      <if test="qd != null" >
+        #{qd,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         #{status,jdbcType=DECIMAL},
@@ -182,4 +196,32 @@
     from KP_CHECK_ITEM_PF
     where  ITEM_ID = #{itemId,jdbcType=DECIMAL} and  ORG_ID = #{orgId,jdbcType=DECIMAL} and TO_ORG_ID = #{toOrgId,jdbcType=DECIMAL}
   </select>
+
+  <select id="selectForList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_PF where 1=1
+    <if test="qdId != null and qdId != ''" >
+      and QD_ID = #{qdId,jdbcType=DECIMAL}
+    </if>
+    <if test="orgIds != null and orgIds.size() > 0" >
+      and ORG_ID in
+      <foreach collection="orgIds" item="orgId" index="index" open="(" close=")" separator=",">
+        #{orgId}
+      </foreach>
+    </if>
+    <if test="jd != null" >
+      and JD =  #{jd,jdbcType=DECIMAL}
+    </if>
+    <if test="status != null" >
+      and STATUS =  #{status,jdbcType=DECIMAL}
+    </if>
+    <if test="ids != null and ids.size() > 0" >
+      and ID in
+      <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+        #{orgId}
+      </foreach>
+    </if>
+  </select>
+
 </mapper>

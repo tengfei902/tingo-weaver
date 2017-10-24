@@ -26,4 +26,8 @@ public enum PfStatus {
 
         return null;
     }
+
+    public String getDesc() {
+        return this.desc;
+    }
 }

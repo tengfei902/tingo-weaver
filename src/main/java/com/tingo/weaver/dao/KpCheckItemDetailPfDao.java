@@ -4,6 +4,7 @@ import com.tingo.weaver.model.po.KpCheckItemDetailPf;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface KpCheckItemDetailPfDao {
     int deleteByPrimaryKey(BigDecimal id);
@@ -19,4 +20,6 @@ public interface KpCheckItemDetailPfDao {
     int updateByPrimaryKey(KpCheckItemDetailPf record);
 
     KpCheckItemDetailPf selectByUnq(@Param("detailId") BigDecimal detailId,@Param("orgId")BigDecimal orgId,@Param("toOrgId")BigDecimal toOrgId);
+
+    List<KpCheckItemDetailPf> selectByPfId(@Param("pfId")BigDecimal pfId);
 }
