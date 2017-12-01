@@ -224,4 +224,10 @@
     </if>
   </select>
 
+  <update id="updateStatusSelfChecked" parameterType="java.math.BigDecimal" >
+    update KP_CHECK_ITEM_PF
+    set
+    STATUS = 1
+    where ITEM_ID = #{itemId,jdbcType=DECIMAL} and status = 0
+  </update>
 </mapper>

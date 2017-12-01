@@ -30,12 +30,6 @@ public class WeaverController {
     @Autowired
     private KpService kpService;
 
-//    @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET)
-//    public @ResponseBody String getQdDetail(Integer jd) {
-//        List<QingdanGson> list = kpService.selectQdList(jd);
-//        return new Gson().toJson(list);
-//    }
-
     @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
     public @ResponseBody String getQingdanList(Integer jd) {
         List<QingdanGson> list = kpService.selectQdList(jd);
@@ -129,16 +123,32 @@ public class WeaverController {
 
     @RequestMapping(value = "/zc/getKpList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
     public @ResponseBody String getKpList(ZcListRequest zcRequest) {
-//        if(!NumberUtils.isNumber(zcRequest.getJd())) {
-//            zcRequest.setJd(null);
-//        }
-//        if(!NumberUtils.isNumber(zcRequest.getQd())) {
-//            zcRequest.setQd(null);
-//        }
-//        if(!NumberUtils.isNumber(zcRequest.getStatus())) {
-//            zcRequest.setStatus(null);
-//        }
-        List<ZcListGson> list = kpService.getKpZcGson(zcRequest);
+        if(!NumberUtils.isNumber(zcRequest.getJd())) {
+            zcRequest.setJd(null);
+        }
+        if(!NumberUtils.isNumber(zcRequest.getQd())) {
+            zcRequest.setQd(null);
+        }
+        if(!NumberUtils.isNumber(zcRequest.getStatus())) {
+            zcRequest.setStatus(null);
+        }
+        List<PfListGson> list = kpService.getKpList(zcRequest);
         return new Gson().toJson(list);
+    }
+
+    @RequestMapping(value = "/savePf",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
+    public @ResponseBody String savePf(@RequestBody String itemStr) throws Exception {
+        itemStr = URLDecoder.decode(itemStr,"utf-8").replace("=","");
+        Map<String,List<Map<String,String>>> request = new Gson().fromJson(itemStr,new TypeToken<Map<String,List<Map<String,String>>>>(){}.getType());
+        kpService.savePf(request.get("pfs"), request.get("details"));
+        return "SUCCESS";
+    }
+
+    @RequestMapping(value = "/submitPf",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
+    public @ResponseBody String submitPf(@RequestBody String itemStr) throws Exception {
+        itemStr = URLDecoder.decode(itemStr,"utf-8").replace("=","");
+        Map<String,List<Map<String,String>>> request = new Gson().fromJson(itemStr,new TypeToken<Map<String,List<Map<String,String>>>>(){}.getType());
+        kpService.submitPf(request.get("pfs"),request.get("details"));
+        return "SUCCESS";
     }
 }

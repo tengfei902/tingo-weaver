@@ -30,4 +30,8 @@ public enum PfStatus {
     public String getDesc() {
         return this.desc;
     }
+
+    public int getValue() {
+        return this.value;
+    }
 }

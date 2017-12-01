@@ -24,4 +24,6 @@ public interface KpCheckItemPfDao {
 
     List<KpCheckItemPf> selectForList(Map<String,Object> params);
 
+    int updateStatusSelfChecked(@Param("itemId")BigDecimal itemId);
+
 }

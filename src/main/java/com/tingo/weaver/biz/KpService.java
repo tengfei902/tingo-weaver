@@ -20,4 +20,6 @@ public interface KpService {
     void saveZp(List<Map<String,String>> zps,List<Map<String,String>> details);
     void submitZp(List<Map<String,String>> zps,List<Map<String,String>> details);
     List<PfListGson> getKpList(ZcListRequest zcListRequest);
+    void savePf(List<Map<String,String>> pfs,List<Map<String,String>> details);
+    void submitPf(List<Map<String,String>> pfs,List<Map<String,String>> details);
 }

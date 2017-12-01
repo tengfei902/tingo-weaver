@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.util.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -280,6 +281,7 @@ public class KpServiceImpl implements KpService {
         }
     }
 
+    @Transactional
     @Override
     public void submitZp(List<Map<String, String>> zps, List<Map<String, String>> details) {
         for(Map<String,String> zp:zps) {
@@ -294,6 +296,7 @@ public class KpServiceImpl implements KpService {
             kpCheckItemZp.setZpTime(new Date());
             kpCheckItemZp.setStatus(new BigDecimal(ZpStatus.CHECKED.getValue()));
             kpCheckItemZpDao.updateByPrimaryKeySelective(kpCheckItemZp);
+            kpCheckItemPfDao.updateStatusSelfChecked(itemZp.getItemId());
         }
 
         for(Map<String,String> detail:details) {
@@ -406,5 +409,64 @@ public class KpServiceImpl implements KpService {
         }
 
         return result;
+    }
+
+    @Transactional
+    @Override
+    public void savePf(List<Map<String, String>> pfs, List<Map<String, String>> details) {
+        for(Map<String,String> pf:pfs) {
+            KpCheckItemPf kpCheckItemPf = kpCheckItemPfDao.selectByPrimaryKey(new BigDecimal(pf.get("pfId")));
+            if(PfStatus.parse(kpCheckItemPf.getStatus().intValue())!= PfStatus.SELF_MARKED) {
+                continue;
+            }
+
+            KpCheckItemPf itemPf = new KpCheckItemPf();
+            itemPf.setId(new BigDecimal(pf.get("pfId")));
+            itemPf.setPfsm(pf.get("pfsm"));
+            kpCheckItemPfDao.updateByPrimaryKeySelective(itemPf);
+        }
+
+        for(Map<String,String> detail:details) {
+            KpCheckItemDetailPf detailPf = kpCheckItemDetailPfDao.selectByPrimaryKey(new BigDecimal(detail.get("detailId")));
+            KpCheckItemPf kpCheckItemPf = kpCheckItemPfDao.selectByPrimaryKey(detailPf.getPfId());
+            if(PfStatus.parse(kpCheckItemPf.getStatus().intValue())!= PfStatus.SELF_MARKED) {
+                continue;
+            }
+
+            KpCheckItemDetailPf kpCheckItemDetailPf = new KpCheckItemDetailPf();
+            kpCheckItemDetailPf.setId(new BigDecimal(detail.get("detailId")));
+            kpCheckItemDetailPf.setPf(new BigDecimal(detail.get("Kpf")));
+            kpCheckItemDetailPfDao.updateByPrimaryKeySelective(kpCheckItemDetailPf);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void submitPf(List<Map<String, String>> pfs, List<Map<String, String>> details) {
+        for(Map<String,String> pf:pfs) {
+            KpCheckItemPf itemPf = kpCheckItemPfDao.selectByPrimaryKey(new BigDecimal(pf.get("pfId")));
+            if(PfStatus.parse(itemPf.getStatus().intValue()) != PfStatus.SELF_MARKED) {
+                continue;
+            }
+            KpCheckItemPf kpCheckItemPf = new KpCheckItemPf();
+            kpCheckItemPf.setId(itemPf.getId());
+            kpCheckItemPf.setPfsm(pf.get("pfsm"));
+            kpCheckItemPf.setKpTime(new Date());
+            kpCheckItemPf.setStatus(new BigDecimal(PfStatus.MARKED.getValue()));
+            kpCheckItemPfDao.updateByPrimaryKeySelective(kpCheckItemPf);
+        }
+
+        for(Map<String,String> detail:details) {
+            KpCheckItemDetailPf detailPf = kpCheckItemDetailPfDao.selectByPrimaryKey(new BigDecimal(detail.get("detailId")));
+            KpCheckItemPf kpCheckItemPf = kpCheckItemPfDao.selectByPrimaryKey(detailPf.getPfId());
+            if(PfStatus.SELF_MARKED != PfStatus.parse(kpCheckItemPf.getStatus().intValue())) {
+                continue;
+            }
+            KpCheckItemDetailPf kpCheckItemDetailPf = new KpCheckItemDetailPf();
+            kpCheckItemDetailPf.setId(detailPf.getId());
+            kpCheckItemDetailPf.setPf(new BigDecimal(detail.get("zpf")));
+            kpCheckItemDetailPf.setKpTime(new Date());
+            kpCheckItemDetailPfDao.updateByPrimaryKeySelective(kpCheckItemDetailPf);
+        }
     }
 }
