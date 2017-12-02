@@ -326,7 +326,7 @@
 								<outputDirectory>${basedir}/target/conf</outputDirectory>
 								<resources>
 									<resource>
-										<directory>src/main/resource</directory>
+										<directory>src/main/resources</directory>
 										<filtering>true</filtering>
 										<includes>
 											<!-- 将config、spring下的所有文件复制到target/conf目录下 -->
@@ -416,7 +416,7 @@
 					<artifactId>mybatis-generator-maven-plugin</artifactId>
 					<version>1.3.1</version>
 					<configuration>
-						<configurationFile>${basedir}/src/main/resource/META-INF/mybatis/mybatis-generator-config.xml</configurationFile>
+						<configurationFile>${basedir}/src/main/resources/META-INF/mybatis/mybatis-generator-config.xml</configurationFile>
 						<verbose>true</verbose>
 						<overwrite>true</overwrite>
 					</configuration>
