@@ -21,7 +21,7 @@ public class Utils {
 
     public static int getCurrentSeason() {
         Calendar now = Calendar.getInstance();
-        return ((now.get(Calendar.MONTH)+1)/3)+1;
+        return now.get(Calendar.MONTH)%3==0? now.get(Calendar.MONTH)/3: (now.get(Calendar.MONTH)/3)+1;
     }
 
     public static Long o2l(Object obj) {
