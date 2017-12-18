@@ -155,7 +155,7 @@
     <include refid="Base_Column_List" />
     from KP_CHECK_ITEM
     where qd_id = #{qdId,jdbcType=BIGINT}
-    and status = 0
+    and status = 0 order by id ASC
   </select>
 
   <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.util.List" >
