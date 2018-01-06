@@ -230,4 +230,12 @@
     STATUS = 1
     where ITEM_ID = #{itemId,jdbcType=DECIMAL} and status = 0
   </update>
+
+  <select id="selectMarkedByQdId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from KP_CHECK_ITEM_PF
+    where qd_id = #{id,jdbcType=BIGINT}
+    and status = 2
+  </select>
 </mapper>

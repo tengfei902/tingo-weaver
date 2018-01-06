@@ -3,6 +3,7 @@ package com.tingo.weaver;
 import com.google.gson.Gson;
 import com.tingo.BaseTestCase;
 import com.tingo.weaver.biz.KpService;
+import com.tingo.weaver.biz.ReportService;
 import com.tingo.weaver.dao.KpCheckItemDao;
 import com.tingo.weaver.dao.KpCheckItemZpDao;
 import com.tingo.weaver.model.gson.PfListGson;
@@ -28,6 +29,8 @@ public class ItemTest extends BaseTestCase {
     private KpCheckItemDao kpCheckItemDao;
     @Autowired
     private KpCheckItemZpDao kpCheckItemZpDao;
+    @Autowired
+    private ReportService reportService;
 
     @Test
     public void testPublish() {
@@ -85,5 +88,10 @@ public class ItemTest extends BaseTestCase {
         List<PfListGson> list = kpService.getKpList(request);
         System.out.println(new Gson().toJson(list));
 
+    }
+
+    @Test
+    public void testReport() {
+        reportService.getSeasonReport("4");
     }
 }

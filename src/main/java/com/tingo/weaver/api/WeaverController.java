@@ -155,6 +155,6 @@ public class WeaverController {
     @RequestMapping(value = "/getSeasonData",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
     public @ResponseBody String getSeasonData(@RequestBody String jd) {
         //序号，被考评单位，重点工作清单，常规工作清单，本月总分，累计总分）
-        
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package com.tingo.weaver.utils;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -32,5 +33,18 @@ public class Utils {
             return 0L;
         }
         return Long.parseLong(String.valueOf(obj));
+    }
+
+    public static BigDecimal max(BigDecimal b1,BigDecimal b2) {
+        if(null == b1) {
+            return b2;
+        }
+        if(null == b2) {
+            return b1;
+        }
+        if(b1.compareTo(b2) >= 0) {
+            return b1;
+        }
+        return b2;
     }
 }

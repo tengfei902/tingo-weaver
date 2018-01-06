@@ -26,4 +26,6 @@ public interface KpCheckItemPfDao {
 
     int updateStatusSelfChecked(@Param("itemId")BigDecimal itemId);
 
+    List<KpCheckItemPf> selectMarkedByQdId(@Param("qdId") Long qdId);
+
 }
