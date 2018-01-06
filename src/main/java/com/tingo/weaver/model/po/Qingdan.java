@@ -13,6 +13,8 @@ public class Qingdan {
 
     private int jd;
 
+    private String yearStr;
+
     public Long getId() {
         return id;
     }
@@ -51,5 +53,13 @@ public class Qingdan {
 
     public void setJd(int jd) {
         this.jd = jd;
+    }
+
+    public String getYearStr() {
+        return yearStr;
+    }
+
+    public void setYearStr(String yearStr) {
+        this.yearStr = yearStr;
     }
 }

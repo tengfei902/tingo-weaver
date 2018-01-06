@@ -92,6 +92,6 @@ public class ItemTest extends BaseTestCase {
 
     @Test
     public void testReport() {
-        reportService.getSeasonReport("4");
+        System.out.println(new Gson().toJson( reportService.getSeasonReport("4","2027")));
     }
 }

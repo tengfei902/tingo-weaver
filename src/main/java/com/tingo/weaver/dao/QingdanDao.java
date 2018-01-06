@@ -19,5 +19,5 @@ public interface QingdanDao {
 
     int updateByPrimaryKey(Qingdan record);
 
-    List<Qingdan> selectAvailableList(@Param("jd") Integer jd);
+    List<Qingdan> selectAvailableList(@Param("jd") Integer jd,@Param("yearStr")String yearStr);
 }

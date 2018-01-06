@@ -2,6 +2,7 @@ package com.tingo.weaver.api;
 
 import com.google.common.reflect.TypeToken;
 import com.tingo.weaver.biz.KpService;
+import com.tingo.weaver.biz.ReportService;
 import com.tingo.weaver.model.ResponseResult;
 import com.tingo.weaver.model.gson.*;
 import com.tingo.weaver.utils.Utils;
@@ -29,6 +30,8 @@ import java.util.logging.Logger;
 public class WeaverController {
     @Autowired
     private KpService kpService;
+    @Autowired
+    private ReportService reportService;
 
     @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
     public @ResponseBody String getQingdanList(Integer jd) {
@@ -152,9 +155,15 @@ public class WeaverController {
         return "SUCCESS";
     }
 
-    @RequestMapping(value = "/getSeasonData",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
-    public @ResponseBody String getSeasonData(@RequestBody String jd) {
-        //序号，被考评单位，重点工作清单，常规工作清单，本月总分，累计总分）
-        return null;
+    @RequestMapping(value = "/getSeasonData",method = RequestMethod.GET,produces = "application/json;charset=UTF-8")
+    public @ResponseBody String getSeasonData(String jd,String year ) {
+        List<Map<String,Object>> result = reportService.getSeasonReport(jd, year);
+        return new Gson().toJson(result);
+    }
+
+    @RequestMapping(value = "/getAnnualData",method = RequestMethod.GET,produces = "application/json;charset=UTF-8")
+    public @ResponseBody String getAnnualData(String year ) {
+        List<Map<String,Object>> result = reportService.getAnnualReport(year);
+        return new Gson().toJson(result);
     }
 }

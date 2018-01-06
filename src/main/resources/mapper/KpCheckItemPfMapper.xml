@@ -235,7 +235,7 @@
     select
     <include refid="Base_Column_List" />
     from KP_CHECK_ITEM_PF
-    where qd_id = #{id,jdbcType=BIGINT}
+    where qd_id = #{qdId,jdbcType=BIGINT}
     and status = 2
   </select>
 </mapper>

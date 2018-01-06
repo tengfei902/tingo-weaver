@@ -7,9 +7,10 @@
     <result column="QZ" property="qz" jdbcType="DECIMAL" />
     <result column="STATUS" property="status" jdbcType="INTEGER" />
     <result column="JD" property="jd" jdbcType="INTEGER" />
+    <result column="YEAR_STR" property="yearStr" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, QINGDANMC, QZ, STATUS,JD
+    ID, QINGDANMC, QZ, STATUS,JD,YEAR_STR
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
@@ -33,6 +34,9 @@
       <if test="status != null" >
         STATUS,
       </if>
+      <if test="yearStr != null" >
+        YEAR_STR,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -46,6 +50,9 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=BIGINT},
+      </if>
+      <if test="yearStr != null" >
+        #{year_str,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -72,11 +79,14 @@
     where ID = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="selectAvailableList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectAvailableList" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from QINGDAN
     where status = 0
+    <if test="yearStr != null" >
+      and year_str = #{yearStr,jdbcType=VARCHAR}
+    </if>
     <if test="jd != null and jd!=0" >
       and jd = #{jd,jdbcType=INTEGER}
     </if>

@@ -33,53 +33,9 @@ public class ReportServiceImpl implements ReportService {
     private CacheService cacheService;
 
     @Override
-    public Map<String, Object> getSeasonReport(String jd) {
-        List<Qingdan> qds = qingdanDao.selectAvailableList(Integer.parseInt(jd));
-        Map<String,BigDecimal> scoreMap = new ConcurrentHashMap<>();
-
-        for(Qingdan qingdan:qds) {
-            List<KpCheckItemPf> pfs = kpCheckItemPfDao.selectMarkedByQdId(qingdan.getId());
-            for(KpCheckItemPf pf:pfs) {
-                caculateItemScore(pf,scoreMap);
-            }
-        }
-
-        Map<Long,Qingdan> qdMap = qds.parallelStream().collect(Collectors.toMap(Qingdan::getId,Function.identity()));
-        //序号，被考评单位，重点工作清单，常规工作清单，本月总分，累计总分）
-        Map<String,List<Map<String,Object>>> orgScoreMap = new HashMap<>();
-        for(String key:scoreMap.keySet()) {
-            String org = key.split("_")[0];
-            String qdId = key.split("_")[1];
-            if(orgScoreMap.get(org) == null) {
-                orgScoreMap.put(org,new ArrayList<>());
-            }
-            Map<String,Object> map = new HashMap<>();
-            map.put("qdId",qdId);
-            Qingdan qingdan = qdMap.get(Long.parseLong(qdId));
-            map.put("qd",qingdan.getQingdanmc());
-            map.put("weight",qingdan.getQz());
-            map.put("score",scoreMap.get(key));
-            map.put("weightedScore",scoreMap.get(key).multiply(qingdan.getQz()));
-
-            orgScoreMap.get(org).add(map);
-        }
-
-        Map<String,Object> result = new HashMap<>();
-        for(String org:orgScoreMap.keySet()) {
-            HrmSubCompany company = cacheService.getCompany(new BigDecimal(org));
-            result.put("org",org);
-            result.put("orgname",company.getSubcompanyname());
-            result.put("qds",orgScoreMap.get(org));
-
-            BigDecimal score = new BigDecimal("0");
-
-            List<Map<String,Object>> list = orgScoreMap.get(org);
-            for(Map<String,Object> map:list) {
-                score = score.add(new BigDecimal(map.get("weightedScore").toString()));
-            }
-            result.put("score",score);
-        }
-        return result;
+    public List<Map<String, Object>> getSeasonReport(String jd,String year) {
+        List<Qingdan> qds = qingdanDao.selectAvailableList(Integer.parseInt(jd),year);
+        return getScoreMap(qds);
     }
 
     private void caculateItemScore(KpCheckItemPf pf,Map<String,BigDecimal> scoreMap) {
@@ -118,7 +74,58 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Map<String, Object> getAnnualReport(String year) {
-        return null;
+    public List<Map<String, Object>> getAnnualReport(String year) {
+        List<Qingdan> qds = qingdanDao.selectAvailableList(null,year);
+        return getScoreMap(qds);
+    }
+
+    private List<Map<String,Object>> getScoreMap( List<Qingdan> qds) {
+        Map<String,BigDecimal> scoreMap = new ConcurrentHashMap<>();
+
+        for(Qingdan qingdan:qds) {
+            List<KpCheckItemPf> pfs = kpCheckItemPfDao.selectMarkedByQdId(qingdan.getId());
+            for(KpCheckItemPf pf:pfs) {
+                caculateItemScore(pf,scoreMap);
+            }
+        }
+
+        Map<Long,Qingdan> qdMap = qds.parallelStream().collect(Collectors.toMap(Qingdan::getId,Function.identity()));
+        //序号，被考评单位，重点工作清单，常规工作清单，本月总分，累计总分）
+        Map<String,List<Map<String,Object>>> orgScoreMap = new HashMap<>();
+        for(String key:scoreMap.keySet()) {
+            String org = key.split("_")[0];
+            String qdId = key.split("_")[1];
+            if(orgScoreMap.get(org) == null) {
+                orgScoreMap.put(org,new ArrayList<>());
+            }
+            Map<String,Object> map = new HashMap<>();
+            map.put("qdId",qdId);
+            Qingdan qingdan = qdMap.get(Long.parseLong(qdId));
+            map.put("qd",qingdan.getQingdanmc());
+            map.put("weight",qingdan.getQz());
+            map.put("score",scoreMap.get(key));
+            map.put("weightedScore",scoreMap.get(key).multiply(qingdan.getQz()));
+
+            orgScoreMap.get(org).add(map);
+        }
+
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        for(String org:orgScoreMap.keySet()) {
+            Map<String,Object> result = new HashMap<>();
+            resultList.add(result);
+            HrmSubCompany company = cacheService.getCompany(new BigDecimal(org));
+            result.put("org",org);
+            result.put("orgname",company.getSubcompanyname());
+            result.put("qds",orgScoreMap.get(org));
+
+            BigDecimal score = new BigDecimal("0");
+
+            List<Map<String,Object>> list = orgScoreMap.get(org);
+            for(Map<String,Object> map:list) {
+                score = score.add(new BigDecimal(map.get("weightedScore").toString()));
+            }
+            result.put("score",score);
+        }
+        return resultList;
     }
 }

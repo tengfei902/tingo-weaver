@@ -70,7 +70,7 @@ public class KpServiceImpl implements KpService {
     @Override
     public List<QingdanGson> selectQdList(Integer jd) {
         List<QingdanGson> list = new ArrayList<>();
-        List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd);
+        List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd,null);
         qingdans.stream().forEach(qingdan -> list.add(new QingdanGson(qingdan.getId(),qingdan.getQingdanmc())));
         return list;
     }
@@ -78,7 +78,7 @@ public class KpServiceImpl implements KpService {
     @Override
     public List<QingdanDetailGson> selectQdDetail(Integer jd) {
         List<QingdanGson> list = new ArrayList<>();
-        List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd);
+        List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd,null);
         return null;
     }
 
