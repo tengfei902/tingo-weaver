@@ -40,6 +40,9 @@
       <if test="yearStr != null" >
         YEAR_STR,
       </if>
+      <if test="jd != null" >
+        jd,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -56,6 +59,9 @@
       </if>
       <if test="yearStr != null" >
         #{yearStr,jdbcType=VARCHAR},
+      </if>
+      <if test="jd != null" >
+        #{jd,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
