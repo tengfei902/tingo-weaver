@@ -1,10 +1,12 @@
 package com.tingo.weaver.api;
 
 import com.google.common.reflect.TypeToken;
+import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.biz.ReportService;
 import com.tingo.weaver.model.ResponseResult;
 import com.tingo.weaver.model.gson.*;
+import com.tingo.weaver.model.po.Qingdan;
 import com.tingo.weaver.utils.Utils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 
 import javax.ws.rs.FormParam;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +35,8 @@ public class WeaverController {
     private KpService kpService;
     @Autowired
     private ReportService reportService;
+    @Autowired
+    private CheckItemService checkItemService;
 
     @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
     public @ResponseBody String getQingdanList(Integer jd) {
@@ -165,5 +170,25 @@ public class WeaverController {
     public @ResponseBody String getAnnualData(String year ) {
         List<Map<String,Object>> result = reportService.getAnnualReport(year);
         return new Gson().toJson(result);
+    }
+
+    @RequestMapping(value = "/saveQingdan",method = RequestMethod.POST,produces = "application/json;charset=UTF-8",consumes = "application/x-www-form-urlencoded")
+    public @ResponseBody String saveQingdan(@RequestBody String itemStr) throws Exception {
+        itemStr = URLDecoder.decode(itemStr,"utf-8").replace("=","");
+        Map<String,String> map = new Gson().fromJson(itemStr,new TypeToken<Map<String,String>>(){}.getType());
+        String qdid = map.get("qdid");
+        String qingdanmc = map.get("qingdanmc");
+        String yearStr = map.get("yearStr");
+        String jd = map.get("jd");
+        String qz = map.get("qz");
+
+        Qingdan qingdan = new Qingdan();
+        qingdan.setJd(Integer.parseInt(jd));
+        qingdan.setQingdanmc(qingdanmc);
+        qingdan.setQz(new BigDecimal(qz));
+        qingdan.setYearStr(yearStr);
+
+        checkItemService.saveQingdan(qdid,qingdan);
+        return "SUCCESS";
     }
 }

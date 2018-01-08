@@ -20,6 +20,9 @@
   </select>
 
   <insert id="insertSelective" parameterType="com.tingo.weaver.model.po.Qingdan" >
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">
+      select KP_CHECK_ITEM_ID.NEXTVAL from dual
+    </selectKey>
     insert into QINGDAN
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -52,7 +55,7 @@
         #{status,jdbcType=BIGINT},
       </if>
       <if test="yearStr != null" >
-        #{year_str,jdbcType=VARCHAR},
+        #{yearStr,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

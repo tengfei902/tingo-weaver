@@ -1,367 +1,597 @@
+<%@page import="weaver.mobile.rest.gson.tingo.QingdanGson"%>
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.logging.SimpleFormatter"%>
-<%@page import="org.apache.commons.lang.StringUtils"%>
-<%@ page import="weaver.general.Util" %>
-<%@ page import="java.util.*" %>
-<%@ page language="java" contentType="text/html; charset=GBK" %> <%@ include file="/systeminfo/init.jsp" %>
-<jsp:useBean id="DepartmentComInfo" class="weaver.hrm.company.DepartmentComInfo" scope="page" />
+<%@ page import="weaver.general.Util,java.util.*,java.math.*,weaver.mobile.rest.*"%>
+<%@ page language="java" contentType="text/html; charset=GBK"%>
+<%@ include file="/systeminfo/init.jsp"%>
+
+<jsp:useBean id="RecordSet" class="weaver.conn.RecordSet" scope="page" />
 <jsp:useBean id="rs" class="weaver.conn.RecordSet" scope="page" />
-
-<%!
-    //2004-6-16 Edit by Evan:得到user的级别，总部的user可以看到所有部门，分部和部门级的user只能看到所属的部门
-    private String getDepartmentSql(User user){
-        String sql ="";
-        String rightLevel = HrmUserVarify.getRightLevel("HrmResourceEdit:Edit",user);
-        int departmentID = user.getUserDepartment();
-        int subcompanyID = user.getUserSubCompany1();
-        if(rightLevel.equals("2") ){
-            //总部级别的，什么也不返回
-        }else if (rightLevel.equals("1")){ //分部级别的
-            sql = " WHERE subcompanyid1="+subcompanyID ;
-        }else if (rightLevel.equals("0")){ //部门级别
-            sql = " WHERE id="+departmentID ;
-        }
-        //System.out.println("sql = "+sql);
-        return sql;
-    }
-//End Edit
-%>
-
-
-
-<HTML><HEAD>
-    <STYLE>.SectionHeader {
-        FONT-WEIGHT: bold; COLOR: white; BACKGROUND-COLOR: teal
-    }
-    </STYLE>
+<jsp:useBean id="rs2" class="weaver.conn.RecordSet" scope="page" />
+<jsp:useBean id="ResourceComInfo"
+             class="weaver.hrm.resource.ResourceComInfo" scope="page" />
+<jsp:useBean id="TrainTypeComInfo"
+             class="weaver.hrm.tools.TrainTypeComInfo" scope="page" />
+<jsp:useBean id="TrainComInfo" class="weaver.hrm.train.TrainComInfo"
+             scope="page" />
+<jsp:useBean id="TrainResourceComInfo"
+             class="weaver.hrm.train.TrainResourceComInfo" scope="page" />
+<jsp:useBean id="TrainPlanComInfo"
+             class="weaver.hrm.train.TrainPlanComInfo" scope="page" />
+<jsp:useBean id="DepartmentComInfo" class="weaver.hrm.company.DepartmentComInfo" scope="page" />
+<jsp:useBean id="weaverClient" class="weaver.mobile.rest.common.WeaverClient" scope="page" />
+<HTML>
+<HEAD>
     <LINK href="/css/Weaver.css" type=text/css rel=STYLESHEET>
+    <LINK href="/css/crmcss/lanlv.css" type=text/css rel=STYLESHEET>
     <SCRIPT language="javascript" src="/js/weaver.js"></script>
-    <SCRIPT language="javascript">
-        function showAlert(msg){
-            alert(msg);
-        }
-        function showConfirm(msg){
-            return confirm(msg);
-        }
-        function checkPass(){
-            saveBtn.disabled = true;
-            document.resource.submit() ;
-        }
-    </script>
-    <SCRIPT language="javascript" src="/js/chechinput.js"></script>
-</HEAD>
+    <script type="text/javascript" src="/js/jquery/jquery.js"></script>
+    <script language="javascript"
+            src="/wui/theme/ecology7/jquery/js/zDialog.js"></script>
+    <script language="javascript"
+            src="/wui/theme/ecology7/jquery/js/zDrag.js"></script>
+</head>
 <%
+    int msgid = Util.getIntValue(request.getParameter("msgid"), -1);
+    String resourceid = Util.null2String(request
+            .getParameter("resourceid"));
 
-    int msgid = Util.getIntValue(request.getParameter("msgid"),-1);
+    int jd = Util.getIntValue(request.getParameter("jd"), 1);
 
-    String imagefilename = "/images/hdMaintenance.gif";
-    String titlename = SystemEnv.getHtmlLabelName(181511,user.getLanguage())+": "+ SystemEnv.getHtmlLabelName(181513,user.getLanguage());
-    String needfav ="1";
-    String needhelp ="";
-    boolean flagaccount = weaver.general.GCONST.getMOREACCOUNTLANDING();
-    String ifinfo = Util.null2String(request.getParameter("ifinfo"));//检查loginid参数
+    if (resourceid.equals(""))
+        resourceid = String.valueOf(user.getUID());
 
-    String itemId = Util.null2String(request.getParameter("itemId"));
-//根据id获取参数
-    if(StringUtils.isNotBlank(itemId)) {
-        String sql = "select * from t_check_item where id=" + itemId;
-        rs.execute(sql);
-        rs.next();
-    }
+    char separator = Util.getSeparator();
 
+    String imagefilename = "/images/hdReport.gif";
+    String titlename = SystemEnv.getHtmlLabelName(181511,
+            user.getLanguage())
+            + "-"
+            + SystemEnv.getHtmlLabelName(181519, user.getLanguage());
+    String needfav = "1";
+    String needhelp = "";
+    int userid = user.getUID();
+    int deptId = user.getUserDepartment();
+    String resourceId = "";
+
+    String id = "";
+    String tmpvalue1 = "";
+    String tmpname1 = "";
+    String type1 = "1";
+    int tmpcount1 = 1;
+
+    String departmentid = Util.null2String(request.getParameter("departmentid"));
     String kpMonth = new SimpleDateFormat("yyyyMM").format(new Date());
 
-    RecordSet qingdanRecordSet = new RecordSet();
-    qingdanRecordSet.execute("select * from qingdan order by id");
+    if(jd<=0) {
+        Calendar c = Calendar.getInstance();
+        int currentMonth = c.get(Calendar.MONTH) - 1;
+        jd = currentMonth%3==0?currentMonth/3:(currentMonth/3)+1;
+    }
 
+    List<QingdanGson> qingdans = weaverClient.getQingdanList(jd);
 %>
 <BODY>
-<%@ include file="/systeminfo/TopTitle.jsp" %>
-<%@ include file="/systeminfo/RightClickMenuConent.jsp" %>
+<%@ include file="/systeminfo/TopTitle.jsp"%>
+<%@ include file="/systeminfo/RightClickMenuConent.jsp"%>
 <%
-    RCMenu += "{保存,javascript:doSave(this),_TOP} " ;
-    RCMenu += "{删除,javascript:doDel(),_Self}";
-    RCMenuHeight += RCMenuHeightStep ;
+    RCMenu += "{查询 ,javascript:dosearch(),_self} ";
+    RCMenu += "{发布 ,javascript:publish(),_self} ";
+    RCMenuHeight += 2 * RCMenuHeightStep;
 %>
-<%@ include file="/systeminfo/RightClickMenu.jsp" %>
-<iframe id="checkHas" src="" style="display:none"></iframe>
-<table width=100% height=100% border="0" cellspacing="0" cellpadding="0">
+<%@ include file="/systeminfo/RightClickMenu.jsp"%>
+<table width=100% height=100% border="0" cellspacing="0"
+       cellpadding="0">
     <colgroup>
         <col width="10">
         <col width="">
         <col width="10">
-        <tr style="height:0px">
-            <td height="0" colspan="3"></td>
-        </tr>
         <tr>
-            <td ></td>
+            <td></td>
             <td valign="top">
                 <TABLE class=Shadow>
                     <tr>
                         <td valign="top">
                                 <%
-/*登录名冲突*/
-if(msgid!=-1){
-%>
+								if (msgid != -1) {
+							%>
                             <DIV>
-                                <font color=red size=2>
-                                    <%=SystemEnv.getErrorMsgName(msgid,user.getLanguage())%>
+                                <font color=red size=2> <%=SystemEnv.getErrorMsgName(msgid, user.getLanguage())%>
                                 </font>
-                            </DIV>
-                                <%}%>
+                            </DIV> <%
+ 	}
+ %> <%
+ 	if (HrmUserVarify.checkUserRight("HrmResourceTrainRecordAdd:Add",
+ 			user)) {
+ %>
+                            <!--<BUTTON class=Btn id=button1 accessKey=A
+onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>"' name=button1><U>A</U>-<%=SystemEnv.getHtmlLabelName(365, user.getLanguage())%></BUTTON>-->
                                 <%
-      if(ifinfo.equals("y")){
-      %>
-                            <DIV>
-                                <font color=red size=2>
-                                        <%=SystemEnv.getHtmlLabelName(25170,user.getLanguage())%>
-                            </div>
-                                <%}%>
-                            <FORM name=resource id=resource action="ydkpOperation.jsp" method=post>
-                                <input class=inputstyle type=hidden name=operation value="addresourcebasicinfo">
-                                <TABLE class=ViewForm>
-                                    <TBODY>
-                                    <TR>
-                                        <TD vAlign=top>
-                                            <TABLE width=100%>
-    <COLGROUP>
-        <COL width=30%>
-        <COL width=70%>
-    <TBODY>
-    <TR class=Title>
-        <TH colSpan=2><%=SystemEnv.getHtmlLabelName(1361,user.getLanguage())%></TH>
-    </TR>
-    <TR style="height:1px"><TD class=Line colSpan=2></TD></TR>
-    <TR class=Spacing style="height:2px">
-        <TD class=Line1 colSpan=2></TD>
-    </TR>
-    <TR>
-        <TD>考评清单</TD>
-        <TD class=Field>
-            <select id="qingdanSelect">
-                <%while(qingdanRecordSet.next()) {
-                    boolean selected = false;
-                    String currentQingdanId = qingdanRecordSet.getString("id");
-                    System.out.println("qingdanId:"+currentQingdanId);
-                    if(StringUtils.isNotBlank(itemId)) {
-                        String qingdanId = rs.getString("qingdanId");
-                        if(StringUtils.equals(currentQingdanId, qingdanId)) {
-                            selected = true;
-                        }
-                    }
-                %>
-                <option id="selectQingdan<%=qingdanRecordSet.getString("id")%>" value="<%=qingdanRecordSet.getString("id")%>" <%if(selected) { %>selected="selected"<%} %>><%=qingdanRecordSet.getString("qingdanmc")%></option>
-                <%} %>
+								}
+							%>
+
+                            <table class="ViewForm outertable">
+                                <tbody>
+                                <tr />
+                                <tr>
+                                    <td><br />
+                                        <div align="center">
+                                            <font class="reqname">基层党委工作责任制常规工作清单</font>
+                                        </div>
+                                        <table class="ViewForm maintable">
+    <colgroup>
+        <col width="10%"></col>
+        <col width="40%"></col>
+    </colgroup>
+    <tbody>
+    <tr>
+        <TD class="fname">考评公司</TD>
+        <TD class="fvalue" >
+            <BUTTON class=Browser type="button" id=checkedCompany onclick="onShowCompany()"></BUTTON>
+            <SPAN id=checkedCompanyspan>
+												                <%=DepartmentComInfo.getDepartmentname(departmentid)%>
+                <!--IMG src="/images/BacoError.gif" align=absMiddle-->
+												              </SPAN>
+            <INPUT class=inputstyle id="checkedCompanyId" type=hidden name="checkedCompanyId" value=<%=departmentid%>>
+        </TD>
+    </tr>
+    <tr>
+        <TD class="fname">考评季度</TD>
+        <TD class="fvalue" >
+            <select id="kpMonth">
+                <option id="kpMonth1" value="<%=1%>" <%if(jd==1) { %>selected="selected"<%} %>>一季度</option>
+                <option id="kpMonth2" value="<%=2%>" <%if(jd==2) { %>selected="selected"<%} %>>二季度</option>
+                <option id="kpMonth3" value="<%=3%>" <%if(jd==3) { %>selected="selected"<%} %>>三季度</option>
+                <option id="kpMonth4" value="<%=4%>" <%if(jd==4) { %>selected="selected"<%} %>>四季度</option>
             </select>
         </TD>
-    </TR>
-    <TR class=Spacing style="height:2px">
-        <TD class=Line1 colSpan=2></TD>
-    </TR>
-    <TR>
-        <TD>考评内容</TD>
-        <TD class=Field>
-            <INPUT class=InputStyle maxLength=100 size=100 id="itemType" name="itemType" onchange="this.value=trim(this.value)" value="<%=StringUtils.isBlank(itemId)?"":rs.getString("itemtype") %>">
-        </TD>
-    </TR>
-    <TR style="height:1px"><TD class=Line colSpan=2></TD></TR>
-    <TR>
-        <TD>考评方式</TD>
-        <TD class=Field>
-            <select class=InputStyle id="checkType" name="checkType" onchange="changeKpfs()">
-                <option value="ADD" <%if(StringUtils.isNotBlank(itemId) && StringUtils.equals(rs.getString("checktype"), "ADD")){ %>selected<%} %>>加分</option>
-                <option value="MINUS" <%if(StringUtils.isNotBlank(itemId) && StringUtils.equals(rs.getString("checktype"), "MINUS")){ %>selected<%} %>>减分</option>
-                <option value="NO" <%if(StringUtils.isNotBlank(itemId) && StringUtils.equals(rs.getString("checktype"), "NO")){ %>selected<%} %>>一票否决</option>
-            </select>
-        </TD>
-    </TR>
-    <TR style="height:1px"><TD class=Line colSpan=2></TD></TR>
-    <TR>
-        <TD class="fname">评分部门</TD>
-        <TD class="Field" >
-            <%
-                String deptnames = "";
-                String departmentid = "";
-                if(StringUtils.isNotBlank(itemId)) {
-                    departmentid = rs.getString("pfbm");
-                    if(StringUtils.isNotBlank(departmentid)) {
-                        for(String deptid:departmentid.split(",")) {
-                            if(StringUtils.isBlank(deptid)) {
-                                continue;
-                            }
-                            deptnames += DepartmentComInfo.getDepartmentname(deptid)+",";
-                        }
-                        deptnames = deptnames.substring(0,deptnames.length()-1);
-                    }
-                }
-            %>
-            <BUTTON class=Browser type="button" id="checkDept" onclick="onShowDepartment()"></BUTTON>
-				  <SPAN id=departmentspan>
-					<%=deptnames%>
-                      <!--IMG src="/images/BacoError.gif" align=absMiddle-->
-				  </SPAN>
-            <INPUT class=inputstyle id=departmentids type=hidden name=departmentid value=<%=departmentid%>>
-        </TD>
-    </TR>
-    </TBODY>
-    <TR style="height:1px"><TD class=Line colSpan=2></TD></TR>
-
-    <TR class=Spacing style="height:2px">
-        <TD class=Line1 colSpan=2></TD>
-    </TR>
-    </TBODY>
-
-    <COLGROUP>
-        <COL width=15%>
-        <COL width=15%>
-        <COL width=70%>
-    </COLGROUP>
-    <TBODY>
-        <tr>
-            <td><input type="button" value="添加考评明细" onclick="addItem()"></td>
-            <td><input type="button" value="删除考评明细" onclick="doDel()"></td>
-        </tr>
-    </TBODY>
-
+    </tr>
+    </tbody>
+</table></td>
+</tr>
+</tbody>
+</table>
+<table id="table1button" class="form"
+       style="word-wrap: break-word; left: 0px; width: 100%"
+       name="table1button">
     <tbody>
     <tr>
         <td colspan="2">
-            <table id="add_kplist_item"
+            <table id="oTable1"
                    class="ListStyle detailtable detailtableTopTable"
                    style="width: 100%" border="1" name="oTable1">
                 <colgroup>
-                    <COL width="5%">
-                    <COL width="50%">
-                    <COL width="30%">
-                    <COL width="10%">
-                    <COL width="10%">
+                    <COL width="15%">
+                    <COL width="65%">
                 </colgroup>
                 <tbody>
                 <tr class="header detailtitle">
                     <td class="detailtitle" nowrap="nowrap" align="center"><input
-                            id="label9632" class="Label" name="label9634" value="选择"
+                            id="label9634" class="Label" name="label9634" value="选择"
                             disabled="true" /></td>
                     <td class="detailtitle" nowrap="nowrap" align="center"><input
-                            id="label9632" class="Label" name="label9634" value="条款细则"
+                            id="label9632" class="Label" name="label9634" value="考评清单"
                             disabled="true" /></td>
-                    <td class="detailtitle" align="center"><input
-                            id="label9633" class="Label" name="label9635"
-                            value="评分标准" disabled="true" /></td>
-                    <td class="detailtitle" align="center"><input
-                            id="label9633" class="Label" name="label9635"
-                            value="分数上限" disabled="true" /></td>
                 </tr>
                 </tbody>
+
+                <%
+                    ;
+                    for(int rowindex = 1;rowindex<=qingdans.size();rowindex++) {
+                        QingdanGson qingdan = qingdans.get(rowindex-1);
+                %>
+                <tr>
+                    <td><input type='checkbox' id='qingdanId<%=rowindex %>' name='qingdanIdSelect') value='<%=qingdan.getId()%>'></td>
+                    <td><nobr><div style=width:50%  id='itemTitle<%=rowindex %>' name='itemTitle<%=rowindex %>' style='width=80%'><a href="itemList.jsp?qingdanId=<%=qingdan.getId() %>"><%=qingdan.getQingdanmc() %></a></div></td>
+                </tr>
+                <%} %>
             </table>
         </td>
     </tr>
-</TABLE>
-</FORM>
-</td>
-</tr>
-</TABLE>
-</td>
-<td></td>
-</tr>
-<tr style="height:0px">
-    <td height="0" colspan="3"></td>
-</tr>
-</table>
-<script language=vbs>
-sub onShowManagerID()
-	id = window.showModalDialog("/systeminfo/BrowserMain.jsp?url=/hrm/resource/ResourceBrowser.jsp")
-	if (Not IsEmpty(id)) then
-	if id(0)<> "" then
-	manageridspan.innerHtml = "<A href='HrmResource.jsp?id="&id(0)&"'>"&id(1)&"</A>"
-	resource.managerid.value=id(0)
-	else
-	manageridspan.innerHtml = "<IMG src='/images/BacoError.gif' align=absMiddle>"
-	resource.managerid.value=""
-	end if
-	end if
-end sub
+    </tbody>
+</table> <script>
+    jQuery(document).ready(function(){
+        var userid=<%=userid%>;
+        var deptId=<%=deptId%>;
+        var kpMonth=<%=kpMonth%>;
+        var rowindex1=0;
 
-sub onShowAssistantID()
-	id = window.showModalDialog("/systeminfo/BrowserMain.jsp?url=/hrm/resource/ResourceBrowser.jsp")
-	if (Not IsEmpty(id)) then
-	if id(0)<> "" then
-	assistantidspan.innerHtml = "<A href='HrmResource.jsp?id="&id(0)&"'>"&id(1)&"</A>"
-	resource.assistantid.value=id(0)
-	else
-	assistantidspan.innerHtml = ""
-	resource.assistantid.value=""
-	end if
-	end if
-end sub
+        //getYdkpItems();
 
-sub onShowLocationID()
-	id = window.showModalDialog("/systeminfo/BrowserMain.jsp?url=/hrm/location/LocationBrowser.jsp")
-	if (Not IsEmpty(id)) then
-	if id(0)<> 0 then
-	locationidspan.innerHtml = id(1)
-	resource.locationid.value=id(0)
-	else
-	locationidspan.innerHtml = "<IMG src='/images/BacoError.gif' align=absMiddle>"
-	resource.locationid.value=""
-	end if
-	end if
-end sub
+        function getYdkpItems() {
+            jQuery.ajax({
+                type:"GET",
+                url:"/service/common/getAllKpDx",
+                cache:false,
+                data:"userid="+userid+"&status=&companyids=&kpMonth="+kpMonth,
+                success:function(res){
+                    var json = eval("("+res+")");
+                    if(json.flag == "-1"){
+                        alert("数据查询错误");
+                    }else{
+                        jQuery.each(json,function(i){
+                            addRow1();
+                            var itemTitle = encodeURI(json[i].itemTitle,"UTF-8");
+                            jQuery("#itemTitle_"+ rowindex1).html("<a href='itemList.jsp?itemTitle="+json[i].itemTitle+"'>"+json[i].itemTitle+"</a>");
+                            jQuery("#itemTitle_input_"+ rowindex1).val(json[i].itemTitle);
+                            jQuery("#kpMonth_"+ rowindex1).html(json[i].kpMonth);
+                            jQuery("#kpMonth_input_"+ rowindex1).val(json[i].kpMonth);
+                            jQuery("#khjg_"+ rowindex1).html(json[i].companyName);
+                            jQuery("#kpxm_"+ rowindex1).html(json[i].itemType);
 
-sub onShowJobcall()
-	id = window.showModalDialog("/systeminfo/BrowserMain.jsp?url=/hrm/jobcall/JobCallBrowser.jsp")
-	if (Not IsEmpty(id)) then
-	if id(0)<> 0 then
-	jobcallspan.innerHtml = id(1)
-	resource.jobcall.value=id(0)
-	else
-	jobcallspan.innerHtml = "<IMG src='/images/BacoError.gif' align=absMiddle>"
-	resource.jobcall.value=""
-	end if
-	end if
-end sub
+                            var khyf = parseInt(json[i].kpMonth);
+                            var mbyf = khyf+1;
+                            jQuery("#mbyf_input_"+rowindex1).val(mbyf);
+                            rowindex1++;
+                        });
+                    }
+                },
+                error:function(e){}
+            });
+        }
 
-sub onShowJobType()
-	id = window.showModalDialog("/systeminfo/BrowserMain.jsp?url=/hrm/jobtype/JobtypeBrowser.jsp")
-	if (Not IsEmpty(id)) then
-	if id(0)<> 0 then
-	jobtypespan.innerHtml = id(1)
-	resource.jobtype.value=id(0)
-	else
-	jobtypespan.innerHtml = ""
-	resource.jobtype.value=""
-	end if
-	end if
-end sub
+        function addRow1() {
+            var table = jQuery('#oTable1');
+            var row = jQuery("<tr></tr>");
+            //选择框
+            var xztd = jQuery("<td></td>");
+            var xzHtml = "<input type='checkbox' id='itemid_"+ rowindex1+"' name='itemid_"+rowindex1+"' onClick=unselectall("+ rowindex1+ ")>";
+            xztd.append(xzHtml);
+            row.append(xztd);
 
-</script>
-<SCRIPT LANGUAGE="JavaScript">
+            var itemTitletd = jQuery("<td></td>");
+            var itemTitleid = "itemTitle_"+ rowindex1;
+            var itemTitleHtml = "<nobr><div style=width:50%  id='"+ itemTitleid+ "' name='"+ itemTitleid+ "' style='width=80%'>";
+            itemTitletd.append(itemTitleHtml);
+            var itemtitle_input_id = "itemTitle_input_"+ rowindex1;
+            var itemtitle_input_html="<input type='hidden' id='"+itemtitle_input_id+"'>";
+            itemTitletd.append(itemtitle_input_html);
+            row.append(itemTitletd);
 
-</SCRIPT>
-<script language="JavaScript">
-    function onShowDepartment(){
-//2004-6-16 Edit by Evan :传sql参数给部门浏览页面
-        url=encode("/hrm/company/MultiDepartmentBrowser.jsp?isedit=1&rightStr=HrmResourceAdd:Add&sqlwhere=<%=getDepartmentSql(user)%>&selectedids="+jQuery("input[name=departmentid]").val()+"&supdepid=1");
-        data = window.showModalDialog("/systeminfo/BrowserMain.jsp?url="+url);
-//2004-6-16 End Edit
+            var kpMonthtd = jQuery("<td></td>");
+            var kpMonthid = "kpMonth_"+ rowindex1;
+            var kpMonthHtml = "<nobr><div style=width:50%  id='"+ kpMonthid+ "' name='"+ kpMonthid+ "' style='width=80%'>";
+            kpMonthtd.append(kpMonthHtml);
+            var kpMonthinputid = "kpMonth_input_"+ rowindex1;
+            var kpMonthinputHtml = "<input type='hidden' id='"+kpMonthinputid+"'>";
+            kpMonthtd.append(kpMonthinputHtml);
+            row.append(kpMonthtd);
+
+            //考评项目
+            var khjgtd = jQuery("<td></td>");
+            var khjgid = "khjg_"+ rowindex1;
+            var khjgHtml = "<nobr><div style=width:50%  id='"+ khjgid+ "' name='"+ khjgid+ "' style='width=80%'>";
+            khjgtd.append(khjgHtml);
+            row.append(khjgtd);
+
+            //考评项目
+            var kpxmtd = jQuery("<td></td>");
+            var kpxmid = "kpxm_"+ rowindex1;
+            var kpxmHtml = "<nobr><div style=width:50%  id='"+ kpxmid+ "' name='"+ kpxmid+ "' style='width=80%'>";
+            kpxmtd.append(kpxmHtml);
+            row.append(kpxmtd);
+
+            var mbyftd = jQuery("<td></td>");
+            var mbyfid = "mbyf_"+ rowindex1;
+            var mbyfHtml = "<input type='text' id='mbyf_input_"+rowindex1+"'>";
+            mbyftd.append(mbyfHtml);
+            row.append(mbyftd);
+
+            var fftd = jQuery("<td></td>");
+            var ffid = "ff_"+ rowindex1;
+            var ffHtml = "<input type='button' value='发放' onclick=doPublish("+rowindex1+") id='ff_input_"+rowindex1+"'>";
+            fftd.append(ffHtml);
+            row.append(fftd);
+
+            table.append(row);
+        }
+    });
+
+    function onShowBrowser2(id, url, type1,
+                            tmpindex) {
+        var tmpids = "";
+        var id1 = null;
+        if (type1 == 8) {
+            tmpids = $G("con" + id + "_value").value;
+            id1 = window.showModalDialog(url
+                + "?projectids=" + tmpids);
+        } else if (type1 == 9) {
+            tmpids = $G("con" + id + "_value").value;
+            id1 = window.showModalDialog(url
+                + "?documentids=" + tmpids);
+        } else if (type1 == 1) {
+            tmpids = $G("con" + id + "_value").value;
+            id1 = window.showModalDialog(url
+                + "?resourceids=" + tmpids);
+        } else if (type1 == 4) {
+            tmpids = $G("con" + id + "_value").value;
+            id1 = window.showModalDialog(url
+                + "?selectedids=" + tmpids
+                + "&resourceids=" + tmpids);
+        } else if (type1 == 16) {
+            tmpids = $G("con" + id + "_value").value;
+            id1 = window.showModalDialog(url
+                + "?resourceids=" + tmpids);
+        } else if (type1 == 7) {
+            tmpids = $G("con" + id + "_value").value;
+            id1 = window.showModalDialog(url
+                + "?resourceids=" + tmpids);
+        } else if (type1 == 142) {
+            tmpids = $G("con" + id + "_value").value;
+            id1 = window.showModalDialog(url
+                + "?receiveUnitIds=" + tmpids);
+        }
+        //id1 = window.showModalDialog(url)
+        if (id1 != null) {
+            resourceids = wuiUtil
+                .getJsonValueByIndex(id1, 0);
+            resourcename = wuiUtil
+                .getJsonValueByIndex(id1, 1);
+            if (wuiUtil.getJsonValueByIndex(id1, 0) != "") {
+                resourceids = resourceids.substr(1);
+                resourcename = resourcename
+                    .substr(1);
+                $G("con" + id + "_valuespan").innerHTML = resourcename;
+                jQuery(
+                    "input[name=con" + id
+                    + "_value]").val(
+                    resourceids);
+                jQuery(
+                    "input[name=con" + id
+                    + "_name]").val(
+                    resourcename);
+            } else {
+                $G("con" + id + "_valuespan").innerHTML = "";
+                $G("con" + id + "_value").value = "";
+                $G("con" + id + "_name").value = "";
+            }
+        }
+        if ($G("con" + id + "_value").value == "") {
+            document.getElementsByName("check_con")[tmpindex * 1].checked = false;
+        } else {
+            document.getElementsByName("check_con")[tmpindex * 1].checked = true;
+        }
+    }
+
+    function dosave() {
+        if (!docheck()) {
+            return false;
+        }
+    }
+
+    function cancelRowData(id, row) {
+        jQuery("#kpxm_" + row).show();
+        jQuery("#kpxm_input_" + row).hide();
+        jQuery("#kpnr_" + row).show();
+        jQuery("#kpnr_input_" + row).hide();
+        jQuery("#xmsm_" + row).show();
+        jQuery("#xmsm_input_" + row).hide();
+        jQuery("#kpfs_" + row).show();
+        jQuery("#kpfs_input_" + row).hide();
+        jQuery("#fssx_" + row).show();
+        jQuery("#fssx_input_" + row).hide();
+        jQuery("#kslb_" + row).show();
+        jQuery("#kslb_input_" + row).hide();
+        jQuery("#xssx_" + row).show();
+        jQuery("#xssx_input_" + row).hide();
+        jQuery("#updateRow_" + row).show();
+        jQuery("#saveRow_" + row).hide();
+        jQuery("#cancelRow_" + row).hide();
+        jQuery("#departmentspan_" + row).hide();
+        jQuery("#kpfenshu_input_" + row).hide();
+        jQuery("#kpfenshu_" + row).show();
+    }
+
+    function updateRowData(id, row) {
+        jQuery("#kpxm_" + row).hide();
+        jQuery("#kpxm_input_" + row).show();
+        jQuery("#kpnr_" + row).hide();
+        jQuery("#kpnr_input_" + row).show();
+        jQuery("#xmsm_" + row).hide();
+        jQuery("#xmsm_input_" + row).show();
+        jQuery("#kpfs_" + row).hide();
+        jQuery("#kpfs_input_" + row).show();
+        jQuery("#fssx_" + row).hide();
+        jQuery("#fssx_input_" + row).show();
+        jQuery("#kslb_" + row).hide();
+        jQuery("#kslb_input_" + row).show();
+        jQuery("#xssx_" + row).hide();
+        jQuery("#xssx_input_" + row).show();
+        jQuery("#updateRow_" + row).hide();
+        jQuery("#saveRow_" + row).show();
+        jQuery("#cancelRow_" + row).show();
+        jQuery("#departmentspan_" + row).show();
+        jQuery("#kpfenshu_input_" + row).show();
+        jQuery("#kpfenshu_" + row).hide();
+        changeKpfs(row);
+    }
+
+    function saveRowData(id, row) {
+        jQuery("#kpxm_" + row).show();
+        jQuery("#kpxm_input_" + row).hide();
+        jQuery("#kpnr_" + row).show();
+        jQuery("#kpnr_input_" + row).hide();
+        jQuery("#xmsm_" + row).show();
+        jQuery("#xmsm_input_" + row).hide();
+        jQuery("#kpfs_" + row).show();
+        jQuery("#kpfs_input_" + row).hide();
+        jQuery("#fssx_" + row).show();
+        jQuery("#fssx_input_" + row).hide();
+        jQuery("#kslb_" + row).show();
+        jQuery("#kslb_input_" + row).hide();
+        jQuery("#xssx_" + row).show();
+        jQuery("#xssx_input_" + row).hide();
+        jQuery("#updateRow_" + row).show();
+        jQuery("#saveRow_" + row).hide();
+        jQuery("#departmentspan_" + row).hide();
+        jQuery("#kpfenshu_input_" + row).hide();
+        jQuery("#kpfenshu_" + row).show();
+
+        var kpxm = jQuery("#kpxm_input_" + row)
+            .val();
+        var kpnr = jQuery("#kpnr_input_" + row)
+            .val();
+        var xmsm = jQuery("#xmsm_input_" + row)
+            .val();
+        var kpfs = jQuery("#kpfs_input_" + row)
+            .val();
+        var fssx = jQuery("#fssx_input_" + row)
+            .val();
+        var kslb = jQuery("#kslb_input_" + row)
+            .val();
+        var xssx = jQuery("#xssx_input_" + row)
+            .val();
+        var kpfenshu = jQuery(
+            "#kpfenshu_input_" + row).val();
+
+        if (parseFloat(kpfenshu) > parseFloat(fssx)) {
+            alert("考评分数不能大于分数上限");
+            var kpfenshu_o = jQuery(
+                "#kpfenshu_" + row).html();
+            jQuery("#kpfenshu_input_" + row).val(
+                kpfenshu_o);
+            updateRowData(id, row);
+            return false;
+        }
+        jQuery
+            .ajax({
+                type : "POST",
+                url : "ydkpOperation.jsp",
+                data : "id=" + id + "&kpxm="
+                + kpxm + "&kpfs="
+                + kpfs + "&maxValue="
+                + fssx
+                + "&departmentid="
+                + kslb + "&xssx="
+                + xssx + "&kpnr="
+                + kpnr + "&xmsm="
+                + xmsm + "&kpfenshu="
+                + kpfenshu,
+                success : function(res) {
+                    alert("保存成功");
+                    window.location.href = "ydkpList1.jsp";
+                },
+                error : function(e) {
+                }
+            });
+    }
+
+    function onShowDepartment() {
+        //2004-6-16 Edit by Evan :传sql参数给部门浏览页面
+        url = encode("/hrm/company/MultiDepartmentBrowser.jsp?isedit=1&rightStr=HrmResourceAdd:Add&sqlwhere=&selectedids="+ jQuery("#departmentids").val());
+        data = window.showModalDialog("/systeminfo/BrowserMain.jsp?url="+ url);
+        //2004-6-16 End Edit
         issame = false;
-        if (data!=null){
-            if (data.id != 0 ){
-                if (data.id == jQuery("input[name=departmentid]").val()){
+        if (data != null) {
+            if (data.id != 0) {
+                if (data.id == jQuery("#departmentids").val()) {
                     issame = true;
                 }
                 jQuery("#departmentspan").html(data.name);
-                jQuery("input[name=departmentid]").val(data.id);
-            }else{
+                jQuery("#departmentids").val(data.id);
+            } else {
                 jQuery("#departmentspan").html("<IMG src='/images/BacoError.gif' align=absMiddle>");
-                jQuery("input[name=departmentid]").val("");
+                jQuery("#departmentids").val("");
             }
-            if (issame == false){
+            if (issame == false) {
                 jQuery("#jobtitlespan").html("<IMG src='/images/BacoError.gif' align=absMiddle>");
                 jQuery("input[name=jobtitle]").val("");
                 //	costcenterspan.innerHtml = "<IMG src='/images/BacoError.gif' align=absMiddle>"
                 //	resource.costcenterid.value=""
             }
         }
+    }
+
+    function encode(str) {
+        return escape(str);
+    }
+
+    function changeKpfs(row) {
+        var kpfs = $(
+            "#kpfs_input_" + row
+            + " option:selected").val();
+        if (kpfs == 2) {
+            $("#fssx_input_" + row).hide();
+            $("#fssx_" + row).show();
+            $("#kpfenshu_input_" + row).hide();
+            $("#kpfenshu_" + row).show();
+        } else {
+            $("#fssx_input_" + row).show();
+            $("#fssx_" + row).hide();
+            $("#kpfenshu_input_" + row).show();
+            $("#kpfenshu_" + row).hide();
+        }
+    }
+
+    function onCheck(rowindex) {
+        var itemid = $("#itemid_"+rowindex).val();
+        window.location.href="addDjkpItem.jsp?itemId="+itemid;
+    }
+
+    function addNew() {
+        window.location.href = "addDjkpItem.jsp";
+    }
+
+    var rowindex1 = 0;
+
+    function dosearch() {
+        var jd = $("#rowindex").val();
+        window.location.href = "dxList2.jsp?jd="+jd;
+    }
+
+    function addRow1() {
+        var table = jQuery('#oTable1');
+        var row = jQuery("<tr></tr>");
+        //选择框
+        var xztd = jQuery("<td></td>");
+        var xzHtml = "<input type='checkbox' id='itemid_"+ rowindex1+"' name='itemid_"+rowindex1+"' onClick=unselectall("+ rowindex1+ ")>";
+        xztd.append(xzHtml);
+        row.append(xztd);
+
+        var itemTitletd = jQuery("<td></td>");
+        var itemTitleid = "itemTitle_"+ rowindex1;
+        var itemTitleHtml = "<nobr><div style=width:50%  id='"+ itemTitleid+ "' name='"+ itemTitleid+ "' style='width=80%'>";
+        itemTitletd.append(itemTitleHtml);
+        var itemtitle_input_id = "itemTitle_input_"+ rowindex1;
+        var itemtitle_input_html="<input type='hidden' id='"+itemtitle_input_id+"'>";
+        itemTitletd.append(itemtitle_input_html);
+        row.append(itemTitletd);
+
+        var kpMonthtd = jQuery("<td></td>");
+        var kpMonthid = "kpMonth_"+ rowindex1;
+        var kpMonthHtml = "<nobr><div style=width:50%  id='"+ kpMonthid+ "' name='"+ kpMonthid+ "' style='width=80%'>";
+        kpMonthtd.append(kpMonthHtml);
+        var kpMonthinputid = "kpMonth_input_"+ rowindex1;
+        var kpMonthinputHtml = "<input type='hidden' id='"+kpMonthinputid+"'>";
+        kpMonthtd.append(kpMonthinputHtml);
+        row.append(kpMonthtd);
+
+        //考评项目
+        var khjgtd = jQuery("<td></td>");
+        var khjgid = "khjg_"+ rowindex1;
+        var khjgHtml = "<nobr><div style=width:50%  id='"+ khjgid+ "' name='"+ khjgid+ "' style='width=80%'>";
+        khjgtd.append(khjgHtml);
+        row.append(khjgtd);
+
+        //考评项目
+        var kpxmtd = jQuery("<td></td>");
+        var kpxmid = "kpxm_"+ rowindex1;
+        var kpxmHtml = "<nobr><div style=width:50%  id='"+ kpxmid+ "' name='"+ kpxmid+ "' style='width=80%'>";
+        kpxmtd.append(kpxmHtml);
+        row.append(kpxmtd);
+
+        var mbyftd = jQuery("<td></td>");
+        var mbyfid = "mbyf_"+ rowindex1;
+        var mbyfHtml = "<input type='text' id='mbyf_input_"+rowindex1+"'>";
+        mbyftd.append(mbyfHtml);
+        row.append(mbyftd);
+
+        var fftd = jQuery("<td></td>");
+        var ffid = "ff_"+ rowindex1;
+        var ffHtml = "<input type='button' value='发放' onclick='doPublish("+rowindex1+")' id='ff_input_"+rowindex1+"'>";
+        fftd.append(ffHtml);
+        row.append(fftd);
+
+        table.append(row);
     }
 
     function onShowCompany(){
@@ -390,234 +620,111 @@ end sub
         }
     }
 
-    function onShowCostCenter(){
-        data = window.showModalDialog("/systeminfo/BrowserMain.jsp?url=/hrm/company/CostcenterBrowser.jsp?sqlwhere= where departmentid="+jQuery("input[name=departmentid]").val());
-        if (data!=null){
-            if (data.id != 0 ){
-                jQuery("#costcenterspan").html(data.name);
-                jQuery("input[name=costcenterid]").val(data.id);
-            }else{
-                jQuery("#costcenterspan").html("<IMG src='/images/BacoError.gif' align=absMiddle>");
-                jQuery("input[name=costcenterid]").val("");
-            }
+    function doPublish(rowindex) {
+        var userid=<%=userid%>;
+        var mbyf = $("#mbyf_input_"+rowindex).val();
+        if(mbyf==null || isNaN(mbyf)) {
+            alert("目标月份格式错误");
+            return false;
         }
-    }
-
-    function onShowJobtitle(){
-        url=encode("/hrm/jobtitles/JobTitlesBrowser.jsp?sqlwhere= where jobdepartmentid="+jQuery("input[name=departmentid]").val()+"&fromPage=add");
-        data = window.showModalDialog("/systeminfo/BrowserMain.jsp?url="+url);
-        if (data!=null){
-            if (data.id != 0 ){
-                jQuery("#jobtitlespan").html(data.name);
-                jQuery("input[name=jobtitle]").val(data.id);
-            }else{
-                jQuery("#jobtitlespan").html("<IMG src='/images/BacoError.gif' align=absMiddle>");
-                jQuery("input[name=jobtitle]").val("");
-            }
+        var itemTitle = encodeURI($("#itemTitle_input_"+rowindex).val(),"UTF-8");
+        if(itemTitle == null) {
+            alert("清单不可为空");
+            return false;
         }
-    }
-
-    function onBelongto(){
-        data = window.showModalDialog("/systeminfo/BrowserMain.jsp?url=/hrm/resource/ResourceBrowser.jsp?from=add&sqlwhere=(accounttype is null or accounttype=0)");
-        if (data!=null){
-            if (data.id != ""){
-                jQuery("#belongtospan").html("<A href='HrmResource.jsp?id="+data.id+"'>"+data.name+"</A>");
-                jQuery("input[name=belongto]").val(data.id);
-            }else{
-                jQuery("#belongtospan").html("<IMG src='/images/BacoError.gif' align=absMiddle>");
-                jQuery("input[name=belongto]").val("");
-            }
-        }
-    }
-
-    var saveBtn ;
-    function encode(str){
-        return escape(str);
-    }
-    function doSave(obj) {
-        var details = [];
-
-        var index = 0;
-
-        $("#add_kplist_item").find('tr').each(function() {
-
-            if(index == 0) {
-                index = index+1;
-                return true;
-            }
-
-            var fs;
-            var tkxz;
-            var pfbz;
-
-            $(this).find("input[name='fs']").each(function() {
-               fs = $(this).val();
-            });
-
-            $(this).find("textarea[name='tkxz']").each(function() {
-                tkxz = encodeURI($(this).val(),"UTF-8");
-            });
-
-            $(this).find("textarea[name='pfbz']").each(function() {
-                pfbz = encodeURI($(this).val(),"UTF-8");
-            });
-
-            if(isNaN(fs)) {
-                alert("分数必须为数字");
-                return false;
-            }
-
-            if(tkxz=="") {
-                alert("条款细则不能为空");
-                return false;
-            }
-
-            if(pfbz=="") {
-                alert("评分标准不能为空");
-                return false;
-            }
-
-            details.push({
-                fs:fs,
-                tkxz:tkxz,
-                pfbz:pfbz
-            });
+        var oldkpMonth = jQuery("#kpMonth_input_"+rowindex).val();
+        jQuery.ajax({
+            type:"GET",
+            url:"/service/common/doPublish",
+            cache:false,
+            data:"userid="+userid+"&itemTitle="+itemTitle+"&kpMonth="+mbyf+"&oldkpMonth="+oldkpMonth,
+            success:function(res){
+                alert(res);
+            },
+            error:function(e){}
         });
+    }
 
-        var itemId = "<%=itemId%>";
-        var qingdanid = $("#qingdanSelect").val();
-        var itemType = encodeURI($("#itemType").val(),"UTF-8");
-        var pfbm = $("#departmentids").val();
-        var acceptType = encodeURI($("#acceptType").val(),"UTF-8");
-
-        var obj = {"itemId":itemId,"qdId":qingdanid,"kpnr":itemType,"kpfs":acceptType,"pfbm":pfbm,"details":details};
-
-        if(itemType=="") {
-            alert("考评内容不能为空");
+    function publish() {
+        var spCodesTemp = "";
+        $('input:checkbox[name=qingdanIdSelect]:checked').each(function(i){
+            if(0==i){
+                spCodesTemp = $(this).val();
+            }else{
+                spCodesTemp += (","+$(this).val());
+            }
+        });
+        if(spCodesTemp == "") {
+            alert("请选择需要发布的清单");
             return false;
         }
 
-        if(pfbm == "") {
-            alert("评分部门不能为空");
+        var checkedCompanyId = $("#checkedCompanyId").val();
+        if(checkedCompanyId=="") {
+            alert("请选择考核公司");
             return false;
         }
 
-        <%--//保存列表数据--%>
+        var kpMonth = $("#kpMonth").val();
+        if(kpMonth == "") {
+            alert("考评月份不能为空");
+            return false;
+        }
+        var userId = "<%=userid%>";
+        //保存列表数据
         jQuery.ajax({
             type:"POST",
-            url:"/service/common/saveCheckItems",
-            contentType: "application/json",
-            data:JSON.stringify(obj),
+            url:"/service/common/doPublish2",
+            cache:false,
+            data:"userid="+userid+"&qingdanids="+spCodesTemp+"&companyids="+checkedCompanyId+"&kpMonth="+kpMonth,
             success:function(res){
-                alert("添加成功");
+                alert("发布成功");
                 window.location.href="itemList.jsp";
             },
             error:function(e){}
         });
     }
 
-    function changeKpfs() {
-        var kpfs = $('#checkType option:selected').val();
-        if(kpfs == "NO") {
-            $("#kpfsDiv").hide();
-        } else {
-            $("#kpfsDiv").show();
+    function stopPingfen(qingdanId) {
+        if(qingdanId == "") {
+            alert("系统错误");
+            return false;
         }
+        jQuery.ajax({
+            type:"GET",
+            url:"/service/common/stopPingfen",
+            cache:false,
+            data:"qingdanid="+qingdanId,
+            success:function(res){
+                refreshPage();
+            },
+            error:function(e){}
+        });
+
     }
 
-    //添加列表项
-    function addItem(){
-        var table_row	= "<tr>";
-        table_row += "<td style='padding: 2px;'><input type='checkbox' name='chk_row'></></td>";
-        table_row += "<td style='padding: 2px;'><textarea name='tkxz' style='width: 90%; overflow:hidden; height: 32px;'></textarea></td>";
-        table_row += "<td style='padding: 2px;'><textarea name='pfbz' style='width: 90%; overflow:hidden; height: 32px;'></textarea></td>";
-        table_row += "<td style='padding: 2px;'><input type='text' name='fs' style='width: 90%;height: 32px;'></></td>";
-        table_row += "</tr>";
-        $('#add_kplist_item').append(table_row);
-    }
-
-    //删除选定列表项
-    function doDel(){
-        var len = $("input[name='chk_row']").length;
-
-        //倒序操作
-        $("input[name='chk_row']").each(function(index){
-            var cur = len - index - 1;
-            if($("input[name='chk_row']").eq(cur).is(':checked')){
-                $('#add_kplist_item tr').eq(cur+1).remove();
-            }
+    function stopZifen(qingdanId){
+        if(qingdanId == "") {
+            alert("系统错误");
+            return false;
+        }
+        jQuery.ajax({
+            type:"GET",
+            url:"/service/common/stopZiping",
+            cache:false,
+            data:"qingdanid="+qingdanId,
+            success:function(res){
+                refreshPage();
+            },
+            error:function(e){}
         });
     }
-</script>
 
-
-<script language="vbs">
-sub onShowBrowser(id,id2,url,linkurl,type1,ismand)
-
-	if type1= 2 or type1 = 19 then
-		id1 = window.showModalDialog(url,,"dialogHeight:320px;dialogwidth:275px")
-		document.all("span"+id2).innerHtml = id1
-		document.all("dateField"+id).value=id1
-	else
-		if type1 <> 17 and type1 <> 18 and type1<>27 and type1<>37 and type1<>4 and type1<>167 and type1<>164 and type1<>169 and type1<>170 then
-			id1 = window.showModalDialog(url)
-		elseif type1=4 or type1=167 or type1=164 or type1=169 or type1=170 then
-            tmpids = document.all("dateField"+id).value
-			id1 = window.showModalDialog(url&"?selectedids="&tmpids)
-		else
-			tmpids = document.all("dateField"+id).value
-			id1 = window.showModalDialog(url&"?resourceids="&tmpids)
-		end if
-		if NOT isempty(id1) then
-			if type1 = 17 or type1 = 18 or type1=27 or type1=37 then
-				if id1(0)<> ""  and id1(0)<> "0" then
-					resourceids = id1(0)
-					resourcename = id1(1)
-					sHtml = ""
-					resourceids = Mid(resourceids,2,len(resourceids))
-					document.all("dateField"+id).value= resourceids
-					resourcename = Mid(resourcename,2,len(resourcename))
-					while InStr(resourceids,",") <> 0
-						curid = Mid(resourceids,1,InStr(resourceids,",")-1)
-						curname = Mid(resourcename,1,InStr(resourcename,",")-1)
-						resourceids = Mid(resourceids,InStr(resourceids,",")+1,Len(resourceids))
-						resourcename = Mid(resourcename,InStr(resourcename,",")+1,Len(resourcename))
-						sHtml = sHtml&"<a href="&linkurl&curid&">"&curname&"</a>&nbsp"
-					wend
-					sHtml = sHtml&"<a href="&linkurl&resourceids&">"&resourcename&"</a>&nbsp"
-					document.all("span"+id2).innerHtml = sHtml
-
-				else
-					if ismand=0 then
-						document.all("span"+id2).innerHtml = empty
-					else
-						document.all("span"+id2).innerHtml ="<img src='/images/BacoError.gif' align=absmiddle>"
-					end if
-					document.all("dateField"+id).value=""
-				end if
-
-			else
-			   if  id1(0)<>""   and id1(0)<> "0"  then
-			        if linkurl = "" then
-						document.all("span"+id2).innerHtml = id1(1)
-					else
-						document.all("span"+id2).innerHtml = "<a href="&linkurl&id1(0)&">"&id1(1)&"</a>"
-					end if
-					document.all("dateField"+id).value=id1(0)
-				else
-					if ismand=0 then
-						document.all("span"+id2).innerHtml = empty
-					else
-						document.all("span"+id2).innerHtml ="<img src='/images/BacoError.gif' align=absmiddle>"
-					end if
-					document.all("dateField"+id).value=""
-				end if
-			end if
-		end if
-	end if
-end sub
+    function refreshPage() {
+        var url = window.location.href;
+        url = url.split("?")[0];
+        location.replace(url);
+    }
 </script>
 </BODY>
-<SCRIPT language="javascript" defer="defer" src='/js/datetime.js?rnd="+Math.random()+"'></script>
-<SCRIPT language="javascript" defer="defer" src='/js/JSDateTime/WdatePicker.js?rnd="+Math.random()+"'></script>
 </HTML>

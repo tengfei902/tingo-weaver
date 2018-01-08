@@ -4,10 +4,12 @@ import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.dao.*;
 import com.tingo.weaver.model.po.*;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.util.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class CheckItemServiceImpl implements CheckItemService {
     private KpCheckItemPfDao kpCheckItemPfDao;
     @Autowired
     private KpCheckItemDetailPfDao kpCheckItemDetailPfDao;
+    @Autowired
+    private QingdanDao qingdanDao;
 
     @Transactional
     @Override
@@ -134,5 +138,43 @@ public class CheckItemServiceImpl implements CheckItemService {
         }
 
         return result;
+    }
+
+    @Transactional
+    @Override
+    public void saveQingdan(String qdid, Qingdan qingdan) {
+        qingdanDao.insertSelective(qingdan);
+        if(StringUtils.isEmpty(qdid)) {
+            return;
+        }
+
+        List<KpCheckItem> items = kpCheckItemDao.selectByQdId(Long.parseLong(qdid));
+        if(CollectionUtils.isEmpty(items)) {
+            return;
+        }
+
+        items.parallelStream().forEach(kpCheckItem -> {
+            KpCheckItem item = new KpCheckItem();
+            item.setJd(qingdan.getJd());
+            item.setQd(qingdan.getQingdanmc());
+            item.setQdId(qingdan.getId());
+            item.setKpfs(kpCheckItem.getKpfs());
+            item.setKpnr(kpCheckItem.getKpnr());
+            item.setPfbm(kpCheckItem.getPfbm());
+
+            kpCheckItemDao.insertSelective(item);
+
+            List<KpCheckItemDetail> details = kpCheckItemDetailDao.selectByItemId(kpCheckItem.getId());
+            details.parallelStream().forEach(kpCheckItemDetail -> {
+                KpCheckItemDetail detail = new KpCheckItemDetail();
+                detail.setItemId(item.getId());
+                detail.setJd(item.getJd());
+                detail.setFs(kpCheckItemDetail.getFs());
+                detail.setPfbz(kpCheckItemDetail.getPfbz());
+                detail.setTkxz(kpCheckItemDetail.getTkxz());
+
+                kpCheckItemDetailDao.insertSelective(detail);
+            });
+        });
     }
 }

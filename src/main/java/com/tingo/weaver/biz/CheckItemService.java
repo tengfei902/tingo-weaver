@@ -15,4 +15,6 @@ public interface CheckItemService {
     void saveCheckItem(KpCheckItem item, List<KpCheckItemDetail> details);
 
     Map<String,List<String>> publishItem(String qdId, Integer jd, List<String> companyIds);
+
+    void saveQingdan(String qdid,Qingdan qingdan);
 }
