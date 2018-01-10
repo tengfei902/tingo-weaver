@@ -11,6 +11,7 @@ import java.util.Map;
 public interface KpService {
     QingdanGson selectQdById(Integer id);
     List<QingdanGson> selectQdList(Integer jd);
+    List<QingdanGson> selectQdList(String yearStr,Integer jd);
     List<QingdanDetailGson> selectQdDetail(Integer jd);
     List<ZcListGson> getKpZcGson(ZcListRequest zcListRequest);
     List<CheckItemGson> getCheckItem(Long qdId);

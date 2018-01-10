@@ -64,14 +64,22 @@ public class KpServiceImpl implements KpService {
         if(Objects.isNull(qingdan)) {
             return new QingdanGson();
         }
-        return new QingdanGson(qingdan.getId(),qingdan.getQingdanmc());
+        return new QingdanGson(qingdan.getId(),qingdan.getQingdanmc(),qingdan.getJd());
     }
 
     @Override
     public List<QingdanGson> selectQdList(Integer jd) {
         List<QingdanGson> list = new ArrayList<>();
         List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd,null);
-        qingdans.stream().forEach(qingdan -> list.add(new QingdanGson(qingdan.getId(),qingdan.getQingdanmc())));
+        qingdans.stream().forEach(qingdan -> list.add(new QingdanGson(qingdan.getId(),qingdan.getQingdanmc(),qingdan.getJd())));
+        return list;
+    }
+
+    @Override
+    public List<QingdanGson> selectQdList(String yearStr, Integer jd) {
+        List<QingdanGson> list = new ArrayList<>();
+        List<Qingdan> qingdans = qingdanDao.selectAvailableList(jd,yearStr);
+        qingdans.stream().forEach(qingdan -> list.add(new QingdanGson(qingdan.getId(),qingdan.getQingdanmc(),qingdan.getJd())));
         return list;
     }
 

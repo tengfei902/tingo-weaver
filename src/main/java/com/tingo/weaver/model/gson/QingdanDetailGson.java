@@ -9,7 +9,7 @@ public class QingdanDetailGson extends QingdanGson {
     private String canPf;
 
     public QingdanDetailGson(Long id, String qingdanmc) {
-        super(id, qingdanmc);
+        super(id, qingdanmc,0);
     }
 
     public String getCanZp() {

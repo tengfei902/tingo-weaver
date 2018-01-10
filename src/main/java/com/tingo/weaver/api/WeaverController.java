@@ -39,8 +39,8 @@ public class WeaverController {
     private CheckItemService checkItemService;
 
     @RequestMapping(value = "/getQingdanList",method = RequestMethod.GET,produces = "text/json;charset=UTF-8")
-    public @ResponseBody String getQingdanList(Integer jd) {
-        List<QingdanGson> list = kpService.selectQdList(jd);
+    public @ResponseBody String getQingdanList(String yearStr,Integer jd) {
+        List<QingdanGson> list = kpService.selectQdList(yearStr,jd);
         return new Gson().toJson(list);
     }
 

@@ -7,14 +7,16 @@ public class QingdanGson {
 
     private Long id;
     private String qingdanmc;
+    private int jd;
 
     public QingdanGson() {
 
     }
 
-    public QingdanGson(Long id ,String qingdanmc) {
+    public QingdanGson(Long id ,String qingdanmc,int jd) {
         this.id = id;
         this.qingdanmc = qingdanmc;
+        this.jd = jd;
     }
 
     public Long getId() {
@@ -31,5 +33,13 @@ public class QingdanGson {
 
     public void setQingdanmc(String qingdanmc) {
         this.qingdanmc = qingdanmc;
+    }
+
+    public int getJd() {
+        return jd;
+    }
+
+    public void setJd(int jd) {
+        this.jd = jd;
     }
 }
