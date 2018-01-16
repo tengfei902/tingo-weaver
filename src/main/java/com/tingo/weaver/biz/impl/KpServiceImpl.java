@@ -333,7 +333,17 @@ public class KpServiceImpl implements KpService {
             return result;
         }
 
-        Map<String,Object> params = MapUtils.buildMap("orgIds",deptIds,"jd",zcListRequest.getJd(),"status",zcListRequest.getStatus(),"qdId",zcListRequest.getQd());
+        List<BigDecimal> toOrgIds = new ArrayList<>();
+
+        if(StringUtils.isNoneBlank(zcListRequest.getCompanyids())) {
+            for(String companyid:zcListRequest.getCompanyids().split(",")) {
+                if(!StringUtils.isEmpty(companyid)) {
+                    toOrgIds.add(new BigDecimal(companyid));
+                }
+            }
+        }
+
+        Map<String,Object> params = MapUtils.buildMap("orgIds",deptIds,"jd",zcListRequest.getJd(),"status",zcListRequest.getStatus(),"qdId",zcListRequest.getQd(),"toOrgIds",toOrgIds);
         List<KpCheckItemPf> pfs = kpCheckItemPfDao.selectForList(params);
 
         if(CollectionUtils.isEmpty(pfs)) {

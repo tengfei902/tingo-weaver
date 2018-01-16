@@ -210,6 +210,12 @@
         #{orgId}
       </foreach>
     </if>
+    <if test="toOrgIds != null and toOrgIds.size() > 0" >
+      and TO_ORG_ID in
+      <foreach collection="toOrgIds" item="toOrgId" index="index" open="(" close=")" separator=",">
+        #{toOrgId}
+      </foreach>
+    </if>
     <if test="jd != null" >
       and JD =  #{jd,jdbcType=DECIMAL}
     </if>

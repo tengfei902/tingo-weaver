@@ -8,6 +8,7 @@ public class ZcListRequest {
     private String status;
     private String jd;
     private String qd;
+    private String companyids;
 
     public String getUserId() {
         return userId;
@@ -39,5 +40,13 @@ public class ZcListRequest {
 
     public void setQd(String qd) {
         this.qd = qd;
+    }
+
+    public String getCompanyids() {
+        return companyids;
+    }
+
+    public void setCompanyids(String companyids) {
+        this.companyids = companyids;
     }
 }
