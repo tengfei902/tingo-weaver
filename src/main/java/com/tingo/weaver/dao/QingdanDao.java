@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface QingdanDao {
     int deleteByPrimaryKey(BigDecimal id);
@@ -20,4 +21,6 @@ public interface QingdanDao {
     int updateByPrimaryKey(Qingdan record);
 
     List<Qingdan> selectAvailableList(@Param("jd") Integer jd,@Param("yearStr")String yearStr);
+
+    List<Qingdan> select(Map<String,Object> map);
 }

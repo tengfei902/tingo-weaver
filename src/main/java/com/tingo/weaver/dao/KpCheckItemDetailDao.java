@@ -14,7 +14,7 @@ public interface KpCheckItemDetailDao {
 
     int insertSelective(KpCheckItemDetail record);
 
-    KpCheckItemDetail selectByPrimaryKey(BigDecimal id);
+    KpCheckItemDetail selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(KpCheckItemDetail record);
 

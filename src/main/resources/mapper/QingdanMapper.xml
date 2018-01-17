@@ -101,4 +101,21 @@
     </if>
     order by id desc
   </select>
+
+  <select id="select" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from QINGDAN
+    where 1=1
+    <if test="yearStr != null" >
+      and year_str = #{yearStr,jdbcType=VARCHAR}
+    </if>
+    <if test="jd != null and jd!=0" >
+      and jd = #{jd,jdbcType=INTEGER}
+    </if>
+    <if test="qdId != null" >
+      and id = #{qdId,jdbcType=BIGINT}
+    </if>
+    order by id desc
+  </select>
 </mapper>

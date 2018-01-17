@@ -21,5 +21,7 @@ public interface KpCheckItemDetailPfDao {
 
     KpCheckItemDetailPf selectByUnq(@Param("detailId") BigDecimal detailId,@Param("orgId")BigDecimal orgId,@Param("toOrgId")BigDecimal toOrgId);
 
+    List<KpCheckItemDetailPf> selectByDetailId(@Param("detailId") BigDecimal detailId,@Param("toOrgId")BigDecimal toOrgId);
+
     List<KpCheckItemDetailPf> selectByPfId(@Param("pfId")BigDecimal pfId);
 }

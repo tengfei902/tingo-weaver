@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.tingo.weaver.biz.CacheService;
+import com.tingo.weaver.dao.HrmDepartmentDao;
 import com.tingo.weaver.dao.HrmSubCompanyDao;
 import com.tingo.weaver.dao.KpCheckItemDao;
 import com.tingo.weaver.dao.KpCheckItemDetailDao;
@@ -28,6 +29,8 @@ public class CacheServiceImpl implements CacheService {
     private KpCheckItemDao kpCheckItemDao;
     @Autowired
     private HrmSubCompanyDao hrmSubCompanyDao;
+    @Autowired
+    private HrmDepartmentDao hrmDepartmentDao;
 
     private LoadingCache<BigDecimal,KpCheckItemDetail> itemDetailCache = CacheBuilder.newBuilder()
             .expireAfterAccess(10, TimeUnit.MINUTES)
@@ -36,7 +39,7 @@ public class CacheServiceImpl implements CacheService {
             .build(new CacheLoader<BigDecimal, KpCheckItemDetail>() {
                 @Override
                 public KpCheckItemDetail load(BigDecimal id) throws Exception {
-                    return kpCheckItemDetailDao.selectByPrimaryKey(id);
+                    return kpCheckItemDetailDao.selectByPrimaryKey(id.longValue());
                 }
             });
 
@@ -62,9 +65,22 @@ public class CacheServiceImpl implements CacheService {
                 }
             });
 
+    private LoadingCache<BigDecimal,HrmDepartment> departmentCache = CacheBuilder.newBuilder().expireAfterAccess(10,TimeUnit.MINUTES).maximumSize(1000).refreshAfterWrite(10,TimeUnit.MINUTES).
+            build(new CacheLoader<BigDecimal, HrmDepartment>() {
+                @Override
+                public HrmDepartment load(BigDecimal id) throws Exception {
+                    return hrmDepartmentDao.selectByPrimaryKey(id);
+                }
+            });
+
     @Override
     public HrmDepartment getDept(BigDecimal deptId) {
-        return null;
+        try {
+            return departmentCache.get(deptId);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @Override

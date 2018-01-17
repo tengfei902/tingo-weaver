@@ -5,10 +5,8 @@ import com.tingo.BaseTestCase;
 import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.biz.KpService;
 import com.tingo.weaver.biz.ReportService;
-import com.tingo.weaver.dao.KpCheckItemDao;
-import com.tingo.weaver.dao.KpCheckItemDetailDao;
-import com.tingo.weaver.dao.KpCheckItemZpDao;
-import com.tingo.weaver.dao.QingdanDao;
+import com.tingo.weaver.dao.*;
+import com.tingo.weaver.model.gson.CheckItemGson;
 import com.tingo.weaver.model.gson.PfListGson;
 import com.tingo.weaver.model.gson.ZcListGson;
 import com.tingo.weaver.model.gson.ZcListRequest;
@@ -45,6 +43,8 @@ public class ItemTest extends BaseTestCase {
     private QingdanDao qingdanDao;
     @Autowired
     private KpCheckItemDetailDao kpCheckItemDetailDao;
+    @Autowired
+    private DeptUserLinkDao deptUserLinkDao;
 
     @Test
     public void testPublish() {
@@ -129,5 +129,14 @@ public class ItemTest extends BaseTestCase {
             List<KpCheckItemDetail> details = kpCheckItemDetailDao.selectByItemId(kpCheckItem.getId());
             Assert.assertTrue(details.size() == 3 || details.size() == 5);
         });
+    }
+
+    @Test
+    public void testGetCheckResult() {
+
+
+
+        List<CheckItemGson> list = kpService.getCheckResult("1243",null,null,null);
+        System.out.println(new Gson().toJson(list));
     }
 }

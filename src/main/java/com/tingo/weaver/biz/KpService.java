@@ -23,4 +23,5 @@ public interface KpService {
     List<PfListGson> getKpList(ZcListRequest zcListRequest);
     void savePf(List<Map<String,String>> pfs,List<Map<String,String>> details);
     void submitPf(List<Map<String,String>> pfs,List<Map<String,String>> details);
+    List<CheckItemGson> getCheckResult(String userId,String yearStr,String jd,String qdId);
 }

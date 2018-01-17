@@ -191,4 +191,10 @@ public class WeaverController {
         checkItemService.saveQingdan(qdid,qingdan);
         return "SUCCESS";
     }
+
+    @RequestMapping(value = "/getKpResult",method = RequestMethod.GET,produces = "application/json;charset=UTF-8")
+    public @ResponseBody String getKpResult(String userId,String yearStr,String jd,String qdId) {
+        List<CheckItemGson> list = kpService.getCheckResult(userId,yearStr,jd,qdId);
+        return new Gson().toJson(list);
+    }
 }

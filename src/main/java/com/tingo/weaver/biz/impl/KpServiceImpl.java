@@ -1,5 +1,6 @@
 package com.tingo.weaver.biz.impl;
 
+import com.tingo.weaver.biz.CacheService;
 import com.tingo.weaver.biz.CheckItemService;
 import com.tingo.weaver.biz.HrmService;
 import com.tingo.weaver.biz.KpService;
@@ -57,6 +58,8 @@ public class KpServiceImpl implements KpService {
     private KpCheckItemDetailPfDao kpCheckItemDetailPfDao;
     @Autowired
     private HrmDepartmentDao hrmDepartmentDao;
+    @Autowired
+    private CacheService cacheService;
 
     @Override
     public QingdanGson selectQdById(Integer id) {
@@ -486,5 +489,78 @@ public class KpServiceImpl implements KpService {
             kpCheckItemDetailPf.setKpTime(new Date());
             kpCheckItemDetailPfDao.updateByPrimaryKeySelective(kpCheckItemDetailPf);
         }
+    }
+
+    @Override
+    public List<CheckItemGson> getCheckResult(String userId, String yearStr,String jd, String qdId) {
+        List<Qingdan> qds = qingdanDao.select(MapUtils.buildMap("yearStr",yearStr,"jd",jd,"qdId",qdId));
+        if(CollectionUtils.isEmpty(qds)) {
+            return Collections.EMPTY_LIST;
+        }
+
+        List<CompanyUserLink> links = companyUserLinkDao.selectByUserId(new BigDecimal(userId));
+        List<BigDecimal> companyIds = links.parallelStream().map(CompanyUserLink::getCompanyid).collect(Collectors.toList());
+
+        List<CheckItemGson> resultList = new ArrayList<>();
+
+        for(Qingdan qd:qds) {
+            List<KpCheckItem> items = kpCheckItemDao.selectByQdId(qd.getId());
+            List<CheckItemGson> list = new ArrayList<>();
+            items.stream().forEach(kpCheckItem -> list.add(convertItem2Gson(kpCheckItem)));
+
+            List<KpCheckItemZp> kpCheckItemZps = kpCheckItemZpDao.selectForList(MapUtils.buildMap("qdId", qd.getId(), "orgIds", companyIds));
+            for (KpCheckItemZp zp : kpCheckItemZps) {
+
+                KpCheckItem kpCheckItem = kpCheckItemDao.selectByPrimaryKey(zp.getItemId().longValue());
+
+                CheckItemGson checkItemGson = new CheckItemGson();
+                resultList.add(checkItemGson);
+                checkItemGson.setItemId(zp.getItemId().longValue());
+                checkItemGson.setJd(String.format("第%s季度", zp.getJd()));
+                checkItemGson.setKpfs(kpCheckItem.getKpfs());
+                checkItemGson.setKpnr(kpCheckItem.getKpnr());
+                checkItemGson.setQd(kpCheckItem.getQd());
+                checkItemGson.setQdId(kpCheckItem.getQdId());
+                checkItemGson.setPfbmId(String.valueOf(zp.getOrgId()));
+                HrmSubCompany company = cacheService.getCompany(zp.getOrgId());
+                checkItemGson.setPfbm(company.getSubcompanyname());
+
+                List<CheckItemDetailGson> detailGsons = new ArrayList<>();
+                checkItemGson.setDetails(detailGsons);
+
+                List<KpCheckItemDetailZp> kpCheckItemDetailZps = kpCheckItemDetailZpDao.selectByZpId(zp.getId());
+                for (KpCheckItemDetailZp kpCheckItemDetailZp : kpCheckItemDetailZps) {
+                    CheckItemDetailGson checkItemDetailGson = new CheckItemDetailGson();
+                    KpCheckItemDetail detail = kpCheckItemDetailDao.selectByPrimaryKey(kpCheckItemDetailZp.getDetailId().longValue());
+                    detailGsons.add(checkItemDetailGson);
+                    checkItemDetailGson.setDetailId(kpCheckItemDetailZp.getDetailId().longValue());
+                    checkItemDetailGson.setPfbz(detail.getPfbz());
+                    checkItemDetailGson.setTkxz(detail.getTkxz());
+                    ZpGson zpGson = new ZpGson();
+                    zpGson.setOrgId(zp.getOrgId().longValue());
+                    zpGson.setZpf(kpCheckItemDetailZp.getPf());
+                    zpGson.setZpStatus(ZpStatus.parse(zp.getStatus().intValue()).getDesc());
+                    checkItemDetailGson.setZp(zpGson);
+
+                    List<KpCheckItemDetailPf> pfs = kpCheckItemDetailPfDao.selectByDetailId(new BigDecimal(detail.getId()), zp.getOrgId());
+                    List<PfGson> pfGsons = new ArrayList<>();
+                    for (KpCheckItemDetailPf pf : pfs) {
+                        PfGson pfGson = new PfGson();
+                        pfGsons.add(pfGson);
+                        pfGson.setItemDetailId(pf.getItemDetailId().longValue());
+                        HrmDepartment org = cacheService.getDept(pf.getOrgId());
+                        pfGson.setOrg(org.getDepartmentname());
+                        pfGson.setOrgId(org.getId().longValue());
+                        HrmSubCompany toOrg = cacheService.getCompany(pf.getToOrgId());
+                        pfGson.setToOrg(toOrg.getSubcompanyname());
+                        pfGson.setToOrgId(toOrg.getId().longValue());
+                        pfGson.setPf(pf.getPf());
+                    }
+                    checkItemDetailGson.setPfs(pfGsons);
+                }
+
+            }
+        }
+        return resultList;
     }
 }

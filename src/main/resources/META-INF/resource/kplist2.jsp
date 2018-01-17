@@ -1,4 +1,3 @@
-<%@page import="weaver.mobile.rest.gson.tingo.PfListGson"%>
 <%@page import="org.apache.commons.lang.NumberUtils"%>
 <%@page import="org.bouncycastle.asn1.DERApplicationSpecific"%>
 <%@page import="weaver.mobile.rest.gson.tingo.ZcDetailListGson"%>
@@ -81,7 +80,7 @@
     List<ZcListGson> zcList = weaverClient.getZcList(String.valueOf(userid), status, String.valueOf(jd), qingdanId);
 
     int rowindex = 0;
-    List<PfListGson> pfs = weaverClient.getKpList(String.valueOf(userid), status, String.valueOf(jd), qingdanId);
+    int view = Util.getIntValue(request.getParameter("view"),0);
 
 %>
 <BODY>
@@ -128,7 +127,7 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
                                 <tr>
                                     <td><br />
                                         <div align="center">
-                                            <font class="reqname">考评评分</font>
+                                            <font class="reqname">考评自测</font>
                                         </div>
                                         <table class="ViewForm maintable">
     <colgroup>
@@ -143,20 +142,18 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
         <TD class="fvalue"><%=deptname %></TD>
         <input type="hidden" id="khbmid" readonly>
 
-        <TD class="fname">状态</TD>
-        <TD class="fvalue">
-            <select id="statusSelect">
-                <option value="" <%if(StringUtils.isBlank(status)) {%>selected="selected"<%} %>>全部</option>
-                <option value="0" <%if(StringUtils.equals("0", status)) {%> selected="selected" <%} %>>未考评</option>
-                <option value="1" <%if(StringUtils.equals("1", status)) {%>selected="selected"<%} %>>已考评</option>
-            </select>
-        </TD>
-    </tr>
-    <tr>
         <TD class="fname">当前用户</TD>
         <TD class="fvalue"><%=username %></TD>
+    </tr>
+    <tr>
+        <TD class="fname">考评年度</TD>
+        <TD class="fvalue">
+            <select id="kpyear">
+                <option id="kpyear1" value="<%=2017%>" <%if(yearStr==2017) { %>selected="selected"<%} %>>2017</option>
+                <option id="kpyear2" value="<%=2018%>" <%if(yearStr==2018) { %>selected="selected"<%} %>>2018</option>
+            </select>
+        </TD>
         <TD class="fname">考评季度</TD>
-
         <TD class="fvalue">
             <select id="kpmonth">
                 <option id="kpMonth1" value="<%=1%>" <%if(jd==1) { %>selected="selected"<%} %>>一季度</option>
@@ -165,7 +162,6 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
                 <option id="kpMonth4" value="<%=4%>" <%if(jd==4) { %>selected="selected"<%} %>>四季度</option>
             </select>
         </TD>
-
     </tr>
     <tr>
         <TD class="fname">清单列表</TD>
@@ -200,11 +196,6 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
         <col width="10%"></col>
         <col width="80%"></col>
     </colgroup>
-    <tr>
-        <td><input type="button" value="保存自评" onclick="doSave()"></td>
-        <td><input type="button" value="提交自评" onclick="doSubmit()"> </td>
-        <td style="font-size: 0pt" height="15" colspan="2"></td>
-    </tr>
     <p>&nbsp;</p>
     </tbody>
 </table>
@@ -219,13 +210,13 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
                    style="width: 100%" border="1" name="oTable1">
                 <colgroup>
                     <COL width="3%">
-                    <COL width="10%">
+                    <COL width="6%">
                     <COL width="10%">
                     <COL width="5%">
                     <COL width="5%">
                     <COL width="20%">
                     <COL width="5%">
-                    <COL width="15%">
+                    <COL width="20%">
                     <COL width="5%">
                     <COL width="20%">
                 </colgroup>
@@ -244,31 +235,37 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
                             id="label9637" class="Label" name="label9637"
                             value="考评季度" disabled="true" style="width:60px;" /></td>
                     <td class="detailtitle" nowrap="nowrap" align="center"><input
-                            id="label9643" class="Label" name="label9639"
-                            value="自评说明" disabled="true" style="width:60px;" /></td>
-                    <td class="detailtitle" nowrap="nowrap" align="center"><input
                             id="label9636" class="Label" name="label9636"
                             value="条款细则" disabled="true" /></td>
-                    <td class="detailtitle" nowrap="nowrap" align="center"><input
-                            id="label9637" class="Label" name="label9637"
-                            value="评分标准" disabled="true" style="width:60px;" /></td>
                     <td class="detailtitle" nowrap="nowrap" align="center"><input
                             id="label9637" class="Label" name="label9637"
                             value="分值" disabled="true" style="width:60px;" /></td>
                     <td class="detailtitle" nowrap="nowrap" align="center"><input
                             id="label9637" class="Label" name="label9637"
-                            value="自评分数" disabled="true" style="width:60px;" /></td>
+                            value="评分标准" disabled="true" style="width:60px;" /></td>
                     <td class="detailtitle" nowrap="nowrap" align="center"><input
                             id="label9644" class="Label" name="label9639"
-                            value="考评分数" disabled="true" style="width:60px;" /></td>
+                            value="自评分" disabled="true" style="width:60px;" /></td>
                     <td class="detailtitle" nowrap="nowrap" align="center"><input
                             id="label9646" class="Label" name="label9639"
-                            value="考评说明" disabled="true" style="width:60px;" /></td>
+                            value="自评说明" disabled="true" style="width:60px;" /></td>
+                    <td class="detailtitle" nowrap="nowrap" align="center"><input
+                            id="label9647" class="Label" name="label9639"
+                            value="评分部门" disabled="true" style="width:60px;" /></td>
+                    <td class="detailtitle" nowrap="nowrap" align="center"><input
+                            id="label9648" class="Label" name="label9639"
+                            value="评分" disabled="true" style="width:60px;" /></td>
+                    <td class="detailtitle" nowrap="nowrap" align="center"><input
+                            id="label9649" class="Label" name="label9639"
+                            value="评分状态" disabled="true" style="width:60px;" /></td>
+                    <td class="detailtitle" nowrap="nowrap" align="center"><input
+                            id="label9650" class="Label" name="label9639"
+                            value="评分说明" disabled="true" style="width:60px;" /></td>
                 </tr>
                 </tbody>
                 <%
 
-                    for(int i=0;i<pfs.size();i++) {
+                    for(int i=0;i<zcList.size();i++) {
                         ZcListGson zc = zcList.get(i);
                         int rowspan = zc.getDetails().size();
 
@@ -294,7 +291,7 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
                     <td><div id='fz_<%=rowindex %>' name='fz_<%=rowindex %>' style='width=80%'><%=null == detail.getFz()?"":detail.getFz()%></div></td>
                     <td><div id='pfbz_<%=rowindex %>' name='pfbz_<%=rowindex %>' style='width=80%'><%=detail.getPfbz()%></div></td>
                     <%
-                        if(zc.getStatus() == 0) {
+                        if(zc.getStatus() == 0 && view != 1) {
                     %>
                     <td><input type="text" id='zpf_<%=rowindex %>' name='zpf_<%=rowindex %>' style='width=80%' value="<%=(null==detail.getZpf() || detail.getZpf().compareTo(BigDecimal.ZERO)<=0)?detail.getFz():detail.getZpf()%>"></td>
                     <%} else { %>
@@ -306,7 +303,7 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
 
                     <%
                         if(detailCount == 0) {
-                            if(zc.getStatus() == 0) {
+                            if(zc.getStatus() == 0 && view != 1) {
                     %>
                     <td rowspan="<%=rowspan%>"><textarea id='zpsm_<%=i %>' name='zpsm_<%=i %>' cols="80" style='height: <%=zc.getDetails().size()*35 %>' ><%=null==zc.getZpsm()?"":zc.getZpsm() %></textarea></td>
                     <%
@@ -455,8 +452,9 @@ onclick='location.href="HrmResourceTrainRecordAdd.jsp?resourceid=<%=resourceid%>
         var status = $("#statusSelect").val();
         var qingdanid = $("#qingdanSelect").val();
         var jd = $("#kpmonth").val();
+        var view = <%=view%>;
         location.replace(url+"&status="+status);
-        location.replace(url+"?status="+status+"&qingdanid="+qingdanid+"&jd="+jd);
+        location.replace(url+"?status="+status+"&qingdanid="+qingdanid+"&jd="+jd+"&view="+view);
     }
 
 </script>
