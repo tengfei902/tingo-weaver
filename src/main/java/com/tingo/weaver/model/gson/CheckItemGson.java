@@ -15,6 +15,7 @@ public class CheckItemGson {
     private String pfbm;
     private String pfbmId;
     private String jd;
+    private String zpsm;
     private List<CheckItemDetailGson> details;
 
     public Long getItemId() {
@@ -87,5 +88,13 @@ public class CheckItemGson {
 
     public void setPfbmId(String pfbmId) {
         this.pfbmId = pfbmId;
+    }
+
+    public String getZpsm() {
+        return zpsm;
+    }
+
+    public void setZpsm(String zpsm) {
+        this.zpsm = zpsm;
     }
 }

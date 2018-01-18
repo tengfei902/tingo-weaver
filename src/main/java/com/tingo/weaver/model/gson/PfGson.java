@@ -10,6 +10,7 @@ public class PfGson {
     private String toOrg;
     private BigDecimal pf;
     private String pfStatus;
+    private String pfsm;
 
     public Long getItemDetailId() {
         return itemDetailId;
@@ -65,5 +66,13 @@ public class PfGson {
 
     public void setPfStatus(String pfStatus) {
         this.pfStatus = pfStatus;
+    }
+
+    public String getPfsm() {
+        return pfsm;
+    }
+
+    public void setPfsm(String pfsm) {
+        this.pfsm = pfsm;
     }
 }

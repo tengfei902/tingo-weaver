@@ -528,6 +528,9 @@ public class KpServiceImpl implements KpService {
                 List<CheckItemDetailGson> detailGsons = new ArrayList<>();
                 checkItemGson.setDetails(detailGsons);
 
+                KpCheckItemZp kpCheckItemZp = kpCheckItemZpDao.selectByUnq(new BigDecimal(kpCheckItem.getId()),company.getId());
+                checkItemGson.setZpsm(kpCheckItemZp.getZpsm());
+
                 List<KpCheckItemDetailZp> kpCheckItemDetailZps = kpCheckItemDetailZpDao.selectByZpId(zp.getId());
                 for (KpCheckItemDetailZp kpCheckItemDetailZp : kpCheckItemDetailZps) {
                     CheckItemDetailGson checkItemDetailGson = new CheckItemDetailGson();
@@ -544,6 +547,8 @@ public class KpServiceImpl implements KpService {
 
                     List<KpCheckItemDetailPf> pfs = kpCheckItemDetailPfDao.selectByDetailId(new BigDecimal(detail.getId()), zp.getOrgId());
                     List<PfGson> pfGsons = new ArrayList<>();
+                    Map<BigDecimal,KpCheckItemPf> pfMap = new HashMap<>();
+
                     for (KpCheckItemDetailPf pf : pfs) {
                         PfGson pfGson = new PfGson();
                         pfGsons.add(pfGson);
@@ -555,6 +560,13 @@ public class KpServiceImpl implements KpService {
                         pfGson.setToOrg(toOrg.getSubcompanyname());
                         pfGson.setToOrgId(toOrg.getId().longValue());
                         pfGson.setPf(pf.getPf());
+                        if(null == pfMap.get(pf.getPfId())) {
+                            KpCheckItemPf kpCheckItemPf = kpCheckItemPfDao.selectByPrimaryKey(pf.getPfId());
+                            pfMap.put(kpCheckItemPf.getId(),kpCheckItemPf);
+                        }
+
+                        pfGson.setPfStatus(PfStatus.parse(pfMap.get(pf.getPfId()).getStatus().intValue()).getDesc() );
+                        pfGson.setPfsm(pfMap.get(pf.getPfId()).getPfsm()    );
                     }
                     checkItemDetailGson.setPfs(pfGsons);
                 }
