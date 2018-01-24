@@ -126,6 +126,8 @@ public class ReportServiceImpl implements ReportService {
             }
             result.put("score",score);
         }
+
+        resultList = resultList.parallelStream().sorted((o1, o2) -> new BigDecimal(o2.get("score")==null?"0":o2.get("score").toString()).compareTo(new BigDecimal(o1.get("score")==null?"0":o1.get("score").toString()))).collect(Collectors.toList());
         return resultList;
     }
 }

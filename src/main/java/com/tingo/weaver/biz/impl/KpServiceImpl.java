@@ -503,11 +503,11 @@ public class KpServiceImpl implements KpService {
 
         List<CheckItemGson> resultList = new ArrayList<>();
 
-        for(Qingdan qd:qds) {
-            List<KpCheckItem> items = kpCheckItemDao.selectByQdId(qd.getId());
-            List<CheckItemGson> list = new ArrayList<>();
-            items.stream().forEach(kpCheckItem -> list.add(convertItem2Gson(kpCheckItem)));
+        if(CollectionUtils.isEmpty(resultList)) {
+            return resultList;
+        }
 
+        for(Qingdan qd:qds) {
             List<KpCheckItemZp> kpCheckItemZps = kpCheckItemZpDao.selectForList(MapUtils.buildMap("qdId", qd.getId(), "orgIds", companyIds));
             for (KpCheckItemZp zp : kpCheckItemZps) {
 
@@ -516,7 +516,7 @@ public class KpServiceImpl implements KpService {
                 CheckItemGson checkItemGson = new CheckItemGson();
                 resultList.add(checkItemGson);
                 checkItemGson.setItemId(zp.getItemId().longValue());
-                checkItemGson.setJd(String.format("ç¬?%så­£åº¦", zp.getJd()));
+                checkItemGson.setJd(String.format("ç¬¬%så­£åº¦", zp.getJd()));
                 checkItemGson.setKpfs(kpCheckItem.getKpfs());
                 checkItemGson.setKpnr(kpCheckItem.getKpnr());
                 checkItemGson.setQd(kpCheckItem.getQd());
@@ -565,7 +565,7 @@ public class KpServiceImpl implements KpService {
                             pfMap.put(kpCheckItemPf.getId(),kpCheckItemPf);
                         }
 
-                        pfGson.setPfStatus(pfMap.get(pf.getPfId()).getStatus().intValue()==2?"ÒÑ¿¼ºË":"Î´¿¼ºË");
+                        pfGson.setPfStatus(pfMap.get(pf.getPfId()).getStatus().intValue()==2?"å·²è€ƒæ ¸":"æœªè€ƒæ ¸");
                         pfGson.setPfsm(pfMap.get(pf.getPfId()).getPfsm()    );
                     }
                     checkItemDetailGson.setPfs(pfGsons);
