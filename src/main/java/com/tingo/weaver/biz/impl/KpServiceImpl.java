@@ -244,7 +244,7 @@ public class KpServiceImpl implements KpService {
             detail.setPfbz(detailGson.getPfbz());
             detail.setFs(detailGson.getFs());
             detail.setTkxz(detailGson.getTkxz());
-            detail.setId(detailGson.getDetailId() == null?null:detailGson.getDetailId());
+            detail.setId(detailGson.getDetailId() == null ? null : detailGson.getDetailId());
             if(itemGson.getItemId()!= null) {
                 detail.setItemId(itemGson.getItemId());
             }
@@ -516,7 +516,7 @@ public class KpServiceImpl implements KpService {
                 CheckItemGson checkItemGson = new CheckItemGson();
                 resultList.add(checkItemGson);
                 checkItemGson.setItemId(zp.getItemId().longValue());
-                checkItemGson.setJd(String.format("ç¬¬%så­£åº¦", zp.getJd()));
+                checkItemGson.setJd(String.format("ç¬?%så­£åº¦", zp.getJd()));
                 checkItemGson.setKpfs(kpCheckItem.getKpfs());
                 checkItemGson.setKpnr(kpCheckItem.getKpnr());
                 checkItemGson.setQd(kpCheckItem.getQd());
@@ -565,7 +565,7 @@ public class KpServiceImpl implements KpService {
                             pfMap.put(kpCheckItemPf.getId(),kpCheckItemPf);
                         }
 
-                        pfGson.setPfStatus(PfStatus.parse(pfMap.get(pf.getPfId()).getStatus().intValue()).getDesc() );
+                        pfGson.setPfStatus(pfMap.get(pf.getPfId()).getStatus().intValue()==2?"ÒÑ¿¼ºË":"Î´¿¼ºË");
                         pfGson.setPfsm(pfMap.get(pf.getPfId()).getPfsm()    );
                     }
                     checkItemDetailGson.setPfs(pfGsons);
